@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Pwm.iml" filepath="$PROJECT_DIR$/Pwm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/QuadCopter.iml" filepath="$PROJECT_DIR$/QuadCopter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/artifactidd.iml" filepath="$PROJECT_DIR$/artifactidd.iml" />
+    </modules>
+  </component>
+</project>
