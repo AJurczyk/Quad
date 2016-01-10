@@ -1,13 +1,99 @@
 version '1.0-SNAPSHOT'
-
-apply plugin: 'java'
-
-sourceCompatibility = 1.5
-
-repositories {
-    mavenCentral()
+allprojects {
+    apply plugin: 'idea'
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'findbugs'
+    apply plugin: 'checkstyle'
+    apply plugin: 'pmd'
+    apply plugin: "jacoco"
+
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        ignoreFailures true
+
+        useTestNG {
+            includeGroups 'unitTests'
+        }
+    }
+
+    tasks.withType(FindBugs) {
+        ignoreFailures true
+        excludeFilter=file("${project.rootDir}/config/findbugs_exclude.xml")
+        reports {
+            xml.enabled = true
+            xml.withMessages = true
+            html.enabled = false
+        }
+    }
+
+    task findbugsMainHtml << {
+        if (new File(findbugsMain.reports.xml.destination.parent, "main.xml").exists()) {
+            ant.xslt(in: findbugsMain.reports.xml.destination,
+                    style: file("${project.rootDir}/config/findbugs_default.xsl"),
+                    out: new File(findbugsMain.reports.xml.destination.parent, 'main.html'))
+        }
+    }
+
+    task findbugsTestHtml << {
+        if (new File(findbugsTest.reports.xml.destination.parent, "test.xml").exists()) {
+            ant.xslt(in: findbugsTest.reports.xml.destination,
+                    style: file("${project.rootDir}/config/findbugs_default.xsl"),
+                    out: new File(findbugsTest.reports.xml.destination.parent, 'test.html'))
+        }
+    }
+
+    findbugsMain.finalizedBy findbugsMainHtml
+    findbugsTest.finalizedBy findbugsTestHtml
+
+    checkstyle {
+        ignoreFailures true
+        configFile = file("${project.rootDir}/config/google_checks.xml")
+        toolVersion = '6.11.2'
+    }
+
+    task checkstyleMainHtml << {
+        if (new File(checkstyleMain.reports.xml.destination.parent, "main.xml").exists()) {
+            ant.xslt(in: checkstyleMain.reports.xml.destination,
+                    style: file("${project.rootDir}/config/checkstyle-noframes-sorted.xsl"),
+                    out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
+        }
+        println "PATH: "+checkstyleMain.reports.xml.destination.parent
+    }
+
+    task checkstyleTestHtml << {
+        if (new File(checkstyleTest.reports.xml.destination.parent, "test.xml").exists()) {
+            ant.xslt(in: checkstyleTest.reports.xml.destination,
+                    style: file("${project.rootDir}/config/checkstyle-noframes-sorted.xsl"),
+                    out: new File(checkstyleTest.reports.xml.destination.parent, 'test.html'))
+        }
+    }
+
+    checkstyleMain.finalizedBy checkstyleMainHtml
+    checkstyleTest.finalizedBy checkstyleTestHtml
+
+    pmd {
+        ignoreFailures true
+        ruleSetConfig = resources.text.fromFile("${project.rootDir}/config/pmd_rules.xml")
+    }
+
+    jacoco {
+        toolVersion = "0.7.1.201405082137"
+        reportsDir = file("$buildDir/customJacocoReportDir")
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled false
+            csv.enabled false
+            html.destination "${buildDir}/jacocoHtml"
+        }
+    }
 }

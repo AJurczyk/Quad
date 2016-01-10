@@ -1,4 +1,3 @@
-import com.pi4j.wiringpi.Gpio;
 import hardware.exception.PwmValueOutOfRange;
 import hardware.IPwm;
 import hardware.exception.WholeNumberException;

@@ -1,7 +1,6 @@
 package hardware.impl;
 
 import com.pi4j.wiringpi.Gpio;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import hardware.IGpioControl;
 import hardware.exception.PwmValueOutOfRange;
 import hardware.IPwm;
@@ -13,7 +12,7 @@ import hardware.exception.WholeNumberException;
 public class HardwarePwm extends AbstractPwm implements IPwm {
 
     private static final int BASE_PI_FREQ = 19200000;//The Raspberry Pi PWM clock base frequency of 19.2 MHz.
-    private static final int MAX_RANGE = 4096;
+    // private static final int MAX_RANGE = 4096;
     private static final int MIN_CLOCK = 2;
     private static final int MAX_CLOCK = 4095;
     private static final int MAX_PERIOD = 877;

@@ -1,14 +1,11 @@
 package hardware;
 
-import com.pi4j.wiringpi.Gpio;
 import hardware.exception.PwmValueOutOfRange;
 import hardware.exception.WholeNumberException;
 import hardware.impl.HardwarePwm;
 import hardware.impl.pi4jGpio;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,16 +14,13 @@ import static org.mockito.Mockito.verify;
 /**
  * @author aleksander.jurczyk@gmail.com on 30.12.15.
  */
+@Test(groups = "unitTests")
 public class HardwarePwmTest {
 
     private static final int PIN = 1;
     private static final int PERIOD = 20;
     private static final int PROPELLER_PERIOD = 5;
 
-    @Test
-    public final void calculateClock() {
-
-    }
 
     @Test
     public final void servoTest() throws PwmValueOutOfRange, WholeNumberException {
