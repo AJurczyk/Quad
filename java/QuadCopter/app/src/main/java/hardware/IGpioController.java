@@ -3,7 +3,7 @@ package hardware;
 /**
  * @author aleksander.jurczyk@gmail.com on 08.01.16.
  */
-public interface IGpioControl {
+public interface IGpioController {
 
     void pwmSetClock(int value);
 

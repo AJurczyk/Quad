@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="3.0.1" sequence="0" timestamp="1452444850965" analysisTimestamp="1452444850989" release="">
+  <Project projectName="">
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/test/hardware/HardwarePwmTest.class</Jar>
+    <AuxClasspathEntry>/home/alek/Quad/java/QuadCopter/app/build/classes/main</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/com.pi4j/pi4j-core/1.0/b479fd891a87ab398c1d9abef19de95dc8037d9/pi4j-core-1.0.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/org.testng/testng/6.9.10/6feb3e964aeb7097aff30c372aac3ec0f8d87ede/testng-6.9.10.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/1.10.19/e8546f5bef4e061d8dd73895b4e8f40e3fe6effe/mockito-core-1.10.19.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/com.beust/jcommander/1.48/bfcb96281ea3b59d626704f74bc6d625ff51cbce/jcommander-1.48.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/org.beanshell/bsh/2.0b4/a05f0a0feefa8d8467ac80e16e7de071489f0d9c/bsh-2.0b4.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.1/860340562250678d1a344907ac75754e259cdb14/hamcrest-core-1.1.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.1/87c0ea803b69252868d09308b4618f766f135a96/objenesis-2.1.jar</AuxClasspathEntry>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/test/java/hardware/HardwarePwmTest.java</SrcDir>
+  </Project>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Sun, 10 Jan 2016 17:54:10 +0100" total_classes="1" referenced_classes="18" total_bugs="0" total_size="42" num_packages="1" java_version="1.8.0_66" vm_version="25.66-b17" cpu_seconds="5.70" clock_seconds="1.31" peak_mbytes="119.23" alloc_mbytes="1758.50" gc_seconds="0.03">
+    <FileStats path="hardware/HardwarePwmTest.java" bugCount="0" size="42"/>
+    <PackageStats package="hardware" total_bugs="0" total_types="1" total_size="42">
+      <ClassStats class="hardware.HardwarePwmTest" sourceFile="HardwarePwmTest.java" interface="false" size="42" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="206" invocations="331" avgMicrosecondsPerInvocation="622" maxMicrosecondsPerInvocation="28403" standardDeviationMircosecondsPerInvocation="1960"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="63" invocations="299" avgMicrosecondsPerInvocation="213" maxMicrosecondsPerInvocation="27575" standardDeviationMircosecondsPerInvocation="1599"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="56" invocations="18" avgMicrosecondsPerInvocation="3139" maxMicrosecondsPerInvocation="21063" standardDeviationMircosecondsPerInvocation="5251"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="53" invocations="334" avgMicrosecondsPerInvocation="160" maxMicrosecondsPerInvocation="6672" standardDeviationMircosecondsPerInvocation="372"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="41" invocations="7" avgMicrosecondsPerInvocation="5902" maxMicrosecondsPerInvocation="39395" standardDeviationMircosecondsPerInvocation="13678"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="39" invocations="40" avgMicrosecondsPerInvocation="980" maxMicrosecondsPerInvocation="2803" standardDeviationMircosecondsPerInvocation="796"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="37" invocations="18" avgMicrosecondsPerInvocation="2077" maxMicrosecondsPerInvocation="17170" standardDeviationMircosecondsPerInvocation="3949"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="30" invocations="35" avgMicrosecondsPerInvocation="859" maxMicrosecondsPerInvocation="15294" standardDeviationMircosecondsPerInvocation="2667"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="26" invocations="13" avgMicrosecondsPerInvocation="2067" maxMicrosecondsPerInvocation="15326" standardDeviationMircosecondsPerInvocation="3908"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="19" invocations="7" avgMicrosecondsPerInvocation="2742" maxMicrosecondsPerInvocation="11856" standardDeviationMircosecondsPerInvocation="3766"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="18" invocations="7" avgMicrosecondsPerInvocation="2626" maxMicrosecondsPerInvocation="10264" standardDeviationMircosecondsPerInvocation="3275"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="18" invocations="7" avgMicrosecondsPerInvocation="2601" maxMicrosecondsPerInvocation="12741" standardDeviationMircosecondsPerInvocation="4157"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="16" invocations="18" avgMicrosecondsPerInvocation="899" maxMicrosecondsPerInvocation="3987" standardDeviationMircosecondsPerInvocation="1277"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="15" invocations="18" avgMicrosecondsPerInvocation="871" maxMicrosecondsPerInvocation="5966" standardDeviationMircosecondsPerInvocation="1509"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

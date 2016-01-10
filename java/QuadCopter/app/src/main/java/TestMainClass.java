@@ -1,16 +1,23 @@
+import hardware.IPwmController;
 import hardware.exception.PwmValueOutOfRange;
-import hardware.IPwm;
 import hardware.exception.WholeNumberException;
 import hardware.impl.HardwarePwm;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 29.11.15.
  */
-public class test {
+@SuppressWarnings("PMD")
+public class TestMainClass {
+    /**
+     * Just for testing purposes.
+     * @param args none
+     * @throws PwmValueOutOfRange pwm out of range
+     * @throws WholeNumberException invalid period
+     */
     public static void main(String[] args) throws PwmValueOutOfRange, WholeNumberException {
         System.out.println("TEST quad");
 
-        IPwm pwm = new HardwarePwm(1, 20);
+        IPwmController pwm = new HardwarePwm(1, 20);
         pwm.setDuty(1.5f);
         for (int i = 0; i < 3; i++) {
             pwm.setDuty(1.5f);

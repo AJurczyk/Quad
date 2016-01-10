@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="3.0.1" sequence="0" timestamp="1452444846866" analysisTimestamp="1452444846899" release="">
+  <Project projectName="">
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/TestMainClass.class</Jar>
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/hardware/exception/WholeNumberException.class</Jar>
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/hardware/exception/PwmValueOutOfRange.class</Jar>
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/hardware/IPwmController.class</Jar>
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/hardware/IGpioController.class</Jar>
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/hardware/impl/Pi4jGpio.class</Jar>
+    <Jar>/home/alek/Quad/java/QuadCopter/app/build/classes/main/hardware/impl/HardwarePwm.class</Jar>
+    <AuxClasspathEntry>/home/alek/.gradle/caches/modules-2/files-2.1/com.pi4j/pi4j-core/1.0/b479fd891a87ab398c1d9abef19de95dc8037d9/pi4j-core-1.0.jar</AuxClasspathEntry>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/exception/WholeNumberException.java</SrcDir>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/exception/PwmValueOutOfRange.java</SrcDir>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/IGpioController.java</SrcDir>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/impl/Pi4jGpio.java</SrcDir>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/impl/HardwarePwm.java</SrcDir>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/IPwmController.java</SrcDir>
+    <SrcDir>/home/alek/Quad/java/QuadCopter/app/src/main/java/TestMainClass.java</SrcDir>
+  </Project>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Sun, 10 Jan 2016 17:54:06 +0100" total_classes="7" referenced_classes="43" total_bugs="0" total_size="116" num_packages="4" java_version="1.8.0_66" vm_version="25.66-b17" cpu_seconds="10.52" clock_seconds="2.41" peak_mbytes="141.88" alloc_mbytes="1758.50" gc_seconds="0.04">
+    <FileStats path="TestMainClass.java" bugCount="0" size="13"/>
+    <FileStats path="hardware/IGpioController.java" bugCount="0" size="6"/>
+    <FileStats path="hardware/IPwmController.java" bugCount="0" size="6"/>
+    <FileStats path="hardware/exception/PwmValueOutOfRange.java" bugCount="0" size="4"/>
+    <FileStats path="hardware/exception/WholeNumberException.java" bugCount="0" size="4"/>
+    <FileStats path="hardware/impl/HardwarePwm.java" bugCount="0" size="63"/>
+    <FileStats path="hardware/impl/Pi4jGpio.java" bugCount="0" size="20"/>
+    <PackageStats package="" total_bugs="0" total_types="1" total_size="13">
+      <ClassStats class="TestMainClass" sourceFile="TestMainClass.java" interface="false" size="13" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="hardware" total_bugs="0" total_types="2" total_size="12">
+      <ClassStats class="hardware.IGpioController" sourceFile="IGpioController.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="hardware.IPwmController" sourceFile="IPwmController.java" interface="true" size="6" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="hardware.exception" total_bugs="0" total_types="2" total_size="8">
+      <ClassStats class="hardware.exception.PwmValueOutOfRange" sourceFile="PwmValueOutOfRange.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="hardware.exception.WholeNumberException" sourceFile="WholeNumberException.java" interface="false" size="4" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="hardware.impl" total_bugs="0" total_types="2" total_size="83">
+      <ClassStats class="hardware.impl.HardwarePwm" sourceFile="HardwarePwm.java" interface="false" size="63" bugs="0"/>
+      <ClassStats class="hardware.impl.Pi4jGpio" sourceFile="Pi4jGpio.java" interface="false" size="20" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="421" invocations="467" avgMicrosecondsPerInvocation="901" maxMicrosecondsPerInvocation="33482" standardDeviationMircosecondsPerInvocation="2407"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="153" invocations="43" avgMicrosecondsPerInvocation="3563" maxMicrosecondsPerInvocation="24737" standardDeviationMircosecondsPerInvocation="5941"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="118" invocations="149" avgMicrosecondsPerInvocation="797" maxMicrosecondsPerInvocation="5999" standardDeviationMircosecondsPerInvocation="1147"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="102" invocations="43" avgMicrosecondsPerInvocation="2382" maxMicrosecondsPerInvocation="14299" standardDeviationMircosecondsPerInvocation="3738"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="74" invocations="427" avgMicrosecondsPerInvocation="173" maxMicrosecondsPerInvocation="4614" standardDeviationMircosecondsPerInvocation="355"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="65" invocations="69" avgMicrosecondsPerInvocation="956" maxMicrosecondsPerInvocation="31598" standardDeviationMircosecondsPerInvocation="3852"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="51" invocations="32" avgMicrosecondsPerInvocation="1599" maxMicrosecondsPerInvocation="42969" standardDeviationMircosecondsPerInvocation="7448"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="49" invocations="43" avgMicrosecondsPerInvocation="1140" maxMicrosecondsPerInvocation="20304" standardDeviationMircosecondsPerInvocation="3140"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="45" invocations="470" avgMicrosecondsPerInvocation="96" maxMicrosecondsPerInvocation="1518" standardDeviationMircosecondsPerInvocation="128"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="41" invocations="22" avgMicrosecondsPerInvocation="1867" maxMicrosecondsPerInvocation="9796" standardDeviationMircosecondsPerInvocation="2598"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="40" invocations="43" avgMicrosecondsPerInvocation="953" maxMicrosecondsPerInvocation="11669" standardDeviationMircosecondsPerInvocation="2006"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="40" invocations="43" avgMicrosecondsPerInvocation="953" maxMicrosecondsPerInvocation="9505" standardDeviationMircosecondsPerInvocation="1779"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="40" invocations="22" avgMicrosecondsPerInvocation="1825" maxMicrosecondsPerInvocation="23783" standardDeviationMircosecondsPerInvocation="4923"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="38" invocations="43" avgMicrosecondsPerInvocation="890" maxMicrosecondsPerInvocation="8518" standardDeviationMircosecondsPerInvocation="1863"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="36" invocations="22" avgMicrosecondsPerInvocation="1668" maxMicrosecondsPerInvocation="20750" standardDeviationMircosecondsPerInvocation="4265"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="32" invocations="22" avgMicrosecondsPerInvocation="1498" maxMicrosecondsPerInvocation="9555" standardDeviationMircosecondsPerInvocation="2129"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

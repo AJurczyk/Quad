@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="6.11.2">
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/TestMainClass.java">
+</file>
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/IGpioController.java">
+</file>
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/IPwmController.java">
+</file>
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/exception/PwmValueOutOfRange.java">
+</file>
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/exception/WholeNumberException.java">
+</file>
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/impl/HardwarePwm.java">
+</file>
+<file name="/home/alek/Quad/java/QuadCopter/app/src/main/java/hardware/impl/Pi4jGpio.java">
+</file>
+</checkstyle>

@@ -3,7 +3,7 @@ package hardware;
 import hardware.exception.PwmValueOutOfRange;
 import hardware.exception.WholeNumberException;
 import hardware.impl.HardwarePwm;
-import hardware.impl.pi4jGpio;
+import hardware.impl.Pi4jGpio;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
@@ -24,13 +24,12 @@ public class HardwarePwmTest {
 
     @Test
     public final void servoTest() throws PwmValueOutOfRange, WholeNumberException {
-//    given
-        IGpioControl controller = mock(pi4jGpio.class);
-        IPwm pwm = new HardwarePwm(controller, PIN, PERIOD);
-//    when
+        //given
+        final IGpioController controller = mock(Pi4jGpio.class);
+        final IPwmController pwm = new HardwarePwm(controller, PIN, PERIOD);
+        //when
         pwm.setDuty(1.8f);
-
-//    then
+        //then
         verify(controller, times(1)).pwmSetClock(96);
         verify(controller, times(1)).pwmSetRange(4000);
         verify(controller, times(1)).pwmWrite(PIN, 360);
@@ -39,8 +38,8 @@ public class HardwarePwmTest {
     @Test
     public final void propellerTest() throws PwmValueOutOfRange, WholeNumberException {
         //given
-        IGpioControl controller = mock(pi4jGpio.class);
-        IPwm pwm = new HardwarePwm(controller, PIN, PROPELLER_PERIOD);
+        final IGpioController controller = mock(Pi4jGpio.class);
+        final IPwmController pwm = new HardwarePwm(controller, PIN, PROPELLER_PERIOD);
         //when
         pwm.setDuty(4f);
 
@@ -53,8 +52,8 @@ public class HardwarePwmTest {
     @Test(expectedExceptions = PwmValueOutOfRange.class)
     public final void writeTooHighDuty() throws WholeNumberException, PwmValueOutOfRange {
         //given
-        IGpioControl controller = mock(pi4jGpio.class);
-        IPwm pwm = new HardwarePwm(controller, PIN, PERIOD);
+        final IGpioController controller = mock(Pi4jGpio.class);
+        final IPwmController pwm = new HardwarePwm(controller, PIN, PERIOD);
 
         //when
         pwm.setDuty((float) (PERIOD + 1));
@@ -66,8 +65,8 @@ public class HardwarePwmTest {
     @Test(expectedExceptions = PwmValueOutOfRange.class)
     public final void writeTooLowDuty() throws WholeNumberException, PwmValueOutOfRange {
         //given
-        IGpioControl controller = mock(pi4jGpio.class);
-        IPwm pwm = new HardwarePwm(controller, PIN, PERIOD);
+        final IGpioController controller = mock(Pi4jGpio.class);
+        final IPwmController pwm = new HardwarePwm(controller, PIN, PERIOD);
 
         //when
         pwm.setDuty((float) (PERIOD + 1));
@@ -79,8 +78,8 @@ public class HardwarePwmTest {
     @Test(expectedExceptions = WholeNumberException.class)
     public final void setInvalidPeriodForClock() throws WholeNumberException, PwmValueOutOfRange {
         //given
-        IGpioControl controller = mock(pi4jGpio.class);
-        IPwm pwm = new HardwarePwm(controller, PIN, PERIOD);
+        final IGpioController controller = mock(Pi4jGpio.class);
+        final IPwmController pwm = new HardwarePwm(controller, PIN, PERIOD);
 
         //when
         pwm.setPeriodMs(3);
@@ -92,8 +91,8 @@ public class HardwarePwmTest {
     @Test(expectedExceptions = WholeNumberException.class)
     public final void setInvalidPeriodForSetna() throws WholeNumberException, PwmValueOutOfRange {
         //given
-        IGpioControl controller = mock(pi4jGpio.class);
-        IPwm pwm = new HardwarePwm(controller, PIN, PERIOD);
+        final IGpioController controller = mock(Pi4jGpio.class);
+        final IPwmController pwm = new HardwarePwm(controller, PIN, PERIOD);
 
         //when
         pwm.setPeriodMs(15);

@@ -65,7 +65,6 @@ subprojects {
                     style: file("${project.rootDir}/config/checkstyle-noframes-sorted.xsl"),
                     out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
         }
-        println "PATH: "+checkstyleMain.reports.xml.destination.parent
     }
 
     task checkstyleTestHtml << {

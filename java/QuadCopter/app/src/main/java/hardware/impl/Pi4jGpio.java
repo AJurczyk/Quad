@@ -1,13 +1,13 @@
 package hardware.impl;
 
 import com.pi4j.wiringpi.Gpio;
-import hardware.IGpioControl;
+import hardware.IGpioController;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 08.01.16.
  */
-public class pi4jGpio implements IGpioControl {
-    pi4jGpio() {
+public class Pi4jGpio implements IGpioController {
+    Pi4jGpio() {
         Gpio.wiringPiSetup();
     }
 
