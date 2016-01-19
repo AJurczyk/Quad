@@ -1,7 +1,9 @@
 import hardware.IPwmController;
+import hardware.exception.PrcValueOutOfRange;
 import hardware.exception.PwmValueOutOfRange;
 import hardware.exception.WholeNumberException;
-import hardware.impl.HardwarePwm;
+import hardware.impl.EmaxCf2822;
+import hardware.impl.RPi2HardwarePwm;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 29.11.15.
@@ -10,21 +12,40 @@ import hardware.impl.HardwarePwm;
 public class TestMainClass {
     /**
      * Just for testing purposes.
+     *
      * @param args none
-     * @throws PwmValueOutOfRange pwm out of range
+     * @throws PwmValueOutOfRange   pwm out of range
      * @throws WholeNumberException invalid period
      */
-    public static void main(String[] args) throws PwmValueOutOfRange, WholeNumberException {
+    public static void main(String[] args) throws PwmValueOutOfRange, WholeNumberException, PrcValueOutOfRange {
         System.out.println("TEST quad");
 
-        IPwmController pwm = new HardwarePwm(1, 20);
-        pwm.setDuty(1.5f);
-        for (int i = 0; i < 3; i++) {
-            pwm.setDuty(1.5f);
-            pwm.setDuty(0.8f);
-            pwm.setDuty(1.5f);
-            pwm.setDuty(2.2f);
+        IPwmController pwm = new RPi2HardwarePwm(1, EmaxCf2822.getPwmPeriodMs());
+        EmaxCf2822 motor = new EmaxCf2822(pwm);
+
+        motor.setPercent(0);
+        motor.setPercent(20);
+        motor.setPercent(30);
+        motor.stop();
+
+        try {
+            for (int i = 0; i < 4; i++) {
+                motor.setPercent(i * 10);
+            }
+            motor.stop();
+        } catch (PrcValueOutOfRange prcValueOutOfRange) {
+            motor.stop();
+            throw prcValueOutOfRange;
         }
+//        IPwmController pwm = new RPi2HardwarePwm(1, 20);
+//
+//        pwm.setDuty(1.5f);
+//        for (int i = 0; i < 3; i++) {
+//            pwm.setDuty(1.5f);
+//            pwm.setDuty(0.8f);
+//            pwm.setDuty(1.5f);
+//            pwm.setDuty(2.2f);
+//        }
 
 //        Gpio.pinMode(1,Gpio.PWM_OUTPUT);
 //        Gpio.pwmSetMode(Gpio.PWM_MODE_MS);
