@@ -2,22 +2,29 @@ package hardware.impl;
 
 import hardware.IMotor;
 import hardware.IPwmController;
-import hardware.exception.PrcValueOutOfRange;
-import hardware.exception.PwmValueOutOfRange;
-import hardware.exception.WholeNumberException;
+import hardware.exception.PercentValRangeException;
+import hardware.exception.PwmValRangeException;
+import hardware.exception.WholeNumException;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.
  */
 public class EmaxCf2822 implements IMotor {
 
-    private final static int PWM_MIN_MS = 1;
-    private final static int PWM_MAX_MS = 2;
-    private final static int PWM_PERIOD_MS = 5;
-    int percent;
-    IPwmController pwm;
+    private static final int PWM_MIN_MS = 1;
+    private static final int PWM_MAX_MS = 2;
+    private static final int PWM_PERIOD_MS = 5;
+    private final IPwmController pwm;
+    private int percent;
 
-    public EmaxCf2822(IPwmController pwm) throws WholeNumberException, PwmValueOutOfRange {
+    /**
+     * Constructor that inits pwm parameters.
+     *
+     * @param pwm controller to control pwm pin (eg.Pi4JGpio)
+     * @throws WholeNumException    thrown if period caused error in pwm calculations
+     * @throws PwmValRangeException thrown if period caused error in pwm calculations
+     */
+    public EmaxCf2822(IPwmController pwm) throws WholeNumException, PwmValRangeException {
         this.pwm = pwm;
         pwm.setPeriodMs(PWM_PERIOD_MS);
         pwm.setDuty(PWM_MAX_MS);
@@ -35,17 +42,17 @@ public class EmaxCf2822 implements IMotor {
         return PWM_PERIOD_MS;
     }
 
-    private float calcPwmPercent(int value) throws PwmValueOutOfRange {
-        float pwmValue = PWM_MIN_MS + (float) (PWM_MAX_MS - PWM_MIN_MS) / 100 * value ;
+    private float calcPwmPercent(int value) throws PwmValRangeException {
+        final float pwmValue = PWM_MIN_MS + (float) (PWM_MAX_MS - PWM_MIN_MS) / 100 * value;
         if (pwmValue < PWM_MIN_MS || pwmValue > PWM_MAX_MS) {
-            throw new PwmValueOutOfRange("Calculated pwm value " + pwmValue
+            throw new PwmValRangeException("Calculated pwm value " + pwmValue
                     + " is out of EMAX CF2822 range");
         }
         return pwmValue;
     }
 
     @Override
-    public void stop() throws PwmValueOutOfRange, PrcValueOutOfRange {
+    public void stop() throws PwmValRangeException, PercentValRangeException {
         setPercent(0);
     }
 
@@ -55,16 +62,12 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public void setPercent(int percent) throws PrcValueOutOfRange {
-        System.out.println("[EMAX] Set "+percent+"%");
+    public void setPercent(int percent) throws PercentValRangeException, PwmValRangeException {
+        System.out.println("[EMAX] Set " + percent + "%");
         if (percent < 0 || percent > 100) {
-            throw new PrcValueOutOfRange("Invalid percentage value: " + percent + "%");
+            throw new PercentValRangeException("Invalid percentage value: " + percent + "%");
         }
         this.percent = percent;
-        try {
-            pwm.setDuty(calcPwmPercent(percent));
-        } catch (PwmValueOutOfRange pwmValueOutOfRange) {
-            throw new PrcValueOutOfRange(pwmValueOutOfRange.getMessage());
-        }
+        pwm.setDuty(calcPwmPercent(percent));
     }
 }

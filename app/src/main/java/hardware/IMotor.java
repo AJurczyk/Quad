@@ -1,16 +1,16 @@
 package hardware;
 
-import hardware.exception.PrcValueOutOfRange;
-import hardware.exception.PwmValueOutOfRange;
+import hardware.exception.PercentValRangeException;
+import hardware.exception.PwmValRangeException;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.
  */
 public interface IMotor {
 
-    void stop() throws PwmValueOutOfRange, PrcValueOutOfRange;
+    void stop() throws PwmValRangeException, PercentValRangeException;
 
-    void setPercent(int value) throws PwmValueOutOfRange, PrcValueOutOfRange;
+    void setPercent(int value) throws PwmValRangeException, PercentValRangeException;
 
     int getPercent();
 }
