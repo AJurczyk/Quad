@@ -1,10 +1,10 @@
-package hardware.impl;
+package hardware.motor.impl;
 
-import hardware.IMotor;
-import hardware.IPwmController;
 import hardware.exception.PercentValRangeException;
 import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
+import hardware.motor.IMotor;
+import hardware.pwm.IPwmController;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.
@@ -30,10 +30,20 @@ public class EmaxCf2822 implements IMotor {
         pwm.setDuty(PWM_MAX_MS);
     }
 
+    /**
+     * Returns pwm duty cycle in ms for 0% throttle.
+     *
+     * @return PWM_MIN_MS const
+     */
     public static int getPwmMinMs() {
         return PWM_MIN_MS;
     }
 
+    /**
+     * Returns pwm duty cycle in ms for 100% throttle.
+     *
+     * @return PWM_MAX_MS const
+     */
     public static int getPwmMaxMs() {
         return PWM_MAX_MS;
     }

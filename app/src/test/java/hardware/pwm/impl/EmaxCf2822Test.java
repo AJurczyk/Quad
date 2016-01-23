@@ -1,9 +1,10 @@
-package hardware.impl;
+package hardware.pwm.impl;
 
-import hardware.IPwmController;
 import hardware.exception.PercentValRangeException;
 import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
+import hardware.motor.impl.EmaxCf2822;
+import hardware.pwm.IPwmController;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -33,7 +34,7 @@ public class EmaxCf2822Test {
         verify(pwm, times(1)).setDuty(PWM_17_PRC);
     }
 
-    @Test (expectedExceptions = PercentValRangeException.class)
+    @Test(expectedExceptions = PercentValRangeException.class)
     public final void setPrcAbove100() throws WholeNumException, PwmValRangeException, PercentValRangeException {
         //given
 
@@ -47,7 +48,7 @@ public class EmaxCf2822Test {
         //throwsException
     }
 
-    @Test (expectedExceptions = PercentValRangeException.class)
+    @Test(expectedExceptions = PercentValRangeException.class)
     public final void setPrcBelow0() throws WholeNumException, PwmValRangeException, PercentValRangeException {
         //given
 

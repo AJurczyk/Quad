@@ -1,16 +1,15 @@
-package hardware.impl;
+package hardware.pwm.impl;
 
 import com.pi4j.wiringpi.Gpio;
-import hardware.IGpioController;
-import hardware.IPwmController;
 import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
+import hardware.pwm.IGpioController;
+import hardware.pwm.IPwmController;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 26.12.15.
  */
 public class RPi2HardwarePwm implements IPwmController {
-
 
     private static final int BASE_PI_FREQ = 19200000;//The Raspberry Pi PWM clock base frequency of 19.2 MHz.
     // private static final int MAX_RANGE = 4096;
@@ -24,19 +23,26 @@ public class RPi2HardwarePwm implements IPwmController {
     private IGpioController gpioControl;
     private int pwmValueFor001;
 
-
+    /**
+     * Create and init new Raspberry Hardware Pwm pin using Pi4JGpio.
+     *
+     * @param pin      gpio pin, don't remember how counted. But 1 is for sure hardware pwm
+     * @param periodMs period cycle in miliseconds
+     * @throws PwmValRangeException some pwm value out of allowed range (due to period)
+     * @throws WholeNumException    some pwm value is not an integer (due to period)
+     */
     public RPi2HardwarePwm(int pin, int periodMs) throws PwmValRangeException, WholeNumException {
         this(new Pi4jGpio(), pin, periodMs);
     }
 
     /**
-     * Create and init new Raspberry Hardware Pwm pin.
+     * Constructor for unit tests. Create and init new Raspberry Hardware Pwm pin.
      *
      * @param controller Gpio controller to control hardware PWM
      * @param pin        gpio pin, don't remember how counted. But 1 is for sure hardware pwm
      * @param periodMs   period cycle in miliseconds
-     * @throws PwmValRangeException   some pwm value out of allowed range (due to period)
-     * @throws WholeNumException some pwm value is not an integer (due to period)
+     * @throws PwmValRangeException some pwm value out of allowed range (due to period)
+     * @throws WholeNumException    some pwm value is not an integer (due to period)
      */
     public RPi2HardwarePwm(IGpioController controller, int pin, int periodMs) throws PwmValRangeException,
             WholeNumException {

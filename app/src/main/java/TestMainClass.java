@@ -1,9 +1,9 @@
-import hardware.IPwmController;
 import hardware.exception.PercentValRangeException;
 import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
-import hardware.impl.EmaxCf2822;
-import hardware.impl.RPi2HardwarePwm;
+import hardware.motor.impl.EmaxCf2822;
+import hardware.pwm.IPwmController;
+import hardware.pwm.impl.RPi2HardwarePwm;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 29.11.15.
@@ -14,8 +14,8 @@ public class TestMainClass {
      * Just for testing purposes.
      *
      * @param args none
-     * @throws PwmValRangeException   pwm out of range
-     * @throws WholeNumException invalid period
+     * @throws PwmValRangeException pwm out of range
+     * @throws WholeNumException    invalid period
      */
     public static void main(String[] args) throws PwmValRangeException, WholeNumException, PercentValRangeException {
         System.out.println("TEST quad");

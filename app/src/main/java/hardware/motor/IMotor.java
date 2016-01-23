@@ -1,4 +1,4 @@
-package hardware;
+package hardware.motor;
 
 import hardware.exception.PercentValRangeException;
 import hardware.exception.PwmValRangeException;

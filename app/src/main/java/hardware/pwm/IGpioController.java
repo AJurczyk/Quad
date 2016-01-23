@@ -1,4 +1,4 @@
-package hardware;
+package hardware.pwm;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 08.01.16.

@@ -1,4 +1,4 @@
-package hardware;
+package hardware.pwm;
 
 import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
@@ -14,7 +14,7 @@ public interface IPwmController {
 
     float getFrequency();
 
-    void setPeriodMs(int periodMs) throws PwmValRangeException, WholeNumException;
-
     int getPeriodMs();
+
+    void setPeriodMs(int periodMs) throws PwmValRangeException, WholeNumException;
 }

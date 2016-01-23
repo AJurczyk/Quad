@@ -1,14 +1,12 @@
-package hardware.impl;
+package hardware.pwm.impl;
 
-import hardware.IGpioController;
-import hardware.IPwmController;
 import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
+import hardware.pwm.IGpioController;
+import hardware.pwm.IPwmController;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 /**

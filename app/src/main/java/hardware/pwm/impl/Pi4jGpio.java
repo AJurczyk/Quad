@@ -1,7 +1,7 @@
-package hardware.impl;
+package hardware.pwm.impl;
 
 import com.pi4j.wiringpi.Gpio;
-import hardware.IGpioController;
+import hardware.pwm.IGpioController;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 08.01.16.
