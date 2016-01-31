@@ -1,3 +1,7 @@
-.gradle/2.9
 .idea/
 build/
+.gradle/
+gradlew
+GPIO_Pi2.png
+gradlew.bat
+gradle/
