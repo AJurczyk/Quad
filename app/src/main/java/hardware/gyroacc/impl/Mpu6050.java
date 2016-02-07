@@ -43,15 +43,15 @@ public class Mpu6050 implements IGyroAcc {
         try {
             switch (axis) {
                 case X: {
-                    short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_XOUT_L, Mpu6050Reg.ACCEL_XOUT_H);
+                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_XOUT_L, Mpu6050Reg.ACCEL_XOUT_H);
                     return convertRawAccToG(rawValue);
                 }
                 case Y: {
-                    short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_YOUT_L, Mpu6050Reg.ACCEL_YOUT_H);
+                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_YOUT_L, Mpu6050Reg.ACCEL_YOUT_H);
                     return convertRawAccToG(rawValue);
                 }
                 case Z: {
-                    short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_ZOUT_L, Mpu6050Reg.ACCEL_ZOUT_H);
+                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_ZOUT_L, Mpu6050Reg.ACCEL_ZOUT_H);
                     return convertRawAccToG(rawValue);
                 }
                 default: {
@@ -68,15 +68,15 @@ public class Mpu6050 implements IGyroAcc {
         try {
             switch (axis) {
                 case X: {
-                    short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_XOUT_L, Mpu6050Reg.GYRO_XOUT_H);
+                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_XOUT_L, Mpu6050Reg.GYRO_XOUT_H);
                     return convertRawGyroToAngle(rawValue);
                 }
                 case Y: {
-                    short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_YOUT_L, Mpu6050Reg.GYRO_YOUT_H);
+                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_YOUT_L, Mpu6050Reg.GYRO_YOUT_H);
                     return convertRawGyroToAngle(rawValue);
                 }
                 case Z: {
-                    short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_ZOUT_L, Mpu6050Reg.GYRO_ZOUT_H);
+                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_ZOUT_L, Mpu6050Reg.GYRO_ZOUT_H);
                     return convertRawGyroToAngle(rawValue);
                 }
                 default: {
@@ -93,14 +93,14 @@ public class Mpu6050 implements IGyroAcc {
         return 0;
     }
 
-    private int convertRawAccToG(int rawvalue) {
-        return rawvalue;
+    private int convertRawAccToG(short rawvalue) {
+        return (int) rawvalue;
         //TODO: to implement;
     }
 
     private int convertRawGyroToAngle(short rawValue) {
         //TODO to implement
-        return 0;
+        return (int) rawValue;
     }
 
     private void writeConfig() throws I2cDeviceNotInitializedException, I2cWriteException {

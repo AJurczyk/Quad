@@ -22,6 +22,8 @@ public class Pi4jI2c implements II2cController {
 
     private static final I2CBus BUS;
 
+    private I2CDevice device;
+
     static {
         I2CBus busTmp = null;
         try {
@@ -31,8 +33,6 @@ public class Pi4jI2c implements II2cController {
         }
         BUS = busTmp;
     }
-
-    private I2CDevice device;
 
     /**
      * Takes a device with specific address from the BUS.

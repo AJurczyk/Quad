@@ -1,8 +1,8 @@
 package hardware.gyroacc.impl;
 
 import hardware.gyroacc.enums.Axis;
-import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
+import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.i2c.II2cController;
 import hardware.i2c.exception.I2cDeviceNotInitializedException;
 import hardware.i2c.exception.I2cInitException;

@@ -21,7 +21,8 @@ public final class ByteArrayUtils {
      * @return result of conversion
      */
     public static short castToShort(byte[] array) throws InvalidArgException {
-        if (array.length > 2) {
+        final int shortTypeSize = 2;
+        if (array.length > shortTypeSize) {
             throw new InvalidArgException("Invalid array size. Cannot be longer than 2 bytes");
         }
         return (short) ((array[0] << 8) | (array[1] & 0xFF));

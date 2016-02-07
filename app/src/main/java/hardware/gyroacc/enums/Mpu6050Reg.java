@@ -3,6 +3,7 @@ package hardware.gyroacc.enums;
 /**
  * @author aleksander.jurczyk@gmail.com on 31.01.16.
  */
+@SuppressWarnings("PMD.CommentSize")
 public class Mpu6050Reg {
     /**
      * 8-bit unsigned value. The Sample Rate is determined by dividing the
