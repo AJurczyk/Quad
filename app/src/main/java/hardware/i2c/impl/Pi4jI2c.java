@@ -8,6 +8,8 @@ import hardware.i2c.exception.I2cDeviceNotInitializedException;
 import hardware.i2c.exception.I2cInitException;
 import hardware.i2c.exception.I2cReadException;
 import hardware.i2c.exception.I2cWriteException;
+import utils.ByteArrayUtils;
+import utils.exceptions.InvalidArgException;
 
 import java.io.IOException;
 
@@ -20,8 +22,6 @@ public class Pi4jI2c implements II2cController {
 
     private static final I2CBus BUS;
 
-    private I2CDevice device;
-
     static {
         I2CBus busTmp = null;
         try {
@@ -31,6 +31,8 @@ public class Pi4jI2c implements II2cController {
         }
         BUS = busTmp;
     }
+
+    private I2CDevice device;
 
     /**
      * Takes a device with specific address from the BUS.
@@ -52,7 +54,7 @@ public class Pi4jI2c implements II2cController {
     public byte read(int register) throws I2cReadException, I2cDeviceNotInitializedException {
         if (device == null) {
             throw new I2cDeviceNotInitializedException("Error while reading register " + register
-                    + ". I2C Device has not been initialized");
+                + ". I2C Device has not been initialized");
         }
         try {
             return (byte) device.read(register);
@@ -62,10 +64,26 @@ public class Pi4jI2c implements II2cController {
     }
 
     @Override
+    public short readTwoBytes(byte lsbReg, byte msbReg) throws I2cReadException, I2cDeviceNotInitializedException {
+        if (device == null) {
+            throw new I2cDeviceNotInitializedException("Error while reading register " + lsbReg + " and " + msbReg
+                + ". I2C Device has not been initialized");
+        }
+        try {
+            byte[] value = new byte[2];
+            value[0] = read(lsbReg);
+            value[1] = read(msbReg);
+            return ByteArrayUtils.castToShort(value);
+        } catch (I2cDeviceNotInitializedException | I2cReadException | InvalidArgException e) {
+            throw new I2cReadException("Can't read i2c register " + lsbReg + " or " + msbReg, e);
+        }
+    }
+
+    @Override
     public void write(byte register, byte value) throws I2cWriteException, I2cDeviceNotInitializedException {
         if (device == null) {
             throw new I2cDeviceNotInitializedException("Error while writing to register " + register
-                    + ". I2C Device has not been initialized");
+                + ". I2C Device has not been initialized");
         }
         try {
             device.write(register, value);

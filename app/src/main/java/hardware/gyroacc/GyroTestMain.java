@@ -2,7 +2,7 @@ package hardware.gyroacc;
 
 import hardware.gyroacc.enums.Axis;
 import hardware.gyroacc.exception.AccGyroReadValueException;
-import hardware.gyroacc.exception.AccGyroUnhandledAxisException;
+import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.impl.Mpu6050;
 import hardware.i2c.II2cController;
 import hardware.i2c.exception.I2cDeviceNotInitializedException;
@@ -30,7 +30,7 @@ public class GyroTestMain {
      * @throws AccGyroReadValueException        some problems
      */
     public static void main(String... args) throws I2cDeviceNotInitializedException, I2cInitException,
-            I2cWriteException, AccGyroReadValueException, AccGyroUnhandledAxisException, InterruptedException {
+            I2cWriteException, AccGyroReadValueException, AccGyroIncorrectAxisException, InterruptedException {
 
         II2cController i2c = new Pi4jI2c();
         Mpu6050 mpu6050 = new Mpu6050(i2c);

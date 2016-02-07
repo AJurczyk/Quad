@@ -3,19 +3,19 @@ package hardware.gyroacc.enums;
 /**
  * @author aleksander.jurczyk@gmail.com on 31.01.16.
  */
-public class Mpu6050Registers {
+public class Mpu6050Reg {
     /**
      * 8-bit unsigned value. The Sample Rate is determined by dividing the
      * gyroscope output rate by this value.
      */
-    public static final byte MPU6050_RA_SMPLRT_DIV = 25;
+    public static final byte SMPLRT_DIV = 25;
 
     /**
      * Bit 7 and bit 6 are reserved. Parameters: EXT_SYNC_SET 3-bit unsigned
      * value. Configures the FSYNC pin sampling. DLPF_CFG 3-bit unsigned value.
      * Configures the DLPF setting.
      */
-    public static final byte MPU6050_RA_CONFIG = 26;
+    public static final byte CONFIG = 26;
 
     /**
      * Bits 2 through 0 are reserved. Parameters: XG_ST Setting this bit causes
@@ -25,7 +25,7 @@ public class Mpu6050Registers {
      * Selects the full scale range of gyroscopes:0 ± 250 °/s, 1 ± 500 °/s, 2 ±
      * 1000 °/s, 3 ± 2000 °/s
      */
-    public static final byte MPU6050_RA_GYRO_CONFIG = 27;
+    public static final byte GYRO_CONFIG = 27;
 
     /**
      * Parameters: XA_ST YA_ST ZA_ST AFS_SEL When set to 1, the X- Axis
@@ -34,14 +34,14 @@ public class Mpu6050Registers {
      * accelerometer performs self test. 2-bit unsigned value. Selects the full
      * scale range of accelerometers: 0 ± 2g, 1 ± 4g, 2 ± 8g, 3 ± 16g
      */
-    public static final byte MPU6050_RA_ACCEL_CONFIG = 28;
+    public static final byte ACCEL_CONFIG = 28;
 
     /**
      * <strong>Order of bits from 7 to 0: TEMP_ XG_ YG_ ZG_ ACCEL SLV2 SLV1 SLV0
      * 23 35 FIFO_EN FIFO_EN FIFO_EN FIFO_EN _FIFO_EN _FIFO_EN _FIFO_EN
      * _FIFO_EN</strong>
      *
-     * Parameters: TEMP_FIFO_EN When set to 1, this bit enables TEMP_OUT_H and
+     *<p>Parameters: TEMP_FIFO_EN When set to 1, this bit enables TEMP_OUT_H and
      * TEMP_OUT_L (Registers 65 and 66) to be written into the FIFO buffer. XG_
      * FIFO_EN When set to 1, this bit enables GYRO_XOUT_H and GYRO_XOUT_L
      * (Registers 67 and 68) to be written into the FIFO buffer. YG_ FIFO_EN
@@ -60,7 +60,7 @@ public class Mpu6050Registers {
      * Slave 0 to be written into the FIFO buffer.
      *
      */
-    public static final byte MPU6050_RA_FIFO_EN = 35;
+    public static final byte FIFO_EN = 35;
 
     /**
      * Bits 2 and 1 are reserved. Parameters: FIFO_OFLOW_EN I2C_MST_INT_EN
@@ -70,91 +70,91 @@ public class Mpu6050Registers {
      * bit enables the Data Ready interrupt, which occurs each time a write
      * operation to all of the sensor registers has been completed.
      */
-    public static final byte MPU6050_RA_INT_ENABLE = 56;
+    public static final byte INT_ENABLE = 56;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent X axis accelerometer
      * measurement.
      */
-    public static final byte MPU6050_RA_ACCEL_XOUT_H = 59;
+    public static final byte ACCEL_XOUT_H = 59;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent X axis accelerometer
      * measurement.
      */
-    public static final byte MPU6050_RA_ACCEL_XOUT_L = 60;
+    public static final byte ACCEL_XOUT_L = 60;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Y axis accelerometer
      * measurement.
      */
-    public static final byte MPU6050_RA_ACCEL_YOUT_H = 61;
+    public static final byte ACCEL_YOUT_H = 61;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Y axis accelerometer
      * measurement.
      */
-    public static final byte MPU6050_RA_ACCEL_YOUT_L = 62;
+    public static final byte ACCEL_YOUT_L = 62;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Z axis accelerometer
      * measurement.
      */
-    public static final byte MPU6050_RA_ACCEL_ZOUT_H = 63;
+    public static final byte ACCEL_ZOUT_H = 63;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Z axis accelerometer
      * measurement.
      */
-    public static final byte MPU6050_RA_ACCEL_ZOUT_L = 64;
+    public static final byte ACCEL_ZOUT_L = 64;
 
     /**
      * 16-bit signed value. Stores the most recent temperature sensor
      * measurement.
      */
-    public static final byte MPU6050_RA_TEMP_OUT_H = 65;
+    public static final byte TEMP_OUT_H = 65;
 
     /**
      * 16-bit signed value. Stores the most recent temperature sensor
      * measurement.
      */
-    public static final byte MPU6050_RA_TEMP_OUT_L = 66;
+    public static final byte TEMP_OUT_L = 66;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent X axis gyroscope
      * measurement.
      */
-    public static final byte MPU6050_RA_GYRO_XOUT_H = 67;
+    public static final byte GYRO_XOUT_H = 67;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent X axis gyroscope
      * measurement.
      */
-    public static final byte MPU6050_RA_GYRO_XOUT_L = 68;
+    public static final byte GYRO_XOUT_L = 68;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Y axis gyroscope
      * measurement.
      */
-    public static final byte MPU6050_RA_GYRO_YOUT_H = 69;
+    public static final byte GYRO_YOUT_H = 69;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Y axis gyroscope
      * measurement.
      */
-    public static final byte MPU6050_RA_GYRO_YOUT_L = 70;
+    public static final byte GYRO_YOUT_L = 70;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Z axis gyroscope
      * measurement.
      */
-    public static final byte MPU6050_RA_GYRO_ZOUT_H = 71;
+    public static final byte GYRO_ZOUT_H = 71;
 
     /**
      * 16-bit 2’s complement value. Stores the most recent Z axis gyroscope
      * measurement.
      */
-    public static final byte MPU6050_RA_GYRO_ZOUT_L = 72;
+    public static final byte GYRO_ZOUT_L = 72;
 
     /**
      * Bits 7 to 3 are reserved. Parameters: GYRO_RESET When set to 1, this bit
@@ -164,7 +164,7 @@ public class Mpu6050Registers {
      * analog and digital signal paths.
      *
      */
-    public static final byte MPU6050_RA_SIGNAL_PATH_RESET = 104;
+    public static final byte SIGNAL_PATH_RESET = 104;
 
     /**
      * Bit 4 is reserved. Parameters: DEVICE_RESET SLEEP CYCLE TEMP_DIS CLKSEL
@@ -178,7 +178,7 @@ public class Mpu6050Registers {
      * disables the temperature sensor. 3-bit unsigned value. Specifies the
      * clock source of the device.
      */
-    public static final byte MPU6050_RA_PWR_MGMT_1 = 107;
+    public static final byte PWR_MGMT_1 = 107;
 
     /**
      * Parameters: LP_WAKE_CTRL 2-bit unsigned value. Specifies the frequency of
@@ -191,7 +191,7 @@ public class Mpu6050Registers {
      * gyroscope into standby mode. STBY_ZG When set to 1, this bit puts the Z
      * axis gyroscope into standby mode.
      */
-    public static final byte MPU6050_RA_PWR_MGMT_2 = 108;
+    public static final byte PWR_MGMT_2 = 108;
 
 //    public static final byte MPU6050_RA_XG_OFFS_TC = 0x00;
 //    public static final byte MPU6050_RA_YG_OFFS_TC = 0x01;

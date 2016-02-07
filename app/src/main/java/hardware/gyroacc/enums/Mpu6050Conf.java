@@ -5,18 +5,18 @@ package hardware.gyroacc.enums;
  *
  * @author aleksander.jurczyk@gmail.com on 31.01.16.
  */
-public class Mpu6050Config {
+public class Mpu6050Conf {
     /**
      * Just wakes the device up, because it sets the sleep bit to 0. Also sets
      * the clock source to internal.
      */
-    public static final byte MPU6050_RA_PWR_MGMT_1 = 0b00000000;
+    public static final byte PWR_MGMT_1 = 0b00000000;
 
     /**
-     * Sets the full scale range of the gyroscopes to ± 2000 °/s
-     * Sets the digital low pass filter to max (last 3 bits 110=max 000=min)
+     * Sets the full scale range of the gyroscopes to ± 2000 °/s.
+     * Sets the digital low pass filter to max (last 3 bits 110=max 000=min).
      */
-    public static final byte MPU6050_RA_GYRO_CONFIG = 0b00011110;
+    public static final byte GYRO_CONFIG = 0b00011110;
 
     /**
      * Sets the smaple rate divider for the gyroscopes and accelerometers. This
@@ -24,7 +24,7 @@ public class Mpu6050Config {
      * 1+ sample-rate. <br> <br> The concrete value 0 leaves the sample rate on
      * default, which means 1kHz for acc-rate and 8kHz for gyr-rate.
      */
-    public static final byte MPU6050_RA_SMPLRT_DIV = 0b00000000;
+    public static final byte SMPLRT_DIV = 0b00000000;
 
     /**
      * Setting the digital low pass filter to <br>
@@ -35,26 +35,26 @@ public class Mpu6050Config {
      * Fs (kHz) = 1
      *
      */
-    public static final byte MPU6050_RA_CONFIG = 0b00000001;
+    public static final byte CONFIG = 0b00000001;
 
     /**
-     * Setting accelerometer sensitivity to ± 2g
+     * Setting accelerometer sensitivity to ± 2g.
      */
-    public static final byte MPU6050_RA_ACCEL_CONFIG = 0b00000000;
+    public static final byte ACCEL_CONFIG = 0b00000000;
 
     /**
-     * Disabling FIFO buffer
+     * Disabling FIFO buffer.
      */
-    public static final byte MPU6050_RA_FIFO_EN = 0b00000000;
+    public static final byte FIFO_EN = 0b00000000;
 
     /**
-     * Disabling interrupts
+     * Disabling interrupts.
      */
-    public static final byte MPU6050_RA_INT_ENABLE = 0b00000000;
+    public static final byte INT_ENABLE = 0b00000000;
 
     /**
-     * Disabling standby modes
+     * Disabling standby modes.
      */
-    public static final byte MPU6050_RA_PWR_MGMT_2 = 0b00000000;
+    public static final byte PWR_MGMT_2 = 0b00000000;
 
 }

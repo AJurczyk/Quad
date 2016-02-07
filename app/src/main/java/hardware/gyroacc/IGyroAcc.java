@@ -2,7 +2,7 @@ package hardware.gyroacc;
 
 import hardware.gyroacc.enums.Axis;
 import hardware.gyroacc.exception.AccGyroReadValueException;
-import hardware.gyroacc.exception.AccGyroUnhandledAxisException;
+import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.i2c.exception.I2cReadException;
 
 /**
@@ -10,7 +10,16 @@ import hardware.i2c.exception.I2cReadException;
  */
 public interface IGyroAcc {
 
-    int readAcc(Axis axis) throws I2cReadException, AccGyroReadValueException, AccGyroUnhandledAxisException;
+    /**
+     * Read acceleration value in G of given axis.
+     * @param axis axis to be read
+     * @return acceleration value measured in [G] unit
+     * @throws AccGyroReadValueException communication problems
+     * @throws AccGyroIncorrectAxisException invalid axis
+     */
+    int readAcc(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
 
-    int readRot(Axis axis) throws I2cReadException, AccGyroReadValueException, AccGyroUnhandledAxisException;
+    int readGyro(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
+
+    int readAngle (Axis axis);
 }
