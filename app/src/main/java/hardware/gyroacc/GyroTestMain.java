@@ -1,7 +1,6 @@
 package hardware.gyroacc;
 
 import hardware.gyroacc.enums.Axis;
-import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.gyroacc.impl.Mpu6050;
 import hardware.i2c.II2cController;
@@ -29,17 +28,33 @@ public class GyroTestMain {
      * @throws I2cWriteException                some problems
      * @throws AccGyroReadValueException        some problems
      */
-    public static void main(String... args) throws I2cDeviceNotInitializedException, I2cInitException,
-        I2cWriteException, AccGyroReadValueException, AccGyroIncorrectAxisException, InterruptedException {
+    public static void main(String... args) throws Exception {
 
         II2cController i2c = new Pi4jI2c();
         Mpu6050 mpu6050 = new Mpu6050(i2c);
 
-        int accX;
+        double accX, accY, accZ;
+        double gyroX, gyroY, gyroZ;
+//        double angle;
 
-        for (int i = 0; i < 100; i++) {
-            accX = mpu6050.readAcc(Axis.Z);
-            System.out.println(accX);
+        for (int i = 0; i < 300; i++) {
+//        for (int i = 0; i < 1; i++) {
+            accX = mpu6050.readAccInG(Axis.X);
+            accY = mpu6050.readAccInG(Axis.Y);
+            accZ = mpu6050.readAccInG(Axis.Z);
+
+            gyroX = mpu6050.readGyroDeg(Axis.X);
+            gyroY = mpu6050.readGyroDeg(Axis.Y);
+            gyroZ = mpu6050.readGyroDeg(Axis.Z);
+//            angle=mpu6050.readAngle(Axis.X);
+            System.out.println(
+                    "X: " + String.format("% 2.2f",accX)
+                + "\tY: " + String.format("% 2.2f",accY)
+                + "\tZ: " + String.format("% 2.2f",accZ)
+                + "\tgyroX: " + String.format("% 4.2f",gyroX)
+                + "\tgyroY: " + String.format("% 4.2f",gyroY)
+                + "\tgyroZ: " + String.format("% 4.2f",gyroZ));
+//            System.out.println(angle);
             Thread.sleep(100);
         }
     }

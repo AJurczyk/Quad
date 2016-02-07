@@ -17,9 +17,9 @@ public interface IGyroAcc {
      * @throws AccGyroReadValueException     communication problems
      * @throws AccGyroIncorrectAxisException invalid axis
      */
-    int readAcc(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
+    double readAccInG(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
 
-    int readGyro(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
+    double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
 
-    int readAngle(Axis axis);
+    double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException;
 }

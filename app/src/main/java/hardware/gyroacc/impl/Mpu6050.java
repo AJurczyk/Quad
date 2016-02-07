@@ -23,6 +23,10 @@ public class Mpu6050 implements IGyroAcc {
 
     private final II2cController i2c;
 
+    private final double accRavToGravityFactor;
+
+    private final double gyroRawToAngleFactor;
+
     /**
      * Main constructor that initializes i2c device.
      *
@@ -31,28 +35,47 @@ public class Mpu6050 implements IGyroAcc {
      * @throws I2cDeviceNotInitializedException run initI2cDevice first
      * @throws I2cWriteException                sleepEnable throws this
      */
-    public Mpu6050(II2cController ii2cController) throws I2cInitException, I2cDeviceNotInitializedException,
-        I2cWriteException {
+    public Mpu6050(II2cController ii2cController) throws Exception {
         i2c = ii2cController;
         i2c.initI2cDevice(I2C_ADDRESS);
         writeConfig();
+        accRavToGravityFactor = calcConversionFactor(getAccSensitivityInG());
+        gyroRawToAngleFactor = calcConversionFactor(getGyroSensitivity());
     }
 
     @Override
-    public int readAcc(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
+    public double readAccInG(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+        return readAccRaw(axis) * accRavToGravityFactor;
+    }
+
+    @Override
+    public double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
+        return readGyroRaw(axis) * gyroRawToAngleFactor;
+    }
+
+    @Override
+    public double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+        double accX = readAccRaw(Axis.X);
+        double accY = readAccRaw(Axis.Y);
+        double accZ = readAccRaw(Axis.Z);
+        double mianownik = Math.sqrt(Math.pow(accY, 2) + Math.pow(accZ, 2));
+        double ulamek = accX / mianownik;
+        double resultRadian = Math.atan(ulamek);
+        double resultDeg = resultRadian * (180 / 3.1415);
+        return resultDeg;
+    }
+
+    private short readAccRaw(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         try {
             switch (axis) {
                 case X: {
-                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_XOUT_L, Mpu6050Reg.ACCEL_XOUT_H);
-                    return convertRawAccToG(rawValue);
+                    return i2c.readTwoBytes(Mpu6050Reg.ACCEL_XOUT_L, Mpu6050Reg.ACCEL_XOUT_H);
                 }
                 case Y: {
-                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_YOUT_L, Mpu6050Reg.ACCEL_YOUT_H);
-                    return convertRawAccToG(rawValue);
+                    return i2c.readTwoBytes(Mpu6050Reg.ACCEL_YOUT_L, Mpu6050Reg.ACCEL_YOUT_H);
                 }
                 case Z: {
-                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.ACCEL_ZOUT_L, Mpu6050Reg.ACCEL_ZOUT_H);
-                    return convertRawAccToG(rawValue);
+                    return i2c.readTwoBytes(Mpu6050Reg.ACCEL_ZOUT_L, Mpu6050Reg.ACCEL_ZOUT_H);
                 }
                 default: {
                     throw new AccGyroIncorrectAxisException("Unhandled axis");
@@ -63,21 +86,17 @@ public class Mpu6050 implements IGyroAcc {
         }
     }
 
-    @Override
-    public int readGyro(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
+    private short readGyroRaw(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         try {
             switch (axis) {
                 case X: {
-                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_XOUT_L, Mpu6050Reg.GYRO_XOUT_H);
-                    return convertRawGyroToAngle(rawValue);
+                    return i2c.readTwoBytes(Mpu6050Reg.GYRO_XOUT_L, Mpu6050Reg.GYRO_XOUT_H);
                 }
                 case Y: {
-                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_YOUT_L, Mpu6050Reg.GYRO_YOUT_H);
-                    return convertRawGyroToAngle(rawValue);
+                    return i2c.readTwoBytes(Mpu6050Reg.GYRO_YOUT_L, Mpu6050Reg.GYRO_YOUT_H);
                 }
                 case Z: {
-                    final short rawValue = i2c.readTwoBytes(Mpu6050Reg.GYRO_ZOUT_L, Mpu6050Reg.GYRO_ZOUT_H);
-                    return convertRawGyroToAngle(rawValue);
+                    return i2c.readTwoBytes(Mpu6050Reg.GYRO_ZOUT_L, Mpu6050Reg.GYRO_ZOUT_H);
                 }
                 default: {
                     throw new AccGyroIncorrectAxisException("Unhandled axis");
@@ -88,19 +107,23 @@ public class Mpu6050 implements IGyroAcc {
         }
     }
 
-    @Override
-    public int readAngle(Axis axis) {
-        return 0;
+    private double calcConversionFactor(int valueEqualToMaxRaw) throws Exception {
+        int maxRaw = (int) 0xFFFF / 2;
+        double factor = (double) valueEqualToMaxRaw / (double) maxRaw;
+        if (factor <= 0) {
+            throw new Exception("współczynnik wyszedł chujowy");//TODO implement exception
+        }
+        return factor;
     }
 
-    private int convertRawAccToG(short rawvalue) {
-        return (int) rawvalue;
-        //TODO: to implement;
+    private int getAccSensitivityInG() {
+        int setting = Mpu6050Conf.ACCEL_CONFIG >> 3;
+        return (int) Math.pow(2, setting + 1);
     }
 
-    private int convertRawGyroToAngle(short rawValue) {
-        //TODO to implement
-        return (int) rawValue;
+    private int getGyroSensitivity() {
+        int setting = Mpu6050Conf.GYRO_CONFIG >> 3;
+        return (int) ((double) 250 * Math.pow(2, setting + 1));
     }
 
     private void writeConfig() throws I2cDeviceNotInitializedException, I2cWriteException {

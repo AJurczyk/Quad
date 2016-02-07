@@ -14,9 +14,8 @@ public class Mpu6050Conf {
 
     /**
      * Sets the full scale range of the gyroscopes to ± 2000 °/s.
-     * Sets the digital low pass filter to max (last 3 bits 110=max 000=min).
      */
-    public static final byte GYRO_CONFIG = 0b00011110;
+    public static final byte GYRO_CONFIG = 0b00011000;
 
     /**
      * Sets the smaple rate divider for the gyroscopes and accelerometers. This
@@ -35,12 +34,12 @@ public class Mpu6050Conf {
      * Fs (kHz) = 1
      *
      */
-    public static final byte CONFIG = 0b00000001;
+    public static final byte CONFIG = 0b00000111;
 
     /**
-     * Setting accelerometer sensitivity to ± 2g.
+     * Setting accelerometer sensitivity to ± 4g.
      */
-    public static final byte ACCEL_CONFIG = 0b00000000;
+    public static final byte ACCEL_CONFIG = 0b00001000;
 
     /**
      * Disabling FIFO buffer.

@@ -71,8 +71,8 @@ public class Pi4jI2c implements II2cController {
         }
         try {
             byte[] value = new byte[2];
-            value[0] = read(lsbReg);
-            value[1] = read(msbReg);
+            value[0] = read(msbReg);
+            value[1] = read(lsbReg);
             return ByteArrayUtils.castToShort(value);
         } catch (I2cDeviceNotInitializedException | I2cReadException | InvalidArgException e) {
             throw new I2cReadException("Can't read i2c register " + lsbReg + " or " + msbReg, e);

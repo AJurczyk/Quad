@@ -1,13 +1,7 @@
 package hardware.gyroacc.impl;
 
 import hardware.gyroacc.enums.Axis;
-import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
-import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.i2c.II2cController;
-import hardware.i2c.exception.I2cDeviceNotInitializedException;
-import hardware.i2c.exception.I2cInitException;
-import hardware.i2c.exception.I2cReadException;
-import hardware.i2c.exception.I2cWriteException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,8 +35,7 @@ public class Mpu6050Test {
     private static final byte ROT_Z = 0x00; //TODO get the address
 
     @Test
-    void readAccX() throws I2cDeviceNotInitializedException, I2cInitException, I2cWriteException,
-        AccGyroIncorrectAxisException, AccGyroReadValueException, I2cReadException {
+    void readAccX() throws Exception {
         //given
         II2cController i2c = mock(II2cController.class);
         when(i2c.read(ACC_X_L)).thenReturn(FAKE_ACC_X);
@@ -51,7 +44,7 @@ public class Mpu6050Test {
         Mpu6050 mpu6050 = new Mpu6050(i2c);
 
         //when
-        final int accValue = mpu6050.readAcc(Axis.X);
+        final double accValue = mpu6050.readAccInG(Axis.X);
 
         //then
         verify(i2c, times(1)).initI2cDevice(I2C_ADDRESS);
