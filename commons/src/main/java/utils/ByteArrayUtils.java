@@ -7,6 +7,8 @@ import utils.exceptions.InvalidArgException;
  */
 public final class ByteArrayUtils {
 
+    final static int SHORT_TYPE_SIZE = 2;
+
     /**
      * Hidden constructor.
      */
@@ -21,8 +23,7 @@ public final class ByteArrayUtils {
      * @return result of conversion
      */
     public static short castToShort(byte[] array) throws InvalidArgException {
-        final int shortTypeSize = 2;
-        if (array.length > shortTypeSize) {
+        if (array.length > SHORT_TYPE_SIZE) {
             throw new InvalidArgException("Invalid array size. Cannot be longer than 2 bytes");
         }
         return (short) ((array[0] << 8) | (array[1] & 0xFF));

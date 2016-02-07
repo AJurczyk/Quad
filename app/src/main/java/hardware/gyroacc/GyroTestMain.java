@@ -33,12 +33,17 @@ public class GyroTestMain {
         II2cController i2c = new Pi4jI2c();
         Mpu6050 mpu6050 = new Mpu6050(i2c);
 
-        double accX, accY, accZ;
-        double gyroX, gyroY, gyroZ;
-//        double angle;
+        double accX;
+        double accY;
+        double accZ;
+        double gyroX;
+        double gyroY;
+        double gyroZ;
+
+        //double angle;
 
         for (int i = 0; i < 300; i++) {
-//        for (int i = 0; i < 1; i++) {
+            //for (int i = 0; i < 1; i++) {
             accX = mpu6050.readAccInG(Axis.X);
             accY = mpu6050.readAccInG(Axis.Y);
             accZ = mpu6050.readAccInG(Axis.Z);
@@ -46,15 +51,15 @@ public class GyroTestMain {
             gyroX = mpu6050.readGyroDeg(Axis.X);
             gyroY = mpu6050.readGyroDeg(Axis.Y);
             gyroZ = mpu6050.readGyroDeg(Axis.Z);
-//            angle=mpu6050.readAngle(Axis.X);
+            //angle=mpu6050.readAngle(Axis.X);
             System.out.println(
-                    "X: " + String.format("% 2.2f",accX)
-                + "\tY: " + String.format("% 2.2f",accY)
-                + "\tZ: " + String.format("% 2.2f",accZ)
-                + "\tgyroX: " + String.format("% 4.2f",gyroX)
-                + "\tgyroY: " + String.format("% 4.2f",gyroY)
-                + "\tgyroZ: " + String.format("% 4.2f",gyroZ));
-//            System.out.println(angle);
+                "X: " + String.format("% 2.2f", accX)
+                    + "\tY: " + String.format("% 2.2f", accY)
+                    + "\tZ: " + String.format("% 2.2f", accZ)
+                    + "\tgyroX: " + String.format("% 4.2f", gyroX)
+                    + "\tgyroY: " + String.format("% 4.2f", gyroY)
+                    + "\tgyroZ: " + String.format("% 4.2f", gyroZ));
+            //System.out.println(angle);
             Thread.sleep(100);
         }
     }

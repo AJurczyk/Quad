@@ -23,9 +23,9 @@ public class Mpu6050 implements IGyroAcc {
 
     private final II2cController i2c;
 
-    private final double accRavToGravityFactor;
+    private final double accRaw2Gfactor;
 
-    private final double gyroRawToAngleFactor;
+    private final double gyroRaw2DegFactor;
 
     /**
      * Main constructor that initializes i2c device.
@@ -39,30 +39,31 @@ public class Mpu6050 implements IGyroAcc {
         i2c = ii2cController;
         i2c.initI2cDevice(I2C_ADDRESS);
         writeConfig();
-        accRavToGravityFactor = calcConversionFactor(getAccSensitivityInG());
-        gyroRawToAngleFactor = calcConversionFactor(getGyroSensitivity());
+        accRaw2Gfactor = calcConversionFactor(getAccSensitivityInG());
+        gyroRaw2DegFactor = calcConversionFactor(getGyroSensitivity());
     }
 
     @Override
     public double readAccInG(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        return readAccRaw(axis) * accRavToGravityFactor;
+        return readAccRaw(axis) * accRaw2Gfactor;
     }
 
     @Override
     public double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
-        return readGyroRaw(axis) * gyroRawToAngleFactor;
+        return readGyroRaw(axis) * gyroRaw2DegFactor;
     }
 
     @Override
     public double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        double accX = readAccRaw(Axis.X);
-        double accY = readAccRaw(Axis.Y);
-        double accZ = readAccRaw(Axis.Z);
-        double mianownik = Math.sqrt(Math.pow(accY, 2) + Math.pow(accZ, 2));
-        double ulamek = accX / mianownik;
-        double resultRadian = Math.atan(ulamek);
-        double resultDeg = resultRadian * (180 / 3.1415);
-        return resultDeg;
+        //final double accX = readAccRaw(Axis.X);
+        //final double accY = readAccRaw(Axis.Y);
+        //final double accZ = readAccRaw(Axis.Z);
+        //final double mianownik = Math.sqrt(Math.pow(accY, 2) + Math.pow(accZ, 2));
+        //final double ulamek = accX / mianownik;
+        //final double resultRadian = Math.atan(ulamek);
+        //final double resultDeg = resultRadian * (180 / 3.1415);
+        //return resultDeg;
+        return 0;
     }
 
     private short readAccRaw(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
@@ -107,9 +108,9 @@ public class Mpu6050 implements IGyroAcc {
         }
     }
 
-    private double calcConversionFactor(int valueEqualToMaxRaw) throws Exception {
-        int maxRaw = (int) 0xFFFF / 2;
-        double factor = (double) valueEqualToMaxRaw / (double) maxRaw;
+    private double calcConversionFactor(int maxValue) throws Exception {
+        final int maxRaw = (int) 0xFFFF / 2;
+        final double factor = (double) maxValue / (double) maxRaw;
         if (factor <= 0) {
             throw new Exception("współczynnik wyszedł chujowy");//TODO implement exception
         }
@@ -117,12 +118,12 @@ public class Mpu6050 implements IGyroAcc {
     }
 
     private int getAccSensitivityInG() {
-        int setting = Mpu6050Conf.ACCEL_CONFIG >> 3;
+        final int setting = Mpu6050Conf.ACCEL_CONFIG >> 3;
         return (int) Math.pow(2, setting + 1);
     }
 
     private int getGyroSensitivity() {
-        int setting = Mpu6050Conf.GYRO_CONFIG >> 3;
+        final int setting = Mpu6050Conf.GYRO_CONFIG >> 3;
         return (int) ((double) 250 * Math.pow(2, setting + 1));
     }
 
