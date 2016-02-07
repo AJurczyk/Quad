@@ -26,7 +26,7 @@ public interface II2cController {
      * @param register register of value to read
      * @return value read
      */
-    int read(int register) throws I2cReadException, I2cDeviceNotInitializedException;
+    byte read(int register) throws I2cReadException, I2cDeviceNotInitializedException;
 
     /**
      * Write to i2c device.

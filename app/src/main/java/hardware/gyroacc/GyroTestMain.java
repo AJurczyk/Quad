@@ -22,17 +22,25 @@ public class GyroTestMain {
 
     /**
      * Main to be removed.
+     *
      * @param args some args
      * @throws I2cDeviceNotInitializedException some problems
-     * @throws I2cInitException some problems
-     * @throws I2cWriteException some problems
-     * @throws AccGyroReadValueException some problems
+     * @throws I2cInitException                 some problems
+     * @throws I2cWriteException                some problems
+     * @throws AccGyroReadValueException        some problems
      */
     public static void main(String... args) throws I2cDeviceNotInitializedException, I2cInitException,
-            I2cWriteException, AccGyroReadValueException, AccGyroUnhandledAxisException {
+            I2cWriteException, AccGyroReadValueException, AccGyroUnhandledAxisException, InterruptedException {
+
         II2cController i2c = new Pi4jI2c();
         Mpu6050 mpu6050 = new Mpu6050(i2c);
 
-        mpu6050.readAcc(Axis.X);
+        int accX;
+
+        for (int i = 0; i < 100; i++) {
+            accX = mpu6050.readAcc(Axis.Z);
+            System.out.println(accX);
+            Thread.sleep(100);
+        }
     }
 }

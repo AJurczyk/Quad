@@ -2,6 +2,8 @@ package hardware.gyroacc.impl;
 
 import hardware.gyroacc.IGyroAcc;
 import hardware.gyroacc.enums.Axis;
+import hardware.gyroacc.enums.Mpu6050Config;
+import hardware.gyroacc.enums.Mpu6050Registers;
 import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.gyroacc.exception.AccGyroUnhandledAxisException;
 import hardware.i2c.II2cController;
@@ -18,13 +20,15 @@ import hardware.i2c.exception.I2cWriteException;
 public class Mpu6050 implements IGyroAcc {
 
     private static final int I2C_ADDRESS = 0x68;
-    private static final byte SLEEP_ENABLE_VAL = 0x00;
-    private static final byte SLEEP_DISABLE_VAL = 0x40; //TODO: check if this is disable value
-    private static final byte SLEEP_REGISTRY = 0x6b;
 
-    private static final byte ACC_X = 0x3B;
-    private static final byte ACC_Y = 0x3D;
-    private static final byte ACC_Z = 0x3F;
+    private static final byte ACC_X_L = 0x3B;
+    private static final byte ACC_X_H = 0x3C;
+
+    private static final byte ACC_Y_L = 0x3D;
+    private static final byte ACC_Y_H = 0x3E;
+
+    private static final byte ACC_Z_L = 0x3F;
+    private static final byte ACC_Z_H = 0x40;
 
     private static final byte ROT_X = 0x00; //TODO get the address
     private static final byte ROT_Y = 0x00; //TODO get the address
@@ -44,20 +48,20 @@ public class Mpu6050 implements IGyroAcc {
             I2cWriteException {
         i2c = ii2cController;
         i2c.initI2cDevice(I2C_ADDRESS);
-        sleepEnabled(false);
+        writeConfig();
     }
 
     @Override
     public int readAcc(Axis axis) throws AccGyroReadValueException, AccGyroUnhandledAxisException {
         switch (axis) {
             case X: {
-                return readAccFromReg(ACC_X);
+                return readAccFromReg(ACC_X_L, ACC_X_H);
             }
             case Y: {
-                return readAccFromReg(ACC_Y);
+                return readAccFromReg(ACC_Y_L, ACC_Y_H);
             }
             case Z: {
-                return readAccFromReg(ACC_Z);
+                return readAccFromReg(ACC_Z_L, ACC_Z_H);
             }
             default: {
                 throw new AccGyroUnhandledAxisException("Unhandled axis");
@@ -84,14 +88,21 @@ public class Mpu6050 implements IGyroAcc {
     }
 
 
-    private int readAccFromReg(byte register) throws AccGyroReadValueException {
-        int rawValue = 0;
+    private int readAccFromReg(byte lsb, byte hsb) throws AccGyroReadValueException {
+        short rawValue = 0;
         try {
-            rawValue = i2c.read(register);
+            byte lsbValue = i2c.read(lsb);
+            byte hsbValue = i2c.read(hsb);
+            rawValue = mergeIntoShort(lsbValue, hsbValue);
+
         } catch (I2cReadException | I2cDeviceNotInitializedException e) {
             throw new AccGyroReadValueException("Error while reading acceleration.", e);
         }
         return convertRawAccToPerc(rawValue);
+    }
+
+    private short mergeIntoShort(byte lsb, byte hsb) {
+        return (short) ((lsb << 8) | (hsb & 0xFF));
     }
 
     private int readRotFromReg(byte register) throws AccGyroReadValueException {
@@ -114,11 +125,33 @@ public class Mpu6050 implements IGyroAcc {
         //TODO: to implement;
     }
 
-    private void sleepEnabled(boolean state) throws I2cDeviceNotInitializedException, I2cWriteException {
-        if (state) {
-            i2c.write(SLEEP_REGISTRY, SLEEP_ENABLE_VAL);
-        } else {
-            i2c.write(SLEEP_REGISTRY, SLEEP_DISABLE_VAL);
-        }
+    private void writeConfig() throws I2cDeviceNotInitializedException, I2cWriteException {
+        //1 Waking the device up
+        i2c.write(Mpu6050Registers.MPU6050_RA_PWR_MGMT_1,
+                Mpu6050Config.MPU6050_RA_PWR_MGMT_1);
+
+        //2 Configure sample rate
+        i2c.write(Mpu6050Registers.MPU6050_RA_SMPLRT_DIV,
+                Mpu6050Config.MPU6050_RA_SMPLRT_DIV);
+
+        //3 Setting global config
+        i2c.write(Mpu6050Registers.MPU6050_RA_CONFIG,
+                Mpu6050Config.MPU6050_RA_CONFIG);
+
+        //4 Configure Gyroscope
+        i2c.write(Mpu6050Registers.MPU6050_RA_GYRO_CONFIG,
+                Mpu6050Config.MPU6050_RA_GYRO_CONFIG);
+
+        //5 Configure Accelerometer
+        i2c.write(Mpu6050Registers.MPU6050_RA_ACCEL_CONFIG,
+                Mpu6050Config.MPU6050_RA_ACCEL_CONFIG);
+
+        //6 Configure interrupts
+        i2c.write(Mpu6050Registers.MPU6050_RA_INT_ENABLE,
+                Mpu6050Config.MPU6050_RA_INT_ENABLE);
+
+        //7 Configure low power operations
+        i2c.write(Mpu6050Registers.MPU6050_RA_PWR_MGMT_2,
+                Mpu6050Config.MPU6050_RA_PWR_MGMT_2);
     }
 }

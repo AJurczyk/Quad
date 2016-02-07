@@ -49,13 +49,13 @@ public class Pi4jI2c implements II2cController {
     }
 
     @Override
-    public int read(int register) throws I2cReadException, I2cDeviceNotInitializedException {
+    public byte read(int register) throws I2cReadException, I2cDeviceNotInitializedException {
         if (device == null) {
             throw new I2cDeviceNotInitializedException("Error while reading register " + register
                     + ". I2C Device has not been initialized");
         }
         try {
-            return device.read(register);
+            return (byte) device.read(register);
         } catch (IOException e) {
             throw new I2cReadException("Can't read i2c register " + register, e);
         }
