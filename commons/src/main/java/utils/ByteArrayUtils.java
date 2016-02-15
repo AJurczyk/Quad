@@ -27,5 +27,6 @@ public final class ByteArrayUtils {
             throw new InvalidArgException("Invalid array size. Cannot be longer than 2 bytes");
         }
         return (short) ((array[0] << 8) | (array[1] & 0xFF));
+        //TODO unit test
     }
 }
