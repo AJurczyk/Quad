@@ -58,6 +58,11 @@ public class Mpu6050Test {
         };
     }
 
+    /**
+     * Data provider for gyroscope test.
+     *
+     * @return input and expected data
+     */
     @DataProvider(name = "gyroData")
     public static Object[][] gyroData() {
         return new Object[][]{
@@ -154,7 +159,7 @@ public class Mpu6050Test {
      * Read gyro Y value.
      */
     @Test
-    public final void readGyroZY() throws InvalidConversionFactor, I2cInitException, I2cWriteException,
+    public final void readGyroY() throws InvalidConversionFactor, I2cInitException, I2cWriteException,
         I2cDeviceNotInitializedException, AccGyroIncorrectAxisException, AccGyroReadValueException, I2cReadException {
         //given
         final II2cController i2c = mock(II2cController.class);

@@ -48,14 +48,12 @@ public class Mpu6050 implements IGyroAcc {
 
     @Override
     public double readAccInG(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        short rawValue = readAccRaw(axis);
-        return rawValue * accRaw2Gfactor;
+        return readAccRaw(axis) * accRaw2Gfactor;
     }
 
     @Override
     public double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
-        short rawValue = readGyroRaw(axis);
-        return rawValue * gyroRaw2DegFactor;
+        return readGyroRaw(axis) * gyroRaw2DegFactor;
     }
 
     @Override
