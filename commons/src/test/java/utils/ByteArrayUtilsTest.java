@@ -20,9 +20,9 @@ public class ByteArrayUtilsTest {
     @DataProvider(name = "exampleByteArray")
     public static Object[][] exampleByteArray() {
         return new Object[][]{
-            {new byte[]{0x00, 0x00}, (int) 0x0000},
-            {new byte[]{0x01, 0x23}, (int) 0x0123},
-            {new byte[]{(byte) 0xFF, (byte) 0xFF}, (int) 0xFFFF}
+            {new byte[]{0x00, 0x00}, (short) 0x0000},
+            {new byte[]{0x01, 0x23}, (short) 0x0123},
+            {new byte[]{(byte) 0xFF, (byte) 0xFF}, (short) 0xFFFF}
         };
     }
 
