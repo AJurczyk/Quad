@@ -1,4 +1,4 @@
-package hardware.pwm.exception;
+package hardware.pwm.exceptions;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 09.01.16.

@@ -1,7 +1,7 @@
 package hardware.motor;
 
-import hardware.exception.PercentValRangeException;
-import hardware.exception.PwmValRangeException;
+import hardware.pwm.exceptions.PercentValRangeException;
+import hardware.pwm.exceptions.PwmValRangeException;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.

@@ -1,10 +1,10 @@
 package hardware.motor.impl;
 
-import hardware.exception.PercentValRangeException;
-import hardware.exception.PwmValRangeException;
-import hardware.exception.WholeNumException;
 import hardware.motor.IMotor;
 import hardware.pwm.IPwmController;
+import hardware.pwm.exceptions.PercentValRangeException;
+import hardware.pwm.exceptions.PwmValRangeException;
+import hardware.pwm.exceptions.WholeNumException;
 import org.slf4j.LoggerFactory;
 
 /**

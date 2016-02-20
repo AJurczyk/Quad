@@ -29,6 +29,7 @@ public class Mpu6050Test {
 
     /**
      * Data provider for accelerometer test.
+     *
      * @return input and expected data
      */
     @DataProvider(name = "accData")

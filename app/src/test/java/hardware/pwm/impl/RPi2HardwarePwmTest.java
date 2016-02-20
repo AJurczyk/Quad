@@ -1,9 +1,9 @@
 package hardware.pwm.impl;
 
-import hardware.exception.PwmValRangeException;
-import hardware.exception.WholeNumException;
 import hardware.pwm.IGpioController;
 import hardware.pwm.IPwmController;
+import hardware.pwm.exceptions.PwmValRangeException;
+import hardware.pwm.exceptions.WholeNumException;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -57,7 +57,7 @@ public class RPi2HardwarePwmTest {
         pwm.setDuty((float) (PERIOD + 1));
 
         //then
-        //throws exception
+        //throws exceptions
     }
 
     @Test(expectedExceptions = PwmValRangeException.class)
@@ -70,7 +70,7 @@ public class RPi2HardwarePwmTest {
         pwm.setDuty((float) (PERIOD + 1));
 
         //then
-        //throws exception
+        //throws exceptions
     }
 
     @Test(expectedExceptions = WholeNumException.class)
@@ -83,7 +83,7 @@ public class RPi2HardwarePwmTest {
         pwm.setPeriodMs(3);
 
         //then
-        //throws exception
+        //throws exceptions
     }
 
     @Test(expectedExceptions = WholeNumException.class)
@@ -96,6 +96,6 @@ public class RPi2HardwarePwmTest {
         pwm.setPeriodMs(15);
 
         //then
-        //throws exception
+        //throws exceptions
     }
 }

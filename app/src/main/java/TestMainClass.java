@@ -1,8 +1,8 @@
-import hardware.exception.PercentValRangeException;
-import hardware.exception.PwmValRangeException;
-import hardware.exception.WholeNumException;
 import hardware.motor.impl.EmaxCf2822;
 import hardware.pwm.IPwmController;
+import hardware.pwm.exceptions.PercentValRangeException;
+import hardware.pwm.exceptions.PwmValRangeException;
+import hardware.pwm.exceptions.WholeNumException;
 import hardware.pwm.impl.RPi2HardwarePwm;
 
 /**

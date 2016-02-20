@@ -1,7 +1,7 @@
 package hardware.pwm;
 
-import hardware.exception.PwmValRangeException;
-import hardware.exception.WholeNumException;
+import hardware.pwm.exceptions.PwmValRangeException;
+import hardware.pwm.exceptions.WholeNumException;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 26.12.15.

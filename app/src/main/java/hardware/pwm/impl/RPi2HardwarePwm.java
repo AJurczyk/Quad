@@ -1,10 +1,10 @@
 package hardware.pwm.impl;
 
 import com.pi4j.wiringpi.Gpio;
-import hardware.exception.PwmValRangeException;
-import hardware.exception.WholeNumException;
 import hardware.pwm.IGpioController;
 import hardware.pwm.IPwmController;
+import hardware.pwm.exceptions.PwmValRangeException;
+import hardware.pwm.exceptions.WholeNumException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -49,7 +49,7 @@ public class RPi2HardwarePwm implements IPwmController {
      * @throws WholeNumException    some pwm value is not an integer (due to period)
      */
     public RPi2HardwarePwm(IGpioController controller, int pin, int periodMs) throws PwmValRangeException,
-            WholeNumException {
+        WholeNumException {
         this.gpioControl = controller;
         if (periodMs > MAX_PERIOD) {
             throw new PwmValRangeException("Period " + periodMs + "is higher than allowed " + MAX_PERIOD);
@@ -91,8 +91,8 @@ public class RPi2HardwarePwm implements IPwmController {
         LOGGER.debug("[PWM " + pin + "] set duty: " + msValue + "[ms]");
         if (msValue < 0 || msValue > periodMs) {
             throw new PwmValRangeException("pwm value " + msValue
-                    + "ms must be lower than period " + periodMs
-                    + "ms and higher than 0");
+                + "ms must be lower than period " + periodMs
+                + "ms and higher than 0");
         }
         final int pwmValue = (int) ((msValue * 100) * pwmValueFor001);
         LOGGER.debug("[PWM " + pin + "] write: " + pwmValue);
@@ -111,7 +111,7 @@ public class RPi2HardwarePwm implements IPwmController {
         final float clock = ((float) periodMs / 1000) * BASE_PI_FREQ / range;
         if (clock < MIN_CLOCK || clock > MAX_CLOCK) {
             throw new PwmValRangeException("Calculated " + clock + "clock is out of allowed range "
-                    + MIN_CLOCK + "-" + MAX_CLOCK);
+                + MIN_CLOCK + "-" + MAX_CLOCK);
         }
         if (!isWholeNumber(clock)) {
             throw new WholeNumException("clock is not whole number: c=" + clock);
