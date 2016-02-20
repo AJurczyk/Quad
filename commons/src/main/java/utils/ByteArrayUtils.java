@@ -7,7 +7,7 @@ import utils.exceptions.InvalidArgException;
  */
 public final class ByteArrayUtils {
 
-    final static int SHORT_TYPE_SIZE = 2;
+    private static final int SHORT_TYPE_SIZE = 2;
 
     /**
      * Hidden constructor.
@@ -27,6 +27,5 @@ public final class ByteArrayUtils {
             throw new InvalidArgException("Invalid array size. Cannot be longer than 2 bytes");
         }
         return (short) ((array[0] << 8) | (array[1] & 0xFF));
-        //TODO unit test
     }
 }

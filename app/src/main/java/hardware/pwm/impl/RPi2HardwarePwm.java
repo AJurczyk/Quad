@@ -5,11 +5,15 @@ import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
 import hardware.pwm.IGpioController;
 import hardware.pwm.IPwmController;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 26.12.15.
  */
 public class RPi2HardwarePwm implements IPwmController {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(RPi2HardwarePwm.class);
+
 
     private static final int BASE_PI_FREQ = 19200000;//The Raspberry Pi PWM clock base frequency of 19.2 MHz.
     // private static final int MAX_RANGE = 4096;
@@ -71,7 +75,7 @@ public class RPi2HardwarePwm implements IPwmController {
         final int clock = calcClock(periodMs, range);
         pwmValueFor001 = calcPwmValueFor001((float) range, (float) periodMs);
 
-        System.out.println("[PWM " + pin + "] Period: " + periodMs + "[ms]" + ", clock: " + clock + ", range: " + range);
+        LOGGER.debug("[PWM " + pin + "] Period: " + periodMs + "[ms]" + ", clock: " + clock + ", range: " + range);
         gpioControl.pwmWrite(pin, 0);
         gpioControl.pwmSetClock(clock);
         gpioControl.pwmSetRange(range);
@@ -84,14 +88,14 @@ public class RPi2HardwarePwm implements IPwmController {
 
     @Override
     public void setDuty(float msValue) throws PwmValRangeException {
-        System.out.println("[PWM " + pin + "] set duty: " + msValue + "[ms]");
+        LOGGER.debug("[PWM " + pin + "] set duty: " + msValue + "[ms]");
         if (msValue < 0 || msValue > periodMs) {
             throw new PwmValRangeException("pwm value " + msValue
                     + "ms must be lower than period " + periodMs
                     + "ms and higher than 0");
         }
         final int pwmValue = (int) ((msValue * 100) * pwmValueFor001);
-        System.out.println("[PWM " + pin + "] write: " + pwmValue);
+        LOGGER.debug("[PWM " + pin + "] write: " + pwmValue);
         gpioControl.pwmWrite(pin, pwmValue);
         duty = msValue;
     }

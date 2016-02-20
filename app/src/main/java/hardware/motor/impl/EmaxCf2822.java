@@ -5,11 +5,14 @@ import hardware.exception.PwmValRangeException;
 import hardware.exception.WholeNumException;
 import hardware.motor.IMotor;
 import hardware.pwm.IPwmController;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.
  */
 public class EmaxCf2822 implements IMotor {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmaxCf2822.class);
 
     private static final int PWM_MIN_MS = 1;
     private static final int PWM_MAX_MS = 2;
@@ -56,7 +59,7 @@ public class EmaxCf2822 implements IMotor {
         final float pwmValue = PWM_MIN_MS + (float) (PWM_MAX_MS - PWM_MIN_MS) / 100 * value;
         if (pwmValue < PWM_MIN_MS || pwmValue > PWM_MAX_MS) {
             throw new PwmValRangeException("Calculated pwm value " + pwmValue
-                    + " is out of EMAX CF2822 range");
+                + " is out of EMAX CF2822 range.");
         }
         return pwmValue;
     }
@@ -73,9 +76,9 @@ public class EmaxCf2822 implements IMotor {
 
     @Override
     public void setPercent(int percent) throws PercentValRangeException, PwmValRangeException {
-        System.out.println("[EMAX] Set " + percent + "%");
+        LOGGER.debug("[EMAX] Set " + percent + "%");
         if (percent < 0 || percent > 100) {
-            throw new PercentValRangeException("Invalid percentage value: " + percent + "%");
+            throw new PercentValRangeException("Invalid percentage value: " + percent + "%.");
         }
         this.percent = percent;
         pwm.setDuty(calcPwmPercent(percent));

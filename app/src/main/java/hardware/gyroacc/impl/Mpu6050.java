@@ -6,7 +6,7 @@ import hardware.gyroacc.enums.Mpu6050Conf;
 import hardware.gyroacc.enums.Mpu6050Reg;
 import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.exception.AccGyroReadValueException;
-import hardware.gyroacc.exception.invalidConversionFactor;
+import hardware.gyroacc.exception.InvalidConversionFactor;
 import hardware.i2c.II2cController;
 import hardware.i2c.exception.I2cDeviceNotInitializedException;
 import hardware.i2c.exception.I2cInitException;
@@ -35,10 +35,10 @@ public class Mpu6050 implements IGyroAcc {
      * @throws I2cInitException                 error while getting i2c bus
      * @throws I2cDeviceNotInitializedException run initI2cDevice first
      * @throws I2cWriteException                sleepEnable throws this
-     * @throws invalidConversionFactor          raw won't be calculated to given unit
+     * @throws InvalidConversionFactor          raw won't be calculated to given unit
      */
     public Mpu6050(II2cController ii2cController) throws I2cInitException, I2cDeviceNotInitializedException,
-        I2cWriteException, invalidConversionFactor {
+        I2cWriteException, InvalidConversionFactor {
         i2c = ii2cController;
         i2c.initI2cDevice(I2C_ADDRESS);
         writeConfig();
@@ -112,11 +112,11 @@ public class Mpu6050 implements IGyroAcc {
         }
     }
 
-    private double calcConversionFactor(int maxFinalValue) throws invalidConversionFactor {
+    private double calcConversionFactor(int maxFinalValue) throws InvalidConversionFactor {
         final int maxRaw = (int) 0xFFFF / 2;
         final double factor = (double) maxFinalValue / (double) maxRaw;
         if (factor <= 0) {
-            throw new invalidConversionFactor("factor cant be less or equall than 0. Is: "+factor);
+            throw new InvalidConversionFactor("factor cant be less or equall than 0. Is: " + factor);
         }
         return factor;
     }

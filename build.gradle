@@ -1,9 +1,25 @@
 version '1.0-SNAPSHOT'
 allprojects {
     apply plugin: 'idea'
+
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }
 
-subprojects {
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.0"
+        classpath 'de.aaschmid.gradle.plugins:gradle-cpd-plugin:0.5'
+    }
+}
+
+configure([project(":commons"), project(":app")]) {
     apply plugin: 'java'
     apply plugin: 'findbugs'
     apply plugin: 'checkstyle'

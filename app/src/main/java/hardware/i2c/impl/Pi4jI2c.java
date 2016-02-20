@@ -8,6 +8,8 @@ import hardware.i2c.exception.I2cDeviceNotInitializedException;
 import hardware.i2c.exception.I2cInitException;
 import hardware.i2c.exception.I2cReadException;
 import hardware.i2c.exception.I2cWriteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.ByteArrayUtils;
 import utils.exceptions.InvalidArgException;
 
@@ -20,19 +22,22 @@ import java.io.IOException;
  */
 public class Pi4jI2c implements II2cController {
 
-    private static final I2CBus BUS;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Pi4jI2c.class);
 
     private I2CDevice device;
+
+    private static final I2CBus BUS;
 
     static {
         I2CBus busTmp = null;
         try {
             busTmp = I2CFactory.getInstance(I2CBus.BUS_1);
         } catch (IOException e) {
-            System.out.println("Error while init i2c bus. " + e.getCause());
+            LOGGER.error("Error while init i2c bus. " + e.getCause());
         }
         BUS = busTmp;
     }
+
 
     /**
      * Takes a device with specific address from the BUS.
@@ -41,12 +46,13 @@ public class Pi4jI2c implements II2cController {
      */
     public void initI2cDevice(int address) throws I2cInitException {
         if (BUS == null) {
-            throw new I2cInitException("I2C bus hasn't been set");
+            throw new I2cInitException("I2C bus hasn't been set.");
         }
         try {
             device = BUS.getDevice(address);
+            LOGGER.debug("I2C init successefull.");
         } catch (IOException e) {
-            throw new I2cInitException("Error while getting i2c device", e);
+            throw new I2cInitException("Error while getting i2c device.", e);
         }
     }
 
@@ -57,7 +63,9 @@ public class Pi4jI2c implements II2cController {
                 + ". I2C Device has not been initialized");
         }
         try {
-            return (byte) device.read(register);
+            final byte value = (byte) device.read(register);
+            LOGGER.debug("I2C Read register " + register + ". Value: " + value + ".");
+            return value;
         } catch (IOException e) {
             throw new I2cReadException("Can't read i2c register " + register, e);
         }
@@ -73,7 +81,10 @@ public class Pi4jI2c implements II2cController {
             byte[] value = new byte[2];
             value[0] = read(msbReg);
             value[1] = read(lsbReg);
-            return ByteArrayUtils.castToShort(value);
+            final short valueShort = ByteArrayUtils.castToShort(value);
+            LOGGER.debug("I2C Read 2 bytes: " + msbReg + ", " + lsbReg + ". Value: " + valueShort + ".");
+            return valueShort;
+
         } catch (I2cDeviceNotInitializedException | I2cReadException | InvalidArgException e) {
             throw new I2cReadException("Can't read i2c register " + lsbReg + " or " + msbReg, e);
         }
