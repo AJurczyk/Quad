@@ -48,12 +48,14 @@ public class Mpu6050 implements IGyroAcc {
 
     @Override
     public double readAccInG(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        return readAccRaw(axis) * accRaw2Gfactor;
+        short rawValue = readAccRaw(axis);
+        return rawValue * accRaw2Gfactor;
     }
 
     @Override
     public double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
-        return readGyroRaw(axis) * gyroRaw2DegFactor;
+        short rawValue = readGyroRaw(axis);
+        return rawValue * gyroRaw2DegFactor;
     }
 
     @Override
@@ -128,7 +130,7 @@ public class Mpu6050 implements IGyroAcc {
 
     private int getGyroSensitivity() {
         final int setting = Mpu6050Conf.GYRO_CONFIG >> 3;
-        return (int) ((double) 250 * Math.pow(2, setting + 1));
+        return (int) ((double) 250 * Math.pow(2, setting));
     }
 
     private void writeConfig() throws I2cDeviceNotInitializedException, I2cWriteException {
