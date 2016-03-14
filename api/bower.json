@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "authors": [
+    "AJurczyk <aleksander.jurczyk@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "index",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
