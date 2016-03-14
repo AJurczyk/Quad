@@ -19,7 +19,7 @@ buildscript {
     }
 }
 
-configure([project(":commons"), project(":app")]) {
+configure([project(":commons"), project(":app"), project(":api")]) {
     apply plugin: 'java'
     apply plugin: 'findbugs'
     apply plugin: 'checkstyle'

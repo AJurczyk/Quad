@@ -18,6 +18,8 @@ import hardware.i2c.impl.Pi4jI2c;
 @SuppressWarnings("PMD")
 public class GyroTestMain {
     //TODO to remove class
+    private static final int TIME_MS = 5000;
+    private static final int DELAY_MS = 20;
 
     /**
      * Main to be removed.
@@ -42,7 +44,8 @@ public class GyroTestMain {
 
         //double angle;
 
-        for (int i = 0; i < 300; i++) {
+
+        for (int i = 0; i < TIME_MS / DELAY_MS; i++) {
             //for (int i = 0; i < 1; i++) {
             accX = mpu6050.readAccInG(Axis.X);
             accY = mpu6050.readAccInG(Axis.Y);
@@ -60,7 +63,7 @@ public class GyroTestMain {
                     + "\tgyroY: " + String.format("% 4.2f", gyroY)
                     + "\tgyroZ: " + String.format("% 4.2f", gyroZ));
             //System.out.println(angle);
-            Thread.sleep(100);
+            Thread.sleep(DELAY_MS);
         }
     }
 }
