@@ -1,10 +1,10 @@
 version '1.0-SNAPSHOT'
 
 dependencies {
-//    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.12'
-    compile(group: 'org.springframework', name: 'spring-web', version: '4.1.7.RELEASE') {
+    compile project(':app')
+
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.2.5.RELEASE'){
         exclude group: 'commons-logging'
+        exclude module: "logback-classic"
     }
-//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.2.5.RELEASE'
-//    testCompile group: 'org.testng', name: 'testng', version: '6.9.6'
 }

@@ -1,4 +1,3 @@
 rootProject.name = 'QuadCopter'
-include 'app', 'commons'
-include 'api'
+include 'app', 'commons', 'api'
 
