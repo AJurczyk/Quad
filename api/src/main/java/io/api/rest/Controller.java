@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
-public class HelloController {
+public class Controller {
 
-    @RequestMapping("/hello")
-    public String start(@RequestParam String name) {
-        return name;
+    @RequestMapping(value = "/hello")
+    public Hello start(@RequestParam String name) {
+        return new Hello(666, name.toUpperCase());
     }
 
 }

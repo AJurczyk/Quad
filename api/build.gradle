@@ -7,4 +7,7 @@ dependencies {
         exclude group: 'commons-logging'
         exclude module: "logback-classic"
     }
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.6'
+
 }
