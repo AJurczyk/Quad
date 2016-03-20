@@ -1,6 +1,26 @@
 body {
-    background-color: #DEF5FC;
+  background-color: #D5E5EB;
 }
-h1 {
-    font-size: 16px;
+
+#gyro-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+#gyro-table td, #gyro-table th {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#gyro-table tr:nth-child(even){background-color: #f2f2f2}
+
+#gyro-table tr:hover {background-color: #ddd;}
+
+#gyro-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #337ab7;
+    color: white;
 }

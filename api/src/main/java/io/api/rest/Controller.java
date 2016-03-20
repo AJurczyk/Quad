@@ -4,9 +4,9 @@ package io.api.rest;
  * @author aleksander.jurczyk@seedlabs.io
  */
 
-import hardware.gyroacc.enums.Axis;
 import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.exception.AccGyroReadValueException;
+import hardware.gyroacc.impl.AccGyroReadOut;
 import hardware.gyroacc.impl.Mpu6050;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,31 +21,8 @@ public class Controller {
     private Mpu6050 gyro;
 
     @RequestMapping(value = "/gyro")
-    public GyroResult getMeasurements() {
-        double accX;
-        double accY;
-        double accZ;
-        double gyroX;
-        double gyroY;
-        double gyroZ;
-
-        try {
-            accX = gyro.readAccInG(Axis.X);
-            accY = gyro.readAccInG(Axis.Y);
-            accZ = gyro.readAccInG(Axis.Z);
-
-            gyroX = gyro.readGyroDeg(Axis.X);
-            gyroY = gyro.readGyroDeg(Axis.Y);
-            gyroZ = gyro.readGyroDeg(Axis.Z);
-
-            return new GyroResult(accX, accY, accZ, gyroX, gyroY, gyroZ);
-
-        } catch (AccGyroIncorrectAxisException e) {
-            e.printStackTrace();
-        } catch (AccGyroReadValueException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public AccGyroReadOut getMeasurements() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+        return gyro.readAll();
     }
 
     @RequestMapping(value = "/hello")

@@ -57,6 +57,16 @@ public class Mpu6050 implements IGyroAcc {
     }
 
     @Override
+    public AccGyroReadOut readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+        return new AccGyroReadOut(readAccInG(Axis.X),
+            readAccInG(Axis.Y),
+            readAccInG(Axis.Z),
+            readGyroDeg(Axis.X),
+            readGyroDeg(Axis.Y),
+            readGyroDeg(Axis.Z));
+    }
+
+    @Override
     public double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
         //final double accX = readAccRaw(Axis.X);
         //final double accY = readAccRaw(Axis.Y);

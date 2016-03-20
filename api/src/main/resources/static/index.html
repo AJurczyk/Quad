@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <title>Control panel</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/app.css">
 
     <script src="bower_components/angular/angular.js"></script>
@@ -12,8 +13,43 @@
 </head>
 <body>
 <div ng-app="myApp" ng-controller="MainCtrl">
-    <h1>{{ name }}</h1>
-    <button ng-click="sayName()">press</button>
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Chart</div>
+            <div class="panel-body">
+                chart is going to be here.
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Gyroscope</div>
+            <button type="button" class="btn btn-default" ng-click="getGyro()">
+                <span class=""></span>Get measurement
+            </button>
+            <br> <br>
+
+            <table id="gyro-table">
+                <tr>
+                    <th>accX</th>
+                    <th>accY</th>
+                    <th>accZ</th>
+                    <th>gyroX</th>
+                    <th>gyroY</th>
+                    <th>gyroZ</th>
+                </tr>
+                <tr ng-repeat="reading in readings">
+                    <td>{{reading.accX}}</td>
+                    <td>{{reading.accY}}</td>
+                    <td>{{reading.accZ}}</td>
+                    <td>{{reading.gyroX}}</td>
+                    <td>{{reading.gyroY}}</td>
+                    <td>{{reading.gyroZ}}</td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
 </div>
 </body>
 </html>
