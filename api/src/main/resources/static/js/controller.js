@@ -5,15 +5,16 @@ app.factory('Entry', function($resource) {
     return $resource('/gyro');
 });
 
+
 app.controller('MainCtrl', ['$scope', 'Entry',
     function ($scope, Entry) {
     $scope.name = "---";
+    $scope.readings = [];
 
-    $scope.sayName = function(){
+    $scope.getGyro = function(){
         var resp = Entry.get({},
             function(){
-                console.log(resp);
-                /*$scope.name = "ID: " + resp.id + ", name: " + resp.name;*/
+                $scope.readings.push(resp);
             },
             function(){
                 $scope.name = "error";}
