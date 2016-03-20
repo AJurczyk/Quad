@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource({"classpath:springConfig.xml"})
 @SuppressWarnings("PMD.UseUtilityClass")
 public class MainApplication {
-    public static void main(String[] args) {
+    public static void main(String... args) {
         SpringApplication.run(MainApplication.class, args);
     }
 
