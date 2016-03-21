@@ -9,6 +9,8 @@ body {
 #gyro-table {
     border-collapse: collapse;
     width: 100%;
+    height: 400px;
+    overflow-y: auto;
 }
 
 
