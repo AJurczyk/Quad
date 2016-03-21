@@ -5,12 +5,12 @@
     <title>Control panel</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css">
+    <link rel="stylesheet" href="node_modules/n3-charts/build/LineChart.css">
 
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/Chart.js/Chart.min.js"></script>
-    <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+    <script src="node_modules/n3-charts/node_modules/d3/d3.min.js"></script>
+    <script src="node_modules/n3-charts/build/LineChart.js"></script>
 
     <script src="js/controller.js"></script>
 
@@ -21,7 +21,10 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Chart</div>
             <div class="panel-body">
-                <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels"></canvas>
+                <div class="gyro-chart">
+                    <linechart data="data" options="options" ></linechart>
+                </div>
+
             </div>
         </div>
         <div class="panel panel-primary">
