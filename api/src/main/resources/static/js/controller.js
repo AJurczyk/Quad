@@ -1,26 +1,28 @@
-var app = angular.module('myApp', ['ngResource', 'n3-line-chart']);
+var app = angular.module('myApp', ['ngResource', 'n3-line-chart', 'emguo.poller']);
+
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
 
 app.factory('Entry', function($resource) {
     //return $resource('/hello?name=:name');
     return $resource('/gyro');
 });
 
-app.controller('MainCtrl', ['$scope', 'Entry',
-    function ($scope, Entry) {
-    $scope.name = "---";
+app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
+    function ($scope, Entry, poller) {
+    var delay = 10;
+    $scope.pollerState = false;
     $scope.readings = [];
     var counter = 0;
-    chartSpan = 10;
+    var chartSpan = 10;
+
     $scope.getGyro = function(){
         var resp = Entry.get({},
             function(){
-                $scope.readings.push(resp);
-                $scope.data.dataset0.push({x: counter, accX: resp.accX, accY: resp.accY, accZ: resp.accZ});
-                if(counter > chartSpan){
-                    $scope.options.axes.x.min++;
-                    $scope.options.axes.x.max++;
-                }
-                counter++;
+                addGyroReading(resp);
             },
             function(){
                 $scope.name = "error";}
@@ -30,15 +32,6 @@ app.controller('MainCtrl', ['$scope', 'Entry',
     $scope.data = {
         dataset0: [
         ]};
-
-    $scope.addFakeData = function(){
-        $scope.data.dataset0.push({x: counter, accX: counter%5, accY: counter%5+1, accZ: counter%5+2});
-        if(counter>chartSpan){
-            $scope.options.axes.x.min++;
-            $scope.options.axes.x.max++;
-        }
-        counter++;
-    }
 
     $scope.options = {
       series: [
@@ -91,4 +84,32 @@ app.controller('MainCtrl', ['$scope', 'Entry',
         $scope.options.axes.x.max=chartSpan;
     };
 
+    var myPoller = poller.get(Entry, {delay: delay});
+    myPoller.promise.then(null, null, function(response){
+        addGyroReading(response);
+    });
+
+    function addGyroReading(resp){
+        $scope.readings.push(resp);
+        $scope.data.dataset0.push({x: counter, accX: resp.accX, accY: resp.accY, accZ: resp.accZ});
+        if(counter > chartSpan){
+            $scope.options.axes.x.min++;
+            $scope.options.axes.x.max++;
+        }
+        counter++;
+    }
+
+    $scope.run = function(){
+    $scope.pollerState =! $scope.pollerState;
+        if($scope.pollerState){
+            myPoller.start();
+        }
+        else {
+            myPoller.stop();
+        }
+    };
+    myPoller.stop();
+//    myPoller.start();
+//    myPoller.restart();
+//    myPoller.remove();
 }]);

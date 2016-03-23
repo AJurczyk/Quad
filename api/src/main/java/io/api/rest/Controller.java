@@ -7,6 +7,7 @@ package io.api.rest;
 import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.gyroacc.impl.AccGyroReadOut;
+import hardware.gyroacc.impl.FakeGyro;
 import hardware.gyroacc.impl.Mpu6050;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 public class Controller {
 
+//    @Autowired
+//    private Mpu6050 gyro;
+
     @Autowired
-    private Mpu6050 gyro;
+    private FakeGyro gyro;
 
     @RequestMapping(value = "/gyro")
     public AccGyroReadOut getMeasurements() throws AccGyroIncorrectAxisException, AccGyroReadValueException {

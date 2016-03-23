@@ -3,16 +3,18 @@ body {
 }
 
 .gyro-chart {
-    width: 600px;
+    width: 100%;
     height: 400px;
+}
+
+.table {
+    height: 400px;
+    overflow-y: auto;
 }
 #gyro-table {
     border-collapse: collapse;
     width: 100%;
-    height: 400px;
-    overflow-y: auto;
 }
-
 
 #gyro-table td, #gyro-table th {
     border: 1px solid #ddd;

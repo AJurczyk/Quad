@@ -11,6 +11,7 @@
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="node_modules/n3-charts/node_modules/d3/d3.min.js"></script>
     <script src="node_modules/n3-charts/build/LineChart.js"></script>
+    <script src="/bower_components/angular-poller/angular-poller.js"></script>
 
     <script src="js/controller.js"></script>
 
@@ -22,42 +23,47 @@
             <div class="panel-heading">Chart</div>
             <div class="panel-body">
                 <div class="gyro-chart">
-                    <linechart data="data" options="options" ></linechart>
+                    <linechart data="data" options="options"></linechart>
                 </div>
 
             </div>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">Gyroscope</div>
+            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'" ng-click="run()">
+                Run
+            </div>
             <button type="button" class="btn btn-default" ng-click="getGyro()">
                 <span class=""></span>Get measurement
             </button>
             <button type="button" class="btn btn-default" ng-click="clear()">
                 <span class=""></span>Clear
             </button>
-            <button type="button" class="btn btn-default" ng-click="addFakeData()">
-                <span class=""></span>add fake data
-            </button>
             <br> <br>
 
-            <table id="gyro-table">
-                <tr>
-                    <th>accX</th>
-                    <th>accY</th>
-                    <th>accZ</th>
-                    <th>gyroX</th>
-                    <th>gyroY</th>
-                    <th>gyroZ</th>
-                </tr>
-                <tr ng-repeat="reading in readings">
-                    <td>{{reading.accX}}</td>
-                    <td>{{reading.accY}}</td>
-                    <td>{{reading.accZ}}</td>
-                    <td>{{reading.gyroX}}</td>
-                    <td>{{reading.gyroY}}</td>
-                    <td>{{reading.gyroZ}}</td>
-                </tr>
-            </table>
+            <div class="table">
+                <table id="gyro-table">
+                    <tr>
+                        <th>lp.</th>
+                        <th>accX</th>
+                        <th>accY</th>
+                        <th>accZ</th>
+                        <th>gyroX</th>
+                        <th>gyroY</th>
+                        <th>gyroZ</th>
+                    </tr>
+                    <tr ng-repeat="reading in readings | reverse">
+                        <td>{{readings.length - $index}}</td>
+                        <td>{{reading.accX}}</td>
+                        <td>{{reading.accY}}</td>
+                        <td>{{reading.accZ}}</td>
+                        <td>{{reading.gyroX}}</td>
+                        <td>{{reading.gyroY}}</td>
+                        <td>{{reading.gyroZ}}</td>
+                    </tr>
+                </table>
+            </div>
+
 
         </div>
 
