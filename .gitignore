@@ -6,3 +6,4 @@ gradlew
 GPIO_Pi2.png
 gradlew.bat
 gradle/
+api/src/main/resources/static/node_modules/
