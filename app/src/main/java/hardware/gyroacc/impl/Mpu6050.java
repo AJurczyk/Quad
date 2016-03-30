@@ -65,7 +65,7 @@ public class Mpu6050 implements IGyroAcc {
             readGyroDeg(Axis.Y),
             readGyroDeg(Axis.Z));
     }
-    
+
     private short readAccRaw(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         try {
             switch (axis) {
