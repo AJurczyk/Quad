@@ -17,10 +17,10 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
     $scope.pollerState = false;
     $scope.readings = [];
     var counter = 0;
-    var chartSpan = 10;
+    var chartSpan = 100;
 
     $scope.getGyro = function(){
-        var resp = Entry.get({},
+        var resp = Entry.query({},
             function(){
                 addGyroReading(resp);
             },
@@ -39,7 +39,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
           axis: "y",
           dataset: "dataset0",
           key: "accX",
-          label: "X",
+          label: "aX",
           color: "#FF0000",
           type: ['line'],
           id: 'seriesAccX'
@@ -48,7 +48,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
           axis: "y",
           dataset: "dataset0",
           key: "accY",
-          label: "Y",
+          label: "aY",
           color: "#00FF00",
           type: ['line'],
           id: 'seriesAccY'
@@ -57,17 +57,44 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
           axis: "y",
           dataset: "dataset0",
           key: "accZ",
-          label: "Z",
+          label: "aZ",
           color: "#0000FF",
           type: ['line'],
           id: 'seriesAccZ'
+        },
+        {
+          axis: "y",
+          dataset: "dataset0",
+          key: "gyroX",
+          label: "gX",
+          color: "#FF0000",
+          type: ['line'],
+          id: 'seriesGyroX'
+        },
+        {
+          axis: "y",
+          dataset: "dataset0",
+          key: "gyroY",
+          label: "gY",
+          color: "#00FF00",
+          type: ['line'],
+          id: 'seriesGyroY'
+         },
+        {
+          axis: "y",
+          dataset: "dataset0",
+          key: "gyroZ",
+          label: "gZ",
+          color: "#0000FF",
+          type: ['line'],
+          id: 'seriesGyroZ'
         }
       ],
       axes: {
         x: {
             key: "x",
             min: 0,
-            max: chartSpan
+            max: chartSpan,
         }
       },
       pan: {
@@ -91,12 +118,22 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
 
     function addGyroReading(resp){
         $scope.readings.push(resp);
-        $scope.data.dataset0.push({x: counter, accX: resp.accX, accY: resp.accY, accZ: resp.accZ});
-        if(counter > chartSpan){
-            $scope.options.axes.x.min++;
-            $scope.options.axes.x.max++;
+        for(i=0; i < resp.length; i++){
+            $scope.data.dataset0.push({
+                x: counter,
+                accX: resp[i].accX,
+                accY: resp[i].accY,
+                accZ: resp[i].accZ,
+                gyroX: resp[i].gyroX,
+                gyroY: resp[i].gyroY,
+                gyroZ: resp[i].gyroZ});
+
+            if(counter > chartSpan){
+                $scope.options.axes.x.min++;
+                $scope.options.axes.x.max++;
+            }
+            counter++;
         }
-        counter++;
     }
 
     $scope.run = function(){

@@ -65,21 +65,7 @@ public class Mpu6050 implements IGyroAcc {
             readGyroDeg(Axis.Y),
             readGyroDeg(Axis.Z));
     }
-
-    @Override
-    public double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        //final double accX = readAccRaw(Axis.X);
-        //final double accY = readAccRaw(Axis.Y);
-        //final double accZ = readAccRaw(Axis.Z);
-        //final double mianownik = Math.sqrt(Math.pow(accY, 2) + Math.pow(accZ, 2));
-        //final double ulamek = accX / mianownik;
-        //final double resultRadian = Math.atan(ulamek);
-        //final double resultDeg = resultRadian * (180 / 3.1415);
-        //return resultDeg;
-        //TODO to implement
-        return 0;
-    }
-
+    
     private short readAccRaw(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         try {
             switch (axis) {

@@ -34,6 +34,4 @@ public interface IGyroAcc {
      * @return object containing all measurements.
      */
     AccGyroReadOut readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException;
-
-    double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException;
 }
