@@ -35,8 +35,4 @@ public class FakeGyro implements IGyroAcc {
             readGyroDeg(Axis.Z));
     }
 
-    @Override
-    public double readAngle(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        return 0;
-    }
 }

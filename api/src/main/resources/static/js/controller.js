@@ -7,13 +7,17 @@ app.filter('reverse', function() {
 });
 
 app.factory('Entry', function($resource) {
-    //return $resource('/hello?name=:name');
-    return $resource('/gyro');
+    return $resource('/gyro',[], {
+        myQuery: {
+            method: 'get',
+            isArray: true
+        }
+    });
 });
 
 app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
     function ($scope, Entry, poller) {
-    var delay = 10;
+    var delay = 110;
     $scope.pollerState = false;
     $scope.readings = [];
     var counter = 0;
@@ -105,20 +109,23 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
 
     $scope.clear = function(){
         counter = 0;
-        $scope.data.dataset0=[];
+        $scope.data.dataset0 = [];
         $scope.readings = [];
         $scope.options.axes.x.min=0;
         $scope.options.axes.x.max=chartSpan;
     };
 
-    var myPoller = poller.get(Entry, {delay: delay});
+    var myPoller = poller.get(Entry, {
+        delay: delay,
+        action: 'myQuery'
+    });
     myPoller.promise.then(null, null, function(response){
         addGyroReading(response);
     });
 
     function addGyroReading(resp){
-        $scope.readings.push(resp);
         for(i=0; i < resp.length; i++){
+            $scope.readings.push(resp[i]);
             $scope.data.dataset0.push({
                 x: counter,
                 accX: resp[i].accX,
