@@ -1,6 +1,6 @@
-package software.imu;
+package software.imudriver;
 
-import software.imu.impl.PositionAngle;
+import software.imudriver.impl.PositionAngle;
 
 /**
  * @author aleksander.jurczyk@seedlabs.io
@@ -27,5 +27,5 @@ public interface IImuDriver {
     /**
      * Check if measuring loop is running.
      */
-    void isReading();
+    boolean isReading();
 }
