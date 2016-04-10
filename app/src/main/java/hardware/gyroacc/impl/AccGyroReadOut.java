@@ -14,6 +14,15 @@ public class AccGyroReadOut {
     private double gyroY;
     private double gyroZ;
 
+    /**
+     * Main constructor.
+     * @param accX acceleration reading X axis
+     * @param accY acceleration reading y axis
+     * @param accZ acceleration reading z axis
+     * @param gyroX gyro reading X axis
+     * @param gyroY gyro reading Y axis
+     * @param gyroZ gyro reading Z axis
+     */
     public AccGyroReadOut(double accX, double accY, double accZ, double gyroX, double gyroY, double gyroZ) {
         this.accX = accX;
         this.accY = accY;

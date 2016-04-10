@@ -4,21 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * List with maximum size that removes the oldest element
- * if the size is being exceeded.
+ * List with maximum maxSize that removes the oldest element
+ * if the maxSize is being exceeded.
  *
  * @author aleksander.jurczyk@seedlabs.io
  */
 public class RotatingList<T> {
-    private List<T> list = new ArrayList<>();
-    private int size;
+    private final List<T> list = new ArrayList<>();
+    private final int maxSize;
 
-    RotatingList(int size) {
-        this.size = size;
+    RotatingList(int maxSize) {
+        this.maxSize = maxSize;
     }
 
-    public void push(T object) {
-        if (list.size() == size) {
+    /**
+     * Add to list.
+     *
+     * @param object object to add
+     */
+    public void add(T object) {
+        if (list.size() == maxSize) {
             list.remove(0);
         }
         list.add(object);
@@ -28,7 +33,7 @@ public class RotatingList<T> {
         return list.get(index);
     }
 
-    public int size(){
+    public int size() {
         return list.size();
     }
 }

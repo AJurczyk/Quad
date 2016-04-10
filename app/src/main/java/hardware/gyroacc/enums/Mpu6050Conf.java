@@ -35,7 +35,7 @@ public class Mpu6050Conf {
      *
      */
     public static final byte CONFIG = 0b00000000;
-//    public static final byte CONFIG = 0b00000111;
+    //public static final byte CONFIG = 0b00000111;
 
     /**
      * Setting accelerometer sensitivity to ± 4g.

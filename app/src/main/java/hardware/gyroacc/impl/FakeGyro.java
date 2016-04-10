@@ -11,12 +11,14 @@ import java.util.Random;
  * @author aleksander.jurczyk@seedlabs.io
  */
 public class FakeGyro implements IGyroAcc {
+
+    private static final double RANGE_MIN = 0;
+    private static final double RANGE_MAX = 0.5;
+
     @Override
     public double readAccInG(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
-        double rangeMin = 0;
-        double rangeMax = 0.5;
-        Random r = new Random();
-        return rangeMin + (rangeMax - rangeMin) * r.nextDouble();
+        final Random random = new Random();
+        return RANGE_MIN + (RANGE_MAX - RANGE_MIN) * random.nextDouble();
     }
 
     @Override

@@ -15,17 +15,19 @@ public class ImuDriver extends Thread implements IImuDriver {
 
     private static final int DT_MS = 10;
 
-    private IGyroAcc gyroAcc;
+    private final IGyroAcc gyroAcc;
+    private final AtomicBoolean stop = new AtomicBoolean(true);
+    private float angleX;
+    private float angleY;
+    private float angleZ;
 
-    private float angleX = 0;
-    private float angleY = 0;
-    private float angleZ = 0;
-
-    private AccGyroReadOut[] readings = new AccGyroReadOut[3];
-
-    private AtomicBoolean stop = new AtomicBoolean(true);
-
+    /**
+     * Constructor with gyroAcc.
+     *
+     * @param gyroAcc gyroAcc controller
+     */
     public ImuDriver(IGyroAcc gyroAcc) {
+        super();
         this.gyroAcc = gyroAcc;
         calibrate();//TODO to implement
     }
@@ -55,25 +57,24 @@ public class ImuDriver extends Thread implements IImuDriver {
         stop.set(false);
         try {
             while (!stop.get()) {
-                AccGyroReadOut rawReading = gyroAcc.readAll(); //TODO filter those values
-//                AccGyroReadOut filteredReading = medianFilter(rawReading);
-                angleX += rawReading.getGyroX()*(DT_MS/1000);
-                angleY += rawReading.getGyroY()*(DT_MS/1000);
-                angleZ += rawReading.getGyroZ()*(DT_MS/1000);
+                final AccGyroReadOut rawReading = gyroAcc.readAll(); //TODO filter those values
+                //AccGyroReadOut filteredReading = medianFilter(rawReading);
+                angleX += rawReading.getGyroX() * (DT_MS / 1000);
+                angleY += rawReading.getGyroY() * (DT_MS / 1000);
+                angleZ += rawReading.getGyroZ() * (DT_MS / 1000);
                 Thread.sleep(DT_MS);
             }
 
         } catch (AccGyroIncorrectAxisException | AccGyroReadValueException e) {
             //todo log eror
         } catch (InterruptedException e) {
-            e.printStackTrace();
             //todo log eror
         } finally {
             stop.set(false);
         }
     }
 
-    private void calibrate(){
+    private void calibrate() {
         //TODO to implement
         angleX = 0;
         angleY = 0;
