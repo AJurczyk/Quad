@@ -5,6 +5,8 @@ import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.exception.AccGyroReadValueException;
 import hardware.gyroacc.impl.AccGyroReadOut;
 import software.imudriver.IImuDriver;
+import utils.MathUtils;
+import utils.RotatingList;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -14,6 +16,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ImuDriver extends Thread implements IImuDriver {
 
     private static final int DT_MS = 10;
+    private static final int MEDIAN_SIZE = 3;
+    private final RotatingList<AccGyroReadOut> previousReadings = new RotatingList<>(MEDIAN_SIZE - 1);
 
     private final IGyroAcc gyroAcc;
     private final AtomicBoolean stop = new AtomicBoolean(true);
@@ -57,11 +61,13 @@ public class ImuDriver extends Thread implements IImuDriver {
         stop.set(false);
         try {
             while (!stop.get()) {
-                final AccGyroReadOut rawReading = gyroAcc.readAll(); //TODO filter those values
-                //AccGyroReadOut filteredReading = medianFilter(rawReading);
-                angleX += rawReading.getGyroX() * (DT_MS / 1000);
-                angleY += rawReading.getGyroY() * (DT_MS / 1000);
-                angleZ += rawReading.getGyroZ() * (DT_MS / 1000);
+                final AccGyroReadOut rawReading = gyroAcc.readAll();
+                final AccGyroReadOut filteredReading = medianFilter(gyroAcc.readAll());
+                previousReadings.add(filteredReading);
+
+                angleX += filteredReading.getGyroX() * (DT_MS / 1000);
+                angleY += filteredReading.getGyroY() * (DT_MS / 1000);
+                angleZ += filteredReading.getGyroZ() * (DT_MS / 1000);
                 Thread.sleep(DT_MS);
             }
 
@@ -72,6 +78,21 @@ public class ImuDriver extends Thread implements IImuDriver {
         } finally {
             stop.set(false);
         }
+    }
+
+    private AccGyroReadOut medianFilter(AccGyroReadOut rawReading) {
+        if (previousReadings.size() < MEDIAN_SIZE - 1) {
+            return rawReading;
+        }
+        final double accX = MathUtils.median(previousReadings.get(0).getAccX(), previousReadings.get(1).getAccX(), rawReading.getAccX());
+        final double accY = MathUtils.median(previousReadings.get(0).getAccY(), previousReadings.get(1).getAccY(), rawReading.getAccY());
+        final double accZ = MathUtils.median(previousReadings.get(0).getAccZ(), previousReadings.get(1).getAccZ(), rawReading.getAccZ());
+
+        final double gyroX = MathUtils.median(previousReadings.get(0).getGyroX(), previousReadings.get(1).getGyroX(), rawReading.getGyroX());
+        final double gyroY = MathUtils.median(previousReadings.get(0).getGyroY(), previousReadings.get(1).getGyroY(), rawReading.getGyroY());
+        final double gyroZ = MathUtils.median(previousReadings.get(0).getGyroZ(), previousReadings.get(1).getGyroZ(), rawReading.getGyroZ());
+
+        return new AccGyroReadOut(accX, accY, accZ, gyroX, gyroY, gyroZ);
     }
 
     private void calibrate() {

@@ -13,7 +13,12 @@ public class RotatingList<T> {
     private final List<T> list = new ArrayList<>();
     private final int maxSize;
 
-    RotatingList(int maxSize) {
+    /**
+     * Constructor with max size of the list.
+     *
+     * @param maxSize max size of the list
+     */
+    public RotatingList(int maxSize) {
         this.maxSize = maxSize;
     }
 
