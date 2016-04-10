@@ -21,6 +21,8 @@ public class ImuDriver extends Thread implements IImuDriver {
     private float angleY = 0;
     private float angleZ = 0;
 
+    private AccGyroReadOut[] readings = new AccGyroReadOut[3];
+
     private AtomicBoolean stop = new AtomicBoolean(true);
 
     public ImuDriver(IGyroAcc gyroAcc) {
@@ -53,10 +55,11 @@ public class ImuDriver extends Thread implements IImuDriver {
         stop.set(false);
         try {
             while (!stop.get()) {
-                AccGyroReadOut reading = gyroAcc.readAll(); //TODO unfiltered values
-                angleX += reading.getGyroX()*(DT_MS/1000);
-                angleY += reading.getGyroY()*(DT_MS/1000);
-                angleZ += reading.getGyroZ()*(DT_MS/1000);
+                AccGyroReadOut rawReading = gyroAcc.readAll(); //TODO filter those values
+//                AccGyroReadOut filteredReading = medianFilter(rawReading);
+                angleX += rawReading.getGyroX()*(DT_MS/1000);
+                angleY += rawReading.getGyroY()*(DT_MS/1000);
+                angleZ += rawReading.getGyroZ()*(DT_MS/1000);
                 Thread.sleep(DT_MS);
             }
 
