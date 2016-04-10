@@ -61,7 +61,6 @@ public class ImuDriver extends Thread implements IImuDriver {
         stop.set(false);
         try {
             while (!stop.get()) {
-                final AccGyroReadOut rawReading = gyroAcc.readAll();
                 final AccGyroReadOut filteredReading = medianFilter(gyroAcc.readAll());
                 previousReadings.add(filteredReading);
 
@@ -84,15 +83,14 @@ public class ImuDriver extends Thread implements IImuDriver {
         if (previousReadings.size() < MEDIAN_SIZE - 1) {
             return rawReading;
         }
-        final double accX = MathUtils.median(previousReadings.get(0).getAccX(), previousReadings.get(1).getAccX(), rawReading.getAccX());
-        final double accY = MathUtils.median(previousReadings.get(0).getAccY(), previousReadings.get(1).getAccY(), rawReading.getAccY());
-        final double accZ = MathUtils.median(previousReadings.get(0).getAccZ(), previousReadings.get(1).getAccZ(), rawReading.getAccZ());
-
-        final double gyroX = MathUtils.median(previousReadings.get(0).getGyroX(), previousReadings.get(1).getGyroX(), rawReading.getGyroX());
-        final double gyroY = MathUtils.median(previousReadings.get(0).getGyroY(), previousReadings.get(1).getGyroY(), rawReading.getGyroY());
-        final double gyroZ = MathUtils.median(previousReadings.get(0).getGyroZ(), previousReadings.get(1).getGyroZ(), rawReading.getGyroZ());
-
-        return new AccGyroReadOut(accX, accY, accZ, gyroX, gyroY, gyroZ);
+        return new AccGyroReadOut(
+            MathUtils.median(previousReadings.get(0).getAccX(), previousReadings.get(1).getAccX(), rawReading.getAccX()),
+            MathUtils.median(previousReadings.get(0).getAccY(), previousReadings.get(1).getAccY(), rawReading.getAccY()),
+            MathUtils.median(previousReadings.get(0).getAccZ(), previousReadings.get(1).getAccZ(), rawReading.getAccZ()),
+            MathUtils.median(previousReadings.get(0).getGyroX(), previousReadings.get(1).getGyroX(), rawReading.getGyroX()),
+            MathUtils.median(previousReadings.get(0).getGyroY(), previousReadings.get(1).getGyroY(), rawReading.getGyroY()),
+            MathUtils.median(previousReadings.get(0).getGyroZ(), previousReadings.get(1).getGyroZ(), rawReading.getGyroZ())
+        );
     }
 
     private void calibrate() {

@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * @author aleksander.jurczyk@seedlabs.io
  */
-public class MathUtils {
+public final class MathUtils {
 
     /**
      * Hidden constructor.
