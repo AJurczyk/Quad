@@ -30,8 +30,11 @@
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">Gyroscope</div>
-            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'" ng-click="run()">
-                Run
+            <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runGyro()">
+                start/stop gyro
+            </div>
+            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runPoller()">
+                Run poller
             </div>
             <button type="button" class="btn btn-default" ng-click="getGyro()">
                 <span class=""></span>Get measurement

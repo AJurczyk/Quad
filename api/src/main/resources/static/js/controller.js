@@ -7,7 +7,7 @@ app.filter('reverse', function() {
 });
 
 app.factory('Entry', function($resource) {
-    return $resource('/gyro',[], {
+    return $resource('/getMeasurements',[], {
         myQuery: {
             method: 'get',
             isArray: true
@@ -15,10 +15,22 @@ app.factory('Entry', function($resource) {
     });
 });
 
-app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
-    function ($scope, Entry, poller) {
-    var delay = 110;
+app.factory('StartStopSrv',['$resource', function($resource){
+    return $resource('/startStopGyro:state', {},
+        {
+            startOrStop: {
+                url: '/startStopGyro?run=:state'
+            }
+        }
+    );
+}
+]);
+
+app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller',
+    function ($scope, Entry, StartStopSrv, poller) {
+    var pollerDelay = 110;
     $scope.pollerState = false;
+    $scope.gyroState = false;
     $scope.readings = [];
     var counter = 0;
     var chartSpan = 100;
@@ -116,7 +128,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
     };
 
     var myPoller = poller.get(Entry, {
-        delay: delay,
+        delay: pollerDelay,
         action: 'myQuery'
     });
     myPoller.promise.then(null, null, function(response){
@@ -143,8 +155,17 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
         }
     }
 
-    $scope.run = function(){
-    $scope.pollerState =! $scope.pollerState;
+    $scope.runGyro = function(){
+        $scope.gyroState = !$scope.gyroState;
+        StartStopSrv.startOrStop(
+            {
+                state: $scope.gyroState
+            }
+        );
+    }
+
+    $scope.runPoller = function(){
+        $scope.pollerState =! $scope.pollerState;
         if($scope.pollerState){
             myPoller.start();
         }
@@ -152,8 +173,5 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'poller',
             myPoller.stop();
         }
     };
-    myPoller.stop();
-//    myPoller.start();
-//    myPoller.restart();
-//    myPoller.remove();
+    myPoller.stop();//TODO: why is that for here?
 }]);

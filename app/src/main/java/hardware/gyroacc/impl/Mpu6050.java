@@ -12,6 +12,7 @@ import hardware.i2c.exception.I2cDeviceNotInitializedException;
 import hardware.i2c.exception.I2cInitException;
 import hardware.i2c.exception.I2cReadException;
 import hardware.i2c.exception.I2cWriteException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * MPU6050 gyro and acc basic implementation.
@@ -22,6 +23,7 @@ public class Mpu6050 implements IGyroAcc {
 
     private static final int I2C_ADDRESS = 0x68;
 
+    @Autowired
     private final II2cController i2c;
 
     private final double accRaw2Gfactor;
@@ -57,8 +59,8 @@ public class Mpu6050 implements IGyroAcc {
     }
 
     @Override
-    public AccGyroReadOut readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        return new AccGyroReadOut(readAccInG(Axis.X),
+    public AccGyroData readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+        return new AccGyroData(readAccInG(Axis.X),
             readAccInG(Axis.Y),
             readAccInG(Axis.Z),
             readGyroDeg(Axis.X),

@@ -3,7 +3,7 @@ package hardware.gyroacc;
 import hardware.gyroacc.enums.Axis;
 import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import hardware.gyroacc.exception.AccGyroReadValueException;
-import hardware.gyroacc.impl.AccGyroReadOut;
+import hardware.gyroacc.impl.AccGyroData;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 26.01.16.
@@ -33,5 +33,5 @@ public interface IGyroAcc {
      * Read gyro [deg] and acc [G] on all 3 axis.
      * @return object containing all measurements.
      */
-    AccGyroReadOut readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException;
+    AccGyroData readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException;
 }

@@ -27,8 +27,8 @@ public class FakeGyro implements IGyroAcc {
     }
 
     @Override
-    public AccGyroReadOut readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        return new AccGyroReadOut(
+    public AccGyroData readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+        return new AccGyroData(
             readAccInG(Axis.X),
             readAccInG(Axis.Y),
             readAccInG(Axis.Z),
