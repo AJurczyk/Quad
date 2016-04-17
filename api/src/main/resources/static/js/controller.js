@@ -56,7 +56,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller',
           dataset: "dataset0",
           key: "accX",
           label: "aX",
-          color: "#FF0000",
+          color: "#00FFFF",
           type: ['line'],
           id: 'seriesAccX'
         },
@@ -83,7 +83,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller',
           dataset: "dataset0",
           key: "gyroX",
           label: "gX",
-          color: "#FF0000",
+          color: "#00FFFF",
           type: ['line'],
           id: 'seriesGyroX'
         },
@@ -104,7 +104,64 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller',
           color: "#0000FF",
           type: ['line'],
           id: 'seriesGyroZ'
-        }
+        },
+
+
+
+        {
+                  axis: "y",
+                  dataset: "dataset0",
+                  key: "accXraw",
+                  label: "aXraw",
+                  color: "#FF0000",
+                  type: ['line'],
+                  id: 'seriesAccXraw'
+                },
+                {
+                  axis: "y",
+                  dataset: "dataset0",
+                  key: "accYraw",
+                  label: "aYraw",
+                  color: "#FF0000",
+                  type: ['line'],
+                  id: 'seriesAccYraw'
+                 },
+                {
+                  axis: "y",
+                  dataset: "dataset0",
+                  key: "accZraw",
+                  label: "aZraw",
+                  color: "#FF0000",
+                  type: ['line'],
+                  id: 'seriesAccZraw'
+                },
+                {
+                  axis: "y",
+                  dataset: "dataset0",
+                  key: "gyroXraw",
+                  label: "gXraw",
+                  color: "#FF0000",
+                  type: ['line'],
+                  id: 'seriesGyroXraw'
+                },
+                {
+                  axis: "y",
+                  dataset: "dataset0",
+                  key: "gyroYraw",
+                  label: "gYraw",
+                  color: "#FF0000",
+                  type: ['line'],
+                  id: 'seriesGyroYraw'
+                 },
+                {
+                  axis: "y",
+                  dataset: "dataset0",
+                  key: "gyroZraw",
+                  label: "gZraw",
+                  color: "#FF0000",
+                  type: ['line'],
+                  id: 'seriesGyroZraw'
+                }
       ],
       axes: {
         x: {
@@ -136,7 +193,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller',
     });
 
     function addGyroReading(resp){
-        for(i=0; i < resp.length; i++){
+        for(i=0; i < resp.length; i+=2){
             $scope.readings.push(resp[i]);
             $scope.data.dataset0.push({
                 x: counter,
@@ -145,7 +202,14 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller',
                 accZ: resp[i].accZ,
                 gyroX: resp[i].gyroX,
                 gyroY: resp[i].gyroY,
-                gyroZ: resp[i].gyroZ});
+                gyroZ: resp[i].gyroZ,
+
+                accXraw: resp[i+1].accX,
+                accYraw: resp[i+1].accY,
+                accZraw: resp[i+1].accZ,
+                gyroXraw: resp[i+1].gyroX,
+                gyroYraw: resp[i+1].gyroY,
+                gyroZraw: resp[i+1].gyroZ});
 
             if(counter > chartSpan){
                 $scope.options.axes.x.min++;

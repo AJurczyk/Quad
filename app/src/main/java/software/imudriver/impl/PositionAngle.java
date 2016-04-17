@@ -6,11 +6,9 @@ package software.imudriver.impl;
  */
 public class PositionAngle {
 
-    private final float angleX;
-
-    private final float angleY;
-
-    private final float angleZ;
+    private final double angleX;
+    private final double angleY;
+    private final double angleZ;
 
     /**
      * Constructor with all the angles.
@@ -18,21 +16,21 @@ public class PositionAngle {
      * @param angleY y axis inclination
      * @param angleZ z axis inclination
      */
-    public PositionAngle(float angleX, float angleY, float angleZ) {
+    public PositionAngle(double angleX, double angleY, double angleZ) {
         this.angleX = angleX;
         this.angleY = angleY;
         this.angleZ = angleZ;
     }
 
-    public float getAngleX() {
+    public double getAngleX() {
         return angleX;
     }
 
-    public float getAngleY() {
+    public double getAngleY() {
         return angleY;
     }
 
-    public float getAngleZ() {
+    public double getAngleZ() {
         return angleZ;
     }
 }

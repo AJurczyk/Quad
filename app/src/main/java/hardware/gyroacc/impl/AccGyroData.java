@@ -14,6 +14,10 @@ public class AccGyroData {
     private double gyroY;
     private double gyroZ;
 
+    public AccGyroData(){
+
+    }
+
     /**
      * Main constructor.
      * @param accX acceleration reading X axis
