@@ -27,7 +27,6 @@ public class ImuDriver implements IImuDriver, Runnable {
     private static final int MEDIAN_SIZE = 3;
     private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE - 1);
     private final List<IImuReadingListener> listeners = new ArrayList<>();
-    private final AtomicBoolean stop = new AtomicBoolean(true);
     private AccGyroData compensation = new AccGyroData();
 
     @Autowired
@@ -69,28 +68,26 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     @Override
     public void stopReading() {
-        stop.set(true);
-//        try {
-//            runner.join(1000);
-        runner.interrupt();
-//        } catch (InterruptedException e) {
-//            LOGGER.debug("Waiting for gyroscope to end was interrupted.", e);
-//        }
+        try {
+            runner.interrupt();
+            runner.join();
+        } catch (InterruptedException e) {
+            LOGGER.debug("Waiting for gyroscope to end was interrupted.", e);
+        }
     }
 
     @Override
     public boolean isReading() {
-        return !stop.get();
+        return runner.isAlive();
     }
 
     @Override
     public void run() {
         LOGGER.debug("Start reading gyro.");
         calibrate();
-        stop.set(false);
         long systemDelay;
         try {
-            while (!stop.get()) {
+            while (true) {
                 systemDelay = System.currentTimeMillis();
                 final AccGyroData cleanReading = readCleanData();
                 angleX += cleanReading.getGyroX() * (DT_MS / 1000d);
@@ -105,9 +102,8 @@ public class ImuDriver implements IImuDriver, Runnable {
         } catch (InterruptedException | AccGyroIncorrectAxisException | AccGyroReadValueException e) {
             LOGGER.error(e.toString());
         } finally {
-            stop.set(true);
+            LOGGER.debug("Reading gyro finished.");
         }
-        LOGGER.debug("Stop reading gyro.");
     }
 
     private AccGyroData readCleanData() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
@@ -151,23 +147,23 @@ public class ImuDriver implements IImuDriver, Runnable {
         gyroZforMedian[MEDIAN_SIZE - 1] = rawReading.getGyroZ();
 
         return new AccGyroData(
-            MathUtils.median(accXforMedian),
-            MathUtils.median(accYforMedian),
-            MathUtils.median(accZforMedian),
-            MathUtils.median(gyroXforMedian),
-            MathUtils.median(gyroYforMedian),
-            MathUtils.median(gyroZforMedian)
+                MathUtils.median(accXforMedian),
+                MathUtils.median(accYforMedian),
+                MathUtils.median(accZforMedian),
+                MathUtils.median(gyroXforMedian),
+                MathUtils.median(gyroYforMedian),
+                MathUtils.median(gyroZforMedian)
         );
     }
 
     private AccGyroData compensateData(AccGyroData data) {
         return new AccGyroData(
-            data.getAccX(),
-            data.getAccY(),
-            data.getAccZ(),
-            data.getGyroX() - compensation.getGyroX(),
-            data.getGyroY() - compensation.getGyroY(),
-            data.getGyroZ() - compensation.getGyroZ()
+                data.getAccX(),
+                data.getAccY(),
+                data.getAccZ(),
+                data.getGyroX() - compensation.getGyroX(),
+                data.getGyroY() - compensation.getGyroY(),
+                data.getGyroZ() - compensation.getGyroZ()
         );
     }
 
