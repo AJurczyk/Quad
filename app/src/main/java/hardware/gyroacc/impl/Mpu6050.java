@@ -13,12 +13,14 @@ import hardware.i2c.exception.I2cInitException;
 import hardware.i2c.exception.I2cReadException;
 import hardware.i2c.exception.I2cWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * MPU6050 gyro and acc basic implementation.
  *
  * @author aleksander.jurczyk@gmail.com on 26.01.16.
  */
+@Component
 public class Mpu6050 implements IGyroAcc {
 
     private static final int I2C_ADDRESS = 0x68;

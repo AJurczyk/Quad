@@ -14,7 +14,7 @@ import utils.RotatingList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * @author aleksander.jurczyk@seedlabs.io
@@ -22,34 +22,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ImuDriver implements IImuDriver, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriver.class);
-
     private static final int DT_MS = 20;
     private static final int MEDIAN_SIZE = 3;
+    private static final int CALI_PROBES = 100;
+
     private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE - 1);
+
     private final List<IImuReadingListener> listeners = new ArrayList<>();
+
+    private Thread runner;
+
     private AccGyroData compensation = new AccGyroData();
 
     @Autowired
     private IGyroAcc gyroAcc;
-    private double angleX;
-    private double angleY;
-    private double angleZ;
 
-    private Thread runner;
-
-    /**
-     * Constructor with gyroAcc.
-     *
-     * @param gyroAcc gyroAcc controller
-     */
-    public ImuDriver(IGyroAcc gyroAcc) {
-        super();
-        this.gyroAcc = gyroAcc;
-    }
-
-    public void setGyroAcc(IGyroAcc gyroAcc) {
-        this.gyroAcc = gyroAcc;
-    }
+    private PositionAngle positionAngle;
 
     public void registerListener(IImuReadingListener listener) {
         listeners.add(listener);
@@ -57,17 +45,17 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     @Override
     public PositionAngle getAngle() {
-        return new PositionAngle(angleX, angleY, angleZ);
+        return positionAngle;
     }
 
     @Override
-    public void startReading() {
+    public void startWorking() {
         runner = new Thread(this);
         runner.start();
     }
 
     @Override
-    public void stopReading() {
+    public void stopWorking() {
         try {
             runner.interrupt();
             runner.join();
@@ -77,25 +65,36 @@ public class ImuDriver implements IImuDriver, Runnable {
     }
 
     @Override
-    public boolean isReading() {
+    public boolean isWorking() {
         return runner.isAlive();
     }
 
     @Override
     public void run() {
         LOGGER.debug("Start reading gyro.");
-        calibrate();
         long systemDelay;
+
+        positionAngle = new PositionAngle();
+
         try {
+            calibrate();
             while (true) {
                 systemDelay = System.currentTimeMillis();
-                final AccGyroData cleanReading = readCleanData();
-                angleX += cleanReading.getGyroX() * (DT_MS / 1000d);
-                angleY += cleanReading.getGyroY() * (DT_MS / 1000d);
-                angleZ += cleanReading.getGyroZ() * (DT_MS / 1000d);
+                final AccGyroData rawReading = gyroAcc.readAll();
+                final AccGyroData cleanReading = applyCompensation(applyMedianFilter(rawReading));
+                previousReadings.add(rawReading);
+
+                listeners.forEach(listener -> listener.readingReceived(rawReading));
+                listeners.forEach(listener -> listener.readingReceived(cleanReading));
+
+                reCalcAngle(cleanReading);
+
                 systemDelay = System.currentTimeMillis() - systemDelay;
+
                 if (systemDelay < DT_MS) {
                     Thread.sleep(DT_MS - systemDelay);
+                } else {
+                    LOGGER.warn("Gyro math took longer than dt(" + DT_MS + "ms): " + systemDelay + "ms.");
                 }
             }
 
@@ -106,57 +105,52 @@ public class ImuDriver implements IImuDriver, Runnable {
         }
     }
 
-    private AccGyroData readCleanData() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
-        final AccGyroData raw = gyroAcc.readAll();
-        final AccGyroData filtered = medianFilter(raw);
-        final AccGyroData compensated = compensateData(filtered);
+    private void calibrate() throws InterruptedException, AccGyroIncorrectAxisException, AccGyroReadValueException {
 
-        previousReadings.add(raw);
+        double meanGyroX = 0;
+        double meanGyroY = 0;
+        double meanGyroZ = 0;
 
-        listeners.forEach(listener -> listener.ReadingReceived(compensated));
-        listeners.forEach(listener -> listener.ReadingReceived(raw));
-        return compensated;
+        for (int i = 0; i < CALI_PROBES; i++) {
+            final AccGyroData reading = applyMedianFilter(gyroAcc.readAll());
+
+            listeners.forEach(listener -> listener.readingReceived(reading));
+            listeners.forEach(listener -> listener.readingReceived(reading));
+
+            meanGyroX += reading.getGyroX();
+            meanGyroY += reading.getGyroY();
+            meanGyroZ += reading.getGyroZ();
+            Thread.sleep(DT_MS);
+        }
+        meanGyroX /= CALI_PROBES;
+        meanGyroY /= CALI_PROBES;
+        meanGyroZ /= CALI_PROBES;
+
+        compensation = new AccGyroData(0, 0, 0, meanGyroX, meanGyroY, meanGyroZ);
     }
 
-    private AccGyroData medianFilter(AccGyroData rawReading) {
+    private AccGyroData applyMedianFilter(AccGyroData rawReading) {
         if (previousReadings.size() < MEDIAN_SIZE - 1) {
             return rawReading;
         }
 
-        double[] accXforMedian = new double[MEDIAN_SIZE];
-        double[] accYforMedian = new double[MEDIAN_SIZE];
-        double[] accZforMedian = new double[MEDIAN_SIZE];
-        double[] gyroXforMedian = new double[MEDIAN_SIZE];
-        double[] gyroYforMedian = new double[MEDIAN_SIZE];
-        double[] gyroZforMedian = new double[MEDIAN_SIZE];
-
-        for (int i = 0; i < MEDIAN_SIZE - 1; i++) {
-            accXforMedian[i] = previousReadings.get(previousReadings.size() - i - 1).getAccX();
-            accYforMedian[i] = previousReadings.get(previousReadings.size() - i - 1).getAccY();
-            accZforMedian[i] = previousReadings.get(previousReadings.size() - i - 1).getAccZ();
-            gyroXforMedian[i] = previousReadings.get(previousReadings.size() - i - 1).getGyroX();
-            gyroYforMedian[i] = previousReadings.get(previousReadings.size() - i - 1).getGyroY();
-            gyroZforMedian[i] = previousReadings.get(previousReadings.size() - i - 1).getGyroZ();
+        final List<AccGyroData> dataForMedian = new ArrayList<>();
+        for (int i = 1; i < MEDIAN_SIZE; i++) {
+            dataForMedian.add(previousReadings.get(previousReadings.size() - i));
         }
-
-        accXforMedian[MEDIAN_SIZE - 1] = rawReading.getAccX();
-        accYforMedian[MEDIAN_SIZE - 1] = rawReading.getAccY();
-        accZforMedian[MEDIAN_SIZE - 1] = rawReading.getAccZ();
-        gyroXforMedian[MEDIAN_SIZE - 1] = rawReading.getGyroX();
-        gyroYforMedian[MEDIAN_SIZE - 1] = rawReading.getGyroY();
-        gyroZforMedian[MEDIAN_SIZE - 1] = rawReading.getGyroZ();
+        dataForMedian.add(rawReading);
 
         return new AccGyroData(
-                MathUtils.median(accXforMedian),
-                MathUtils.median(accYforMedian),
-                MathUtils.median(accZforMedian),
-                MathUtils.median(gyroXforMedian),
-                MathUtils.median(gyroYforMedian),
-                MathUtils.median(gyroZforMedian)
+                MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccX).collect(Collectors.toList())),
+                MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccY).collect(Collectors.toList())),
+                MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccZ).collect(Collectors.toList())),
+                MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroX).collect(Collectors.toList())),
+                MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroY).collect(Collectors.toList())),
+                MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroZ).collect(Collectors.toList()))
         );
     }
 
-    private AccGyroData compensateData(AccGyroData data) {
+    private AccGyroData applyCompensation(AccGyroData data) {
         return new AccGyroData(
                 data.getAccX(),
                 data.getAccY(),
@@ -167,32 +161,9 @@ public class ImuDriver implements IImuDriver, Runnable {
         );
     }
 
-    private void calibrate() {
-        try {
-            compensation = new AccGyroData();
-            final int probesAmount = 100;
-            double meanGyroX = 0;
-            double meanGyroY = 0;
-            double meanGyroZ = 0;
-
-            for (int i = 0; i < probesAmount; i++) {
-                final AccGyroData filteredReading = readCleanData();
-
-                meanGyroX += filteredReading.getGyroX();
-                meanGyroY += filteredReading.getGyroY();
-                meanGyroZ += filteredReading.getGyroZ();
-                Thread.sleep(DT_MS);
-            }
-            meanGyroX /= probesAmount;
-            meanGyroY /= probesAmount;
-            meanGyroZ /= probesAmount;
-
-            compensation = new AccGyroData(0, 0, 0, meanGyroX, meanGyroY, meanGyroZ);
-            angleX = 0;
-            angleY = 0;
-            angleZ = 0;
-        } catch (InterruptedException | AccGyroIncorrectAxisException | AccGyroReadValueException e) {
-            LOGGER.error(e.toString());
-        }
+    private void reCalcAngle(AccGyroData cleanReading) {
+        positionAngle.setAngleX(positionAngle.getAngleX() + cleanReading.getGyroX() * (DT_MS / 1000d));
+        positionAngle.setAngleY(positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000d));
+        positionAngle.setAngleZ(positionAngle.getAngleZ() + cleanReading.getGyroZ() * (DT_MS / 1000d));
     }
 }

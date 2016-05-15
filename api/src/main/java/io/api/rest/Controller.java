@@ -16,17 +16,14 @@ import software.imudriver.IImuReadingListener;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
 
 @RestController
 public class Controller implements IImuReadingListener {
 
+    private final List<AccGyroData> storedReadings = new ArrayList<>();
     @Autowired
-    IImuDriver imuDriver;
-
-    private List<AccGyroData> storedReadings = new ArrayList<>();
+    private IImuDriver imuDriver;
 
     @PostConstruct
     public void init() {
@@ -34,7 +31,7 @@ public class Controller implements IImuReadingListener {
     }
 
     /**
-     * Perform readings from gyroscope.
+     * Get reading from storedReadings list.
      *
      * @return list of measurements
      * @throws AccGyroIncorrectAxisException something went wrong
@@ -43,25 +40,28 @@ public class Controller implements IImuReadingListener {
      */
     @RequestMapping(value = "/getMeasurements")
     public List<AccGyroData> getMeasurements() throws AccGyroIncorrectAxisException, AccGyroReadValueException,
-        InterruptedException {
-        final List<AccGyroData> newReadings = new LinkedList<>();
-        while (!storedReadings.isEmpty()) {
-            newReadings.add(storedReadings.remove(0));
-        }
+            InterruptedException {
+        final List<AccGyroData> newReadings = storedReadings;
+        storedReadings.clear();
         return newReadings;
     }
 
+    /**
+     * Starts imudriver work.
+     *
+     * @param run on/off
+     */
     @RequestMapping(value = "/startStopGyro")
     public void startGyroReading(@RequestParam boolean run) {
         if (run) {
-            imuDriver.startReading();
+            imuDriver.startWorking();
         } else {
-            imuDriver.stopReading();
+            imuDriver.stopWorking();
         }
     }
 
     @Override
-    public void ReadingReceived(AccGyroData data) {
+    public void readingReceived(AccGyroData data) {
         storedReadings.add(data);
     }
 }

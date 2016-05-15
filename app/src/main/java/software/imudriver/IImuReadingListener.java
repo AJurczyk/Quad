@@ -12,5 +12,5 @@ public interface IImuReadingListener {
      *
      * @param data received data
      */
-    void ReadingReceived(AccGyroData data);
+    void readingReceived(AccGyroData data);
 }

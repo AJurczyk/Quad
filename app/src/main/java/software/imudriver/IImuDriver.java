@@ -17,17 +17,17 @@ public interface IImuDriver {
     /**
      * Starts measuring loop.
      */
-    void startReading();
+    void startWorking();
 
     /**
      * Stops measuring loop.
      */
-    void stopReading();
+    void stopWorking();
 
     /**
      * Check if measuring loop is running.
      */
-    boolean isReading();
+    boolean isWorking();
 
     /**
      * Register listener that handles measurements.
