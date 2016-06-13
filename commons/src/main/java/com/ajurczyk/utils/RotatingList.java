@@ -42,7 +42,7 @@ public class RotatingList<T> {
         return list.size();
     }
 
-    public void clear(){//TODO unit test
+    public void clear() { //TODO unit test
         list.clear();
     }
 }

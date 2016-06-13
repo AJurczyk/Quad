@@ -3,11 +3,11 @@ package com.ajurczyk.software.imudriver.impl;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuFilteredReader;
+import com.ajurczyk.software.imudriver.IImuReadingListener;
+import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.ajurczyk.software.imudriver.IImuReadingListener;
-import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,15 +22,17 @@ public interface IGyroAcc {
 
     /**
      * Read gyroscope in degrees of given axis.
+     *
      * @param axis axis to be read
      * @return gyroscope value measured in degrees
-     * @throws AccGyroReadValueException communication problems
+     * @throws AccGyroReadValueException     communication problems
      * @throws AccGyroIncorrectAxisException invalid axis
      */
     double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
 
     /**
      * Read gyro [deg] and acc [G] on all 3 axis.
+     *
      * @return object containing all measurements.
      */
     AccGyroData readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException;

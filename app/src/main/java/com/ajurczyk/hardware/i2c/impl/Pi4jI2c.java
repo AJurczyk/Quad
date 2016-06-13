@@ -5,13 +5,13 @@ import com.ajurczyk.hardware.i2c.exception.I2cDeviceNotInitializedException;
 import com.ajurczyk.hardware.i2c.exception.I2cInitException;
 import com.ajurczyk.hardware.i2c.exception.I2cReadException;
 import com.ajurczyk.hardware.i2c.exception.I2cWriteException;
+import com.ajurczyk.utils.ByteArrayUtils;
+import com.ajurczyk.utils.exceptions.InvalidArgException;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.ajurczyk.utils.ByteArrayUtils;
-import com.ajurczyk.utils.exceptions.InvalidArgException;
 
 import java.io.IOException;
 
@@ -23,10 +23,9 @@ import java.io.IOException;
 public class Pi4jI2c implements II2cController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Pi4jI2c.class);
+    private static final I2CBus BUS;
 
     private I2CDevice device;
-
-    private static final I2CBus BUS;
 
     static {
         I2CBus busTmp = null;
@@ -37,7 +36,6 @@ public class Pi4jI2c implements II2cController {
         }
         BUS = busTmp;
     }
-
 
     /**
      * Takes a device with specific address from the BUS.
@@ -60,7 +58,7 @@ public class Pi4jI2c implements II2cController {
     public byte read(int register) throws I2cReadException, I2cDeviceNotInitializedException {
         if (device == null) {
             throw new I2cDeviceNotInitializedException("Error while reading register " + register
-                + ". I2C Device has not been initialized");
+                    + ". I2C Device has not been initialized");
         }
         try {
             final byte value = (byte) device.read(register);
@@ -75,7 +73,7 @@ public class Pi4jI2c implements II2cController {
     public short readTwoBytes(byte lsbReg, byte msbReg) throws I2cReadException, I2cDeviceNotInitializedException {
         if (device == null) {
             throw new I2cDeviceNotInitializedException("Error while reading register " + lsbReg + " and " + msbReg
-                + ". I2C Device has not been initialized");
+                    + ". I2C Device has not been initialized");
         }
         try {
             byte[] value = new byte[2];
@@ -94,7 +92,7 @@ public class Pi4jI2c implements II2cController {
     public void write(byte register, byte value) throws I2cWriteException, I2cDeviceNotInitializedException {
         if (device == null) {
             throw new I2cDeviceNotInitializedException("Error while writing to register " + register
-                + ". I2C Device has not been initialized");
+                    + ". I2C Device has not been initialized");
         }
         try {
             device.write(register, value);

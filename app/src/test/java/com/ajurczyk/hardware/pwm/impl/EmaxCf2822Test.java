@@ -5,7 +5,6 @@ import com.ajurczyk.hardware.pwm.IPwmController;
 import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.WholeNumException;
-import com.ajurczyk.hardware.pwm.impl.RPi2HardwarePwm;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;

@@ -7,16 +7,16 @@ package io.api.rest;
 import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.software.imudriver.IImuDriver;
+import com.ajurczyk.software.imudriver.IImuReadingListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.ajurczyk.software.imudriver.IImuDriver;
-import com.ajurczyk.software.imudriver.IImuReadingListener;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 @RestController
 public class Controller implements IImuReadingListener {

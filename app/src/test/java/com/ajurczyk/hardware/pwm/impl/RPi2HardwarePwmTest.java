@@ -4,8 +4,6 @@ import com.ajurczyk.hardware.pwm.IGpioController;
 import com.ajurczyk.hardware.pwm.IPwmController;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.WholeNumException;
-import com.ajurczyk.hardware.pwm.impl.Pi4jGpio;
-import com.ajurczyk.hardware.pwm.impl.RPi2HardwarePwm;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;

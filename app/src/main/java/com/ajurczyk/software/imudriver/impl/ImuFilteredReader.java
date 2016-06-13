@@ -24,23 +24,35 @@ public class ImuFilteredReader implements IImuFilteredReader {
     //TODO implement listeners, Logger
     private static final int MEDIAN_SIZE = 3;
 
-    private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE - 1);
+    private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
 
     private String compensationFile = "";
 
     private AccGyroData compensation;//TODO load from file
 
-    protected AccGyroData getCompensation() {
-        return compensation;
-    }
+    private boolean compensate = true;
 
     @Autowired
     private IGyroAcc gyroAcc;
 
+    /**
+     * Constructor that tries to load compensation file.
+     *
+     * @throws IOException               file not found
+     * @throws PropertyNotFoundException asked compensation not found
+     */
     public ImuFilteredReader() throws IOException, PropertyNotFoundException {
-        if(!compensationFile.isEmpty()){
-            reloadCompensation();
+        if (!compensationFile.isEmpty()) {
+            loadCompensationFromFile(compensationFile);
         }
+    }
+
+    protected AccGyroData getCompensation() {
+        return compensation;
+    }
+
+    protected void setGyroAcc(IGyroAcc gyroAcc) {
+        this.gyroAcc = gyroAcc;
     }
 
     @Override
@@ -61,29 +73,33 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     @Override
     public AccGyroData readClean() throws ImuFilteredReaderException {
-        final AccGyroData cleanReading;
-        try {
-            cleanReading = compensateGyro(getMedian(gyroAcc.readAll()));
-            return cleanReading;
-        } catch (AccGyroIncorrectAxisException | AccGyroReadValueException e) {
-            throw new ImuFilteredReaderException(e.getMessage(), e);
+        readRaw();
+
+        AccGyroData cleanReading = getMedian();
+
+        if (compensate) {
+            cleanReading = compensateGyro(cleanReading);
         }
+        return cleanReading;
     }
 
     protected void setCompensationFile(String compensationFile) {
         this.compensationFile = compensationFile;
     }
 
-    private AccGyroData getMedian(AccGyroData dataToFilter) {
-        if (previousReadings.size() < MEDIAN_SIZE - 1) { //TODO what to do now? exception? null? raw?
-            return dataToFilter;
+    protected RotatingList<AccGyroData> getPreviousReadings() {
+        return previousReadings;
+    }
+
+    private AccGyroData getMedian() {
+        if (previousReadings.size() < MEDIAN_SIZE) { //TODO what to do now? exception? null? raw?
+            return previousReadings.get(previousReadings.size() - 1);
         }
 
         final List<AccGyroData> dataForMedian = new ArrayList<>();
-        for (int i = 1; i < MEDIAN_SIZE; i++) {
+        for (int i = 1; i < MEDIAN_SIZE + 1; i++) {
             dataForMedian.add(previousReadings.get(previousReadings.size() - i));
         }
-        dataForMedian.add(dataToFilter);
 
         return new AccGyroData(
                 MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccX).collect(Collectors.toList())),
@@ -108,7 +124,11 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     @Override
     public void reloadCompensation() throws IOException, PropertyNotFoundException {
-        PropertiesManager properties = new PropertiesManager(compensationFile);
+        loadCompensationFromFile(compensationFile);
+    }
+
+    private void loadCompensationFromFile(String filePath) throws IOException, PropertyNotFoundException {
+        final PropertiesManager properties = new PropertiesManager(filePath);
         compensation = new AccGyroData(0, 0, 0,
                 Double.valueOf(properties.getProperty("gyroX")),
                 Double.valueOf(properties.getProperty("gyroY")),
@@ -117,6 +137,6 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     @Override
     public void enableGyroCompensation(boolean state) {
-
+        compensate = state;
     }
 }

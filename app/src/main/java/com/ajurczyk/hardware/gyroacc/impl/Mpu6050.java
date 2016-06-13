@@ -1,5 +1,7 @@
 package com.ajurczyk.hardware.gyroacc.impl;
 
+import com.ajurczyk.hardware.gyroacc.IGyroAcc;
+import com.ajurczyk.hardware.gyroacc.enums.Axis;
 import com.ajurczyk.hardware.gyroacc.enums.Mpu6050Conf;
 import com.ajurczyk.hardware.gyroacc.enums.Mpu6050Reg;
 import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
@@ -10,8 +12,6 @@ import com.ajurczyk.hardware.i2c.exception.I2cDeviceNotInitializedException;
 import com.ajurczyk.hardware.i2c.exception.I2cInitException;
 import com.ajurczyk.hardware.i2c.exception.I2cReadException;
 import com.ajurczyk.hardware.i2c.exception.I2cWriteException;
-import com.ajurczyk.hardware.gyroacc.IGyroAcc;
-import com.ajurczyk.hardware.gyroacc.enums.Axis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,7 @@ public class Mpu6050 implements IGyroAcc {
      * @throws InvalidConversionFactor          raw won't be calculated to given unit
      */
     public Mpu6050(II2cController ii2cController) throws I2cInitException, I2cDeviceNotInitializedException,
-        I2cWriteException, InvalidConversionFactor {
+            I2cWriteException, InvalidConversionFactor {
         i2c = ii2cController;
         i2c.initI2cDevice(I2C_ADDRESS);
         writeConfig();
@@ -63,11 +63,11 @@ public class Mpu6050 implements IGyroAcc {
     @Override
     public AccGyroData readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
         return new AccGyroData(readAccInG(Axis.X),
-            readAccInG(Axis.Y),
-            readAccInG(Axis.Z),
-            readGyroDeg(Axis.X),
-            readGyroDeg(Axis.Y),
-            readGyroDeg(Axis.Z));
+                readAccInG(Axis.Y),
+                readAccInG(Axis.Z),
+                readGyroDeg(Axis.X),
+                readGyroDeg(Axis.Y),
+                readGyroDeg(Axis.Z));
     }
 
     private short readAccRaw(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
@@ -134,30 +134,30 @@ public class Mpu6050 implements IGyroAcc {
     private void writeConfig() throws I2cDeviceNotInitializedException, I2cWriteException {
         //1 Waking the device up
         i2c.write(Mpu6050Reg.PWR_MGMT_1,
-            Mpu6050Conf.PWR_MGMT_1);
+                Mpu6050Conf.PWR_MGMT_1);
 
         //2 Configure sample rate
         i2c.write(Mpu6050Reg.SMPLRT_DIV,
-            Mpu6050Conf.SMPLRT_DIV);
+                Mpu6050Conf.SMPLRT_DIV);
 
         //3 Setting global config
         i2c.write(Mpu6050Reg.CONFIG,
-            Mpu6050Conf.CONFIG);
+                Mpu6050Conf.CONFIG);
 
         //4 Configure Gyroscope
         i2c.write(Mpu6050Reg.GYRO_CONFIG,
-            Mpu6050Conf.GYRO_CONFIG);
+                Mpu6050Conf.GYRO_CONFIG);
 
         //5 Configure Accelerometer
         i2c.write(Mpu6050Reg.ACCEL_CONFIG,
-            Mpu6050Conf.ACCEL_CONFIG);
+                Mpu6050Conf.ACCEL_CONFIG);
 
         //6 Configure interrupts
         i2c.write(Mpu6050Reg.INT_ENABLE,
-            Mpu6050Conf.INT_ENABLE);
+                Mpu6050Conf.INT_ENABLE);
 
         //7 Configure low power operations
         i2c.write(Mpu6050Reg.PWR_MGMT_2,
-            Mpu6050Conf.PWR_MGMT_2);
+                Mpu6050Conf.PWR_MGMT_2);
     }
 }

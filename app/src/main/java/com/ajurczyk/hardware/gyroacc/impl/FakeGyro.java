@@ -1,9 +1,9 @@
 package com.ajurczyk.hardware.gyroacc.impl;
 
-import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
-import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 import com.ajurczyk.hardware.gyroacc.IGyroAcc;
 import com.ajurczyk.hardware.gyroacc.enums.Axis;
+import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
+import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 
 import java.util.Random;
 
@@ -29,12 +29,12 @@ public class FakeGyro implements IGyroAcc {
     @Override
     public AccGyroData readAll() throws AccGyroIncorrectAxisException, AccGyroReadValueException {
         return new AccGyroData(
-            readAccInG(Axis.X),
-            readAccInG(Axis.Y),
-            readAccInG(Axis.Z),
-            readGyroDeg(Axis.X),
-            readGyroDeg(Axis.Y),
-            readGyroDeg(Axis.Z));
+                readAccInG(Axis.X),
+                readAccInG(Axis.Y),
+                readAccInG(Axis.Z),
+                readGyroDeg(Axis.X),
+                readGyroDeg(Axis.Y),
+                readGyroDeg(Axis.Z));
     }
 
 }

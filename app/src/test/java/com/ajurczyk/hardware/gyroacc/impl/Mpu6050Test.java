@@ -4,7 +4,6 @@ import com.ajurczyk.hardware.gyroacc.enums.Axis;
 import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 import com.ajurczyk.hardware.gyroacc.exception.InvalidConversionFactor;
-import com.ajurczyk.hardware.gyroacc.impl.Mpu6050;
 import com.ajurczyk.hardware.i2c.II2cController;
 import com.ajurczyk.hardware.i2c.exception.I2cDeviceNotInitializedException;
 import com.ajurczyk.hardware.i2c.exception.I2cInitException;
