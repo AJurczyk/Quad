@@ -4,15 +4,15 @@ package io.api.rest;
  * @author aleksander.jurczyk@seedlabs.io
  */
 
-import hardware.gyroacc.exception.AccGyroIncorrectAxisException;
-import hardware.gyroacc.exception.AccGyroReadValueException;
-import hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
+import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
+import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import software.imudriver.IImuDriver;
-import software.imudriver.IImuReadingListener;
+import com.ajurczyk.software.imudriver.IImuDriver;
+import com.ajurczyk.software.imudriver.IImuReadingListener;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
