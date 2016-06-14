@@ -1,5 +1,8 @@
 package com.ajurczyk.software.imudriver;
 
+import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
+import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
+
 /**
  * Class used for gyroscope calibration.
  *
@@ -10,5 +13,5 @@ public interface ICalibrationManager {
     /**
      * Perform calibration.
      */
-    void calibrate();
+    void calibrate() throws InterruptedException, ImuFilteredReaderException, CalibrationManagerException;
 }
