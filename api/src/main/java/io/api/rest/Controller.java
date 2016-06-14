@@ -8,7 +8,7 @@ import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
 import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
-import com.ajurczyk.software.imudriver.IImuReadingListener;
+import com.ajurczyk.software.imudriver.IImuReaderListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 @RestController
-public class Controller implements IImuReadingListener {
+public class Controller implements IImuReaderListener {
 
     private final List<AccGyroData> storedReadings = new ArrayList<>();
     @Autowired

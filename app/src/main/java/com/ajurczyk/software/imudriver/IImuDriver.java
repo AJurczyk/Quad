@@ -34,5 +34,5 @@ public interface IImuDriver {
      *
      * @param listener listener to register
      */
-    void registerListener(IImuReadingListener listener);
+    void registerListener(IImuReaderListener listener);
 }

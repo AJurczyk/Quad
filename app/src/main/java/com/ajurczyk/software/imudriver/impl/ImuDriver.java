@@ -3,7 +3,7 @@ package com.ajurczyk.software.imudriver.impl;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuFilteredReader;
-import com.ajurczyk.software.imudriver.IImuReadingListener;
+import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class ImuDriver implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriver.class);
     private static final int DT_MS = 20;
 
-    private final List<IImuReadingListener> listeners = new ArrayList<>();
+    private final List<IImuReaderListener> listeners = new ArrayList<>();
 
     private Thread runner;
 
@@ -29,7 +29,7 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     private PositionAngle positionAngle;
 
-    public void registerListener(IImuReadingListener listener) {
+    public void registerListener(IImuReaderListener listener) {
         listeners.add(listener);
     }
 
