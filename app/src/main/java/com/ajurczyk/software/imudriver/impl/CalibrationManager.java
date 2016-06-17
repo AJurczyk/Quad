@@ -2,6 +2,7 @@ package com.ajurczyk.software.imudriver.impl;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.ICalibrationManager;
+import com.ajurczyk.software.imudriver.IImuFilteredReader;
 import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import org.slf4j.Logger;
@@ -27,12 +28,12 @@ public class CalibrationManager implements ICalibrationManager {
         this.caliProbes = caliProbes;
     }
 
-    protected void setReader(ImuFilteredReader reader) {
+    protected void setReader(IImuFilteredReader reader) {
         this.reader = reader;
     }
 
     @Autowired
-    ImuFilteredReader reader;
+    private IImuFilteredReader reader;
 
     private String compensationFile = "";
 

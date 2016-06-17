@@ -35,7 +35,7 @@ public interface IImuFilteredReader {
     /**
      * Reload compensation parameters from the compensation file.
      */
-    void reloadCompensation() throws IOException, PropertyNotFoundException, ImuFilteredReaderException;
+    void reloadCompensation() throws ImuFilteredReaderException;
 
     /**
      * Enable/disable gyro compensation.

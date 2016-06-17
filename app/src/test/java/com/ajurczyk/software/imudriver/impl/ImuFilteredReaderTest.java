@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
  */
 public class ImuFilteredReaderTest {
 
-    private static final String COMPENSATION_FILE = "src/test/resources/compensation.properties";
+    private static final String COMPENSATION_FILE = "src/test/resources/testCompensation.properties";
     private static final Double GYRO_X_COMPENS = 1.3d;
     private static final Double GYRO_Y_COMPENS = 2.3d;
     private static final Double GYRO_Z_COMPENS = 3.3d;
