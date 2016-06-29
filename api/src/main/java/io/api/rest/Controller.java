@@ -41,7 +41,8 @@ public class Controller implements IImuReaderListener {
     @RequestMapping(value = "/getMeasurements")
     public List<AccGyroData> getMeasurements() throws AccGyroIncorrectAxisException, AccGyroReadValueException,
             InterruptedException {
-        final List<AccGyroData> newReadings = storedReadings;
+        final List<AccGyroData> newReadings = new ArrayList<>();
+        newReadings.addAll(storedReadings);
         storedReadings.clear();
         return newReadings;
     }
