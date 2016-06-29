@@ -47,7 +47,7 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     }
 
-    public ImuFilteredReader(String compensationFile) {
+    protected ImuFilteredReader(String compensationFile) {
         this.compensationFile = compensationFile;
     }
 
@@ -65,6 +65,8 @@ public class ImuFilteredReader implements IImuFilteredReader {
         }
     }
 
+
+    @Override
     public void registerListener(IImuReaderListener listener) {
         listeners.add(listener);
     }
@@ -113,7 +115,7 @@ public class ImuFilteredReader implements IImuFilteredReader {
         compensate = state;
     }
 
-    protected void setCompensationFile(String compensationFile) {
+    public void setCompensationFile(String compensationFile) {
         this.compensationFile = compensationFile;
     }
 
@@ -126,7 +128,7 @@ public class ImuFilteredReader implements IImuFilteredReader {
         try {
             final AccGyroData reading = gyroAcc.readAll();
             previousReadings.add(reading);
-            listeners.stream().forEach(p -> p.rawReadingReceived(reading));
+            //listeners.stream().forEach(p -> p.rawReadingReceived(reading));//TODO handle raw and filtered reading on charts
         } catch (AccGyroIncorrectAxisException | AccGyroReadValueException e) {
             throw new ImuFilteredReaderException(e.getMessage(), e);
         }

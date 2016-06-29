@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  *
  * @author aleksander.jurczyk@gmail.com on 26.01.16.
  */
-@Component
+//@Component
 public class Mpu6050 implements IGyroAcc {
 
     private static final int I2C_ADDRESS = 0x68;

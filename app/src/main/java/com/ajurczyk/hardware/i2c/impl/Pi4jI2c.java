@@ -12,6 +12,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ import java.io.IOException;
  *
  * @author aleksander.jurczyk@gmail.com on 30.01.16.
  */
+@Component
 public class Pi4jI2c implements II2cController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Pi4jI2c.class);

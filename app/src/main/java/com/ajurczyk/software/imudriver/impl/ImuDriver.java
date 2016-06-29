@@ -10,6 +10,7 @@ import com.ajurczyk.time.impl.SystemClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * @author aleksander.jurczyk@seedlabs.io
  */
+@Component
 public class ImuDriver implements IImuDriver, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriver.class);
@@ -47,6 +49,7 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     public void registerListener(IImuReaderListener listener) {
         listeners.add(listener);
+        filteredReader.registerListener(listener);
     }
 
     @Override

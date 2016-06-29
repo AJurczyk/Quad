@@ -3,7 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader"/>
+    <bean class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
+        <property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>
+    </bean>
 
     <bean id="i2cController" class="com.ajurczyk.hardware.i2c.impl.Pi4jI2c"/>
 
