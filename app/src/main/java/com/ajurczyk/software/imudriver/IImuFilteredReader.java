@@ -1,10 +1,7 @@
 package com.ajurczyk.software.imudriver;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
-import com.ajurczyk.properties.PropertyNotFoundException;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
-
-import java.io.IOException;
 
 /**
  * Provides filtering of a given signal.
@@ -13,19 +10,13 @@ import java.io.IOException;
  */
 public interface IImuFilteredReader {
 
-    /**
-     * Get raw reading without filtering.
-     *
-     * @return raw reading
-     */
-    AccGyroData readRaw() throws ImuFilteredReaderException;
 
     /**
      * Get filtered reading.
      *
      * @return filtered reading
      */
-    AccGyroData readClean() throws ImuFilteredReaderException;
+    AccGyroData getFilteredReading() throws ImuFilteredReaderException;
 
     /**
      * Clear previous readings.

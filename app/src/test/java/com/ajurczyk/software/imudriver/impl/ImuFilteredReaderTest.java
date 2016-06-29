@@ -72,7 +72,7 @@ public class ImuFilteredReaderTest {
         final String newline = System.getProperty("line.separator");
         builder.append("gyroX=").append(String.valueOf(GYRO_X_COMPENS)).append(newline)
                 .append("gyroY=").append(String.valueOf(GYRO_Y_COMPENS)).append(newline)
-                .append("gyroZ=").append(String.valueOf(GYRO_Z_COMPENS+1));
+                .append("gyroZ=").append(String.valueOf(GYRO_Z_COMPENS + 1));
 
         final FileOutputStream fos = new FileOutputStream(COMPENSATION_FILE);
         try {
@@ -111,27 +111,7 @@ public class ImuFilteredReaderTest {
         Assert.assertEquals(compensation.getAccZ(), 0.0d, 0.0001d);
         Assert.assertEquals(compensation.getGyroX(), GYRO_X_COMPENS, 0.0001d);
         Assert.assertEquals(compensation.getGyroY(), GYRO_Y_COMPENS, 0.0001d);
-        Assert.assertEquals(compensation.getGyroZ(), GYRO_Z_COMPENS+1, 0.0001d);
-    }
-
-    @Test
-    public final void readRaw() throws IOException, PropertyNotFoundException, ImuFilteredReaderException,
-            AccGyroIncorrectAxisException, AccGyroReadValueException {
-        //given
-        final IImuReaderListener listener = mock(IImuReaderListener.class);
-        final ImuFilteredReader filteredReader = new ImuFilteredReader();
-        final IGyroAcc gyroAcc = mock(IGyroAcc.class);
-        filteredReader.setGyroAcc(gyroAcc);
-        filteredReader.registerListener(listener);
-
-        //when
-        filteredReader.readRaw();
-
-        //then
-        verify(gyroAcc, times(1)).readAll();
-        verify(listener,times(1)).rawReadingReceived(any());
-        verifyNoMoreInteractions(listener);
-        verifyNoMoreInteractions(gyroAcc, listener);
+        Assert.assertEquals(compensation.getGyroZ(), GYRO_Z_COMPENS + 1, 0.0001d);
     }
 
     @Test
@@ -157,9 +137,9 @@ public class ImuFilteredReaderTest {
 
         //when
         for (int i = 0; i < 3; i++) {
-            filteredReader.readClean();
+            filteredReader.getFilteredReading();
         }
-        final AccGyroData reading = filteredReader.readClean();
+        final AccGyroData reading = filteredReader.getFilteredReading();
 
         //then
         Assert.assertEquals(reading.getAccX(), 1.0d, 0.001d);
@@ -194,8 +174,7 @@ public class ImuFilteredReaderTest {
         filteredReader.setGyroAcc(gyroAcc);
 
         //when
-        filteredReader.readClean();
-        filteredReader.readRaw();
+        filteredReader.getFilteredReading();
         filteredReader.clear();
 
         //then
@@ -223,9 +202,9 @@ public class ImuFilteredReaderTest {
         //when
         filteredReader.enableGyroCompensation(false);
         for (int i = 0; i < 3; i++) {
-            filteredReader.readClean();
+            filteredReader.getFilteredReading();
         }
-        final AccGyroData reading = filteredReader.readClean();
+        final AccGyroData reading = filteredReader.getFilteredReading();
 
         //then
         Assert.assertEquals(reading.getAccX(), 1.0d, 0.001d);

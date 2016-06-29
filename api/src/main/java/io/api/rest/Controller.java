@@ -61,7 +61,12 @@ public class Controller implements IImuReaderListener {
     }
 
     @Override
-    public void readingReceived(AccGyroData data) {
+    public void cleanReadingReceived(AccGyroData data) {
+        storedReadings.add(data);
+    }
+
+    @Override
+    public void rawReadingReceived(AccGyroData data) {
         storedReadings.add(data);
     }
 }

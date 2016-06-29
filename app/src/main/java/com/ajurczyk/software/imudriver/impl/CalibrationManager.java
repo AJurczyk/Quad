@@ -20,25 +20,23 @@ import java.nio.charset.StandardCharsets;
 public class CalibrationManager implements ICalibrationManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CalibrationManager.class);
-
-    private int caliProbes = 100;
     private static final int DT_MS = 20;
-
-    protected void setCaliProbes(int caliProbes) {
-        this.caliProbes = caliProbes;
-    }
-
-    protected void setReader(IImuFilteredReader reader) {
-        this.reader = reader;
-    }
-
+    private int caliProbes = 100;
     @Autowired
     private IImuFilteredReader reader;
 
     private String compensationFile = "";
 
+    protected void setCaliProbes(int caliProbes) {
+        this.caliProbes = caliProbes;
+    }
+
     public void setCompensationFile(String compensationFile) {
         this.compensationFile = compensationFile;
+    }
+
+    protected void setReader(IImuFilteredReader reader) {
+        this.reader = reader;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class CalibrationManager implements ICalibrationManager {
             reader.enableGyroCompensation(false);
 
             for (int i = 0; i < caliProbes; i++) {
-                final AccGyroData reading = reader.readClean();
+                final AccGyroData reading = reader.getFilteredReading();
 
                 meanGyroX += reading.getGyroX();
                 meanGyroY += reading.getGyroY();

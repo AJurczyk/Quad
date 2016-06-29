@@ -15,11 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.06.16.
@@ -42,7 +42,6 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     /**
      * Default constructor.
-     *
      */
     public ImuFilteredReader() {
 
@@ -52,6 +51,11 @@ public class ImuFilteredReader implements IImuFilteredReader {
         this.compensationFile = compensationFile;
     }
 
+    /**
+     * Initialization of reader. Loads compensation from file.
+     *
+     * @throws ImuFilteredReaderException thrown when some problems with compensation file occurs
+     */
     @PostConstruct
     public void init() throws ImuFilteredReaderException {
         try {
@@ -78,71 +82,20 @@ public class ImuFilteredReader implements IImuFilteredReader {
         previousReadings.clear();
     }
 
+    @SuppressWarnings("PMD.ShortVariable")
     @Override
-    public AccGyroData readRaw() throws ImuFilteredReaderException {
-        try {
-            final AccGyroData reading = gyroAcc.readAll();
-            previousReadings.add(reading);
-            listeners.stream().forEach(p -> p.rawReadingReceived(reading));
-            return reading;
-        } catch (AccGyroIncorrectAxisException | AccGyroReadValueException e) {
-            throw new ImuFilteredReaderException(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public AccGyroData readClean() throws ImuFilteredReaderException {
+    public AccGyroData getFilteredReading() throws ImuFilteredReaderException {
         readRaw();
-        final AccGyroData cleanReading;
+        AccGyroData cleanReading = getMedian();
 
         if (compensate) {
-            cleanReading = compensateGyro(getMedian());
-        } else {
-            cleanReading = getMedian();
+            cleanReading = compensateGyro(cleanReading);
         }
 
-        listeners.stream().forEach(p -> p.cleanReadingReceived(cleanReading));
+        for (final IImuReaderListener listener : listeners) {
+            listener.cleanReadingReceived(cleanReading);
+        }
         return cleanReading;
-
-    }
-
-    protected void setCompensationFile(String compensationFile) {
-        this.compensationFile = compensationFile;
-    }
-
-    protected RotatingList<AccGyroData> getPreviousReadings() {
-        return previousReadings;
-    }
-
-    private AccGyroData getMedian() {
-        if (previousReadings.size() < MEDIAN_SIZE) {
-            return previousReadings.get(previousReadings.size() - 1);
-        }
-
-        final List<AccGyroData> dataForMedian = new ArrayList<>();
-        for (int i = 1; i < MEDIAN_SIZE + 1; i++) {
-            dataForMedian.add(previousReadings.get(previousReadings.size() - i));
-        }
-
-        return new AccGyroData(
-                MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccX).collect(Collectors.toList())),
-                MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccY).collect(Collectors.toList())),
-                MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccZ).collect(Collectors.toList())),
-                MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroX).collect(Collectors.toList())),
-                MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroY).collect(Collectors.toList())),
-                MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroZ).collect(Collectors.toList()))
-        );
-    }
-
-    private AccGyroData compensateGyro(AccGyroData dataToFilter) {
-        return new AccGyroData(
-                dataToFilter.getAccX(),
-                dataToFilter.getAccY(),
-                dataToFilter.getAccZ(),
-                dataToFilter.getGyroX() - compensation.getGyroX(),
-                dataToFilter.getGyroY() - compensation.getGyroY(),
-                dataToFilter.getGyroZ() - compensation.getGyroZ()
-        );
     }
 
     @Override
@@ -160,11 +113,61 @@ public class ImuFilteredReader implements IImuFilteredReader {
         compensate = state;
     }
 
+    protected void setCompensationFile(String compensationFile) {
+        this.compensationFile = compensationFile;
+    }
+
+    protected RotatingList<AccGyroData> getPreviousReadings() {
+        return previousReadings;
+    }
+
+    @SuppressWarnings("PMD.ShortVariable")
+    private void readRaw() throws ImuFilteredReaderException {
+        try {
+            final AccGyroData reading = gyroAcc.readAll();
+            previousReadings.add(reading);
+            listeners.stream().forEach(p -> p.rawReadingReceived(reading));
+        } catch (AccGyroIncorrectAxisException | AccGyroReadValueException e) {
+            throw new ImuFilteredReaderException(e.getMessage(), e);
+        }
+    }
+
+    private AccGyroData getMedian() {
+        if (previousReadings.size() < MEDIAN_SIZE) {
+            return previousReadings.get(previousReadings.size() - 1);
+        }
+
+        final List<AccGyroData> dataForMedian = new ArrayList<>();
+        for (int i = 1; i < MEDIAN_SIZE + 1; i++) {
+            dataForMedian.add(previousReadings.get(previousReadings.size() - i));
+        }
+
+        return new AccGyroData(
+            MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccX).collect(Collectors.toList())),
+            MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccY).collect(Collectors.toList())),
+            MathUtils.median(dataForMedian.stream().map(AccGyroData::getAccZ).collect(Collectors.toList())),
+            MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroX).collect(Collectors.toList())),
+            MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroY).collect(Collectors.toList())),
+            MathUtils.median(dataForMedian.stream().map(AccGyroData::getGyroZ).collect(Collectors.toList()))
+        );
+    }
+
+    private AccGyroData compensateGyro(AccGyroData dataToFilter) {
+        return new AccGyroData(
+            dataToFilter.getAccX(),
+            dataToFilter.getAccY(),
+            dataToFilter.getAccZ(),
+            dataToFilter.getGyroX() - compensation.getGyroX(),
+            dataToFilter.getGyroY() - compensation.getGyroY(),
+            dataToFilter.getGyroZ() - compensation.getGyroZ()
+        );
+    }
+
     private void loadCompensationFromFile(String filePath) throws IOException, PropertyNotFoundException {
         final PropertiesManager properties = new PropertiesManager(filePath);
         compensation = new AccGyroData(0, 0, 0,
-                Double.valueOf(properties.getProperty("gyroX")),
-                Double.valueOf(properties.getProperty("gyroY")),
-                Double.valueOf(properties.getProperty("gyroZ")));
+            Double.valueOf(properties.getProperty("gyroX")),
+            Double.valueOf(properties.getProperty("gyroY")),
+            Double.valueOf(properties.getProperty("gyroZ")));
     }
 }

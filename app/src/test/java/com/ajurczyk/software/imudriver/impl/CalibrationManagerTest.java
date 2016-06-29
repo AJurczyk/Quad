@@ -9,7 +9,7 @@ import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -29,27 +29,41 @@ public class CalibrationManagerTest {
     private static final Double GYRO_X_COMPENS = 1.3d;
     private static final Double GYRO_Y_COMPENS = 2.3d;
     private static final Double GYRO_Z_COMPENS = 3.3d;
-    private static final int DEFAULT_CALI_PROBES = 100;
+    private static final int CALIBRATE_PROBES = 100;
 
-    @BeforeClass
-    @AfterMethod
-    private void deleteCompensationFile() {
+    /**
+     * Delete compensation file if exists.
+     */
+    @AfterClass
+    public void deleteCompensationFile() {
         final File file = new File(FILE_PATH);
         if (file.exists()) {
             file.delete();
         }
     }
 
-    private void createFile() throws IOException {
-        FileOutputStream fos = new FileOutputStream(FILE_PATH);
-        final String newline = System.getProperty("line.separator");
-        final StringBuilder builder = new StringBuilder();
-        builder.append("gyroX=").append(String.valueOf(GYRO_X_COMPENS)).append(newline)
+    /**
+     * Delete old compensation file and create new.
+     *
+     * @throws IOException some problems with file
+     */
+    @BeforeClass
+    public void createNewCompensationFile() throws IOException {
+        deleteCompensationFile();
+        final FileOutputStream fos = new FileOutputStream(FILE_PATH);
+
+        try {
+            final String newline = System.getProperty("line.separator");
+            final StringBuilder builder = new StringBuilder(18);
+            builder.append("gyroX=").append(String.valueOf(GYRO_X_COMPENS)).append(newline)
                 .append("gyroY=").append(String.valueOf(GYRO_Y_COMPENS)).append(newline)
                 .append("gyroZ=").append(String.valueOf(GYRO_Z_COMPENS));
 
-        fos.write(builder.toString().getBytes(StandardCharsets.UTF_8));
-        fos.close();
+            fos.write(builder.toString().getBytes(StandardCharsets.UTF_8));
+            fos.close();
+        } finally {
+            fos.close();
+        }
     }
 
     @Test
@@ -60,8 +74,8 @@ public class CalibrationManagerTest {
         calibrationMgr.setCompensationFile(FILE_PATH);
         calibrationMgr.setReader(filteredReader);
 
-        when(filteredReader.readClean()).thenAnswer(new Answer<AccGyroData>() {
-            int counter = 0;
+        when(filteredReader.getFilteredReading()).thenAnswer(new Answer<AccGyroData>() {
+            int counter;
 
             @Override
             public AccGyroData answer(InvocationOnMock invocation) throws Throwable {
@@ -90,11 +104,11 @@ public class CalibrationManagerTest {
         calibrationMgr.calibrate();
 
         //then
-        verify(filteredReader, times(100)).readClean();
+        verify(filteredReader, times(CALIBRATE_PROBES)).getFilteredReading();
         verify(filteredReader, times(1)).enableGyroCompensation(false);
         verify(filteredReader, times(1)).enableGyroCompensation(true);
 
-        PropertiesManager properties = new PropertiesManager(FILE_PATH);
+        final PropertiesManager properties = new PropertiesManager(FILE_PATH);
         Assert.assertEquals(properties.getPropertiesNames().size(), 3);
 
         Assert.assertEquals(Double.valueOf(properties.getProperty("gyroX")), 1.6d, 0.001d);
