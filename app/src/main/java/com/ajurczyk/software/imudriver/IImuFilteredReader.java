@@ -34,11 +34,4 @@ public interface IImuFilteredReader {
      * @param state enable/disable
      */
     void enableGyroCompensation(boolean state);
-
-    /**
-     * Register listener that handles received readings.
-     *
-     * @param listener listener to be registered
-     */
-    void registerListener(IImuReaderListener listener);
 }

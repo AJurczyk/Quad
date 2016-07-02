@@ -122,7 +122,7 @@ public class ImuFilteredReaderTest {
         final ImuFilteredReader filteredReader = new ImuFilteredReader();
         filteredReader.setCompensationFile(COMPENSATION_FILE);
         filteredReader.reloadCompensation();
-        filteredReader.registerListener(listener);
+        filteredReader.setListener(listener);
 
         final IGyroAcc gyroAcc = mock(IGyroAcc.class);
         when(gyroAcc.readAll()).thenAnswer(new Answer<AccGyroData>() {

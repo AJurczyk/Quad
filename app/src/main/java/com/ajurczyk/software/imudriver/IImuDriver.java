@@ -28,11 +28,4 @@ public interface IImuDriver {
      * Check if measuring loop is running.
      */
     boolean isWorking();
-
-    /**
-     * Register listener that handles measurements.
-     *
-     * @param listener listener to register
-     */
-    void registerListener(IImuReaderListener listener);
 }

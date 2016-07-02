@@ -29,14 +29,12 @@ public class ImuFilteredReader implements IImuFilteredReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuFilteredReader.class);
 
     private static final int MEDIAN_SIZE = 3;
-
-    private final List<IImuReaderListener> listeners = new ArrayList<>();
-
     private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
+    @Autowired
+    private IImuReaderListener listener;
     private String compensationFile = "";
     private AccGyroData compensation;
     private boolean compensate = true;
-
     @Autowired
     private IGyroAcc gyroAcc;
 
@@ -49,6 +47,10 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     protected ImuFilteredReader(String compensationFile) {
         this.compensationFile = compensationFile;
+    }
+
+    public void setListener(IImuReaderListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -65,11 +67,6 @@ public class ImuFilteredReader implements IImuFilteredReader {
         }
     }
 
-
-    @Override
-    public void registerListener(IImuReaderListener listener) {
-        listeners.add(listener);
-    }
 
     protected AccGyroData getCompensation() {
         return compensation;
@@ -94,9 +91,7 @@ public class ImuFilteredReader implements IImuFilteredReader {
             cleanReading = compensateGyro(cleanReading);
         }
 
-        for (final IImuReaderListener listener : listeners) {
-            listener.cleanReadingReceived(cleanReading);
-        }
+        listener.cleanReadingReceived(cleanReading);
         return cleanReading;
     }
 

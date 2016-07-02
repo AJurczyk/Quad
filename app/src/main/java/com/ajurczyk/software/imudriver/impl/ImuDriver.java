@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author aleksander.jurczyk@seedlabs.io
@@ -23,13 +21,20 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriver.class);
     private static final int DT_MS = 20;
-    private final List<IImuReaderListener> listeners = new ArrayList<>();
+
+    @Autowired
+    private IImuReaderListener listener;
+
     private IClock clock = new SystemClock();
     private Thread runner;
 
     @Autowired
     private IImuFilteredReader filteredReader;
     private PositionAngle positionAngle;
+
+    public void setListener(IImuReaderListener listener) {
+        this.listener = listener;
+    }
 
     protected static int getDtMs() {
         return DT_MS;
@@ -45,11 +50,6 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     public void setPositionAngle(PositionAngle positionAngle) {
         this.positionAngle = positionAngle;
-    }
-
-    public void registerListener(IImuReaderListener listener) {
-        listeners.add(listener);
-        filteredReader.registerListener(listener);
     }
 
     @Override
@@ -106,6 +106,7 @@ public class ImuDriver implements IImuDriver, Runnable {
         positionAngle.setAngleX(positionAngle.getAngleX() + cleanReading.getGyroX() * (DT_MS / 1000d));
         positionAngle.setAngleY(positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000d));
         positionAngle.setAngleZ(positionAngle.getAngleZ() + cleanReading.getGyroZ() * (DT_MS / 1000d));
+        listener.angleReceived(positionAngle);
     }
 
     protected void getInitPosition() {

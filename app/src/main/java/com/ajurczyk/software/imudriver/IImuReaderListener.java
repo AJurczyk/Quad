@@ -1,6 +1,7 @@
 package com.ajurczyk.software.imudriver;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.software.imudriver.impl.PositionAngle;
 
 /**
  * @author aleksander.jurczyk@seedlabs.io
@@ -20,4 +21,11 @@ public interface IImuReaderListener {
      * @param data raw reading
      */
     void rawReadingReceived(AccGyroData data);
+
+    /**
+     * Received info about current angle.
+     *
+     * @param angle current angle
+     */
+    void angleReceived(PositionAngle angle);
 }
