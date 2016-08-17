@@ -155,10 +155,12 @@ public class ImuFilteredReaderTest {
     }
 
     @Test
-    public final void clear() throws IOException, PropertyNotFoundException, AccGyroIncorrectAxisException,
+    public final void clearPrevious() throws IOException, PropertyNotFoundException, AccGyroIncorrectAxisException,
             AccGyroReadValueException, ImuFilteredReaderException {
         //given
+        final IImuReaderListener listener = mock(IImuReaderListener.class);
         final ImuFilteredReader filteredReader = new ImuFilteredReader();
+        filteredReader.setListener(listener);
         filteredReader.setCompensationFile(COMPENSATION_FILE);
         filteredReader.reloadCompensation();
 
@@ -184,7 +186,9 @@ public class ImuFilteredReaderTest {
     @Test
     public final void enableCompensate() throws ImuFilteredReaderException, AccGyroIncorrectAxisException, AccGyroReadValueException {
         //given
+        final IImuReaderListener listener = mock(IImuReaderListener.class);
         final ImuFilteredReader filteredReader = new ImuFilteredReader();
+        filteredReader.setListener(listener);
         filteredReader.setCompensationFile(COMPENSATION_FILE);
         filteredReader.reloadCompensation();
 

@@ -29,14 +29,19 @@ public class ImuFilteredReader implements IImuFilteredReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuFilteredReader.class);
 
     private static final int MEDIAN_SIZE = 3;
-    private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
+
     @Autowired
     private IImuReaderListener listener;
-    private String compensationFile = "";
-    private AccGyroData compensation;
-    private boolean compensate = true;
+
     @Autowired
     private IGyroAcc gyroAcc;
+
+    private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
+
+    private String compensationFile = "";
+    private AccGyroData compensation;
+
+    private boolean compensate = true;
 
     /**
      * Default constructor.
@@ -123,7 +128,7 @@ public class ImuFilteredReader implements IImuFilteredReader {
         try {
             final AccGyroData reading = gyroAcc.readAll();
             previousReadings.add(reading);
-            //listeners.stream().forEach(p -> p.rawReadingReceived(reading));//TODO handle raw and filtered reading on charts
+            listener.rawReadingReceived(reading);
         } catch (AccGyroIncorrectAxisException | AccGyroReadValueException e) {
             throw new ImuFilteredReaderException(e.getMessage(), e);
         }
