@@ -20,52 +20,48 @@
 <div ng-app="myApp" ng-controller="MainCtrl">
     <div class="container">
         <div class="panel panel-primary">
-            <div class="panel-heading">Chart</div>
+            <div class="panel-heading">Acceleration</div>
             <div class="panel-body">
-                <div class="gyro-chart">
-                    <linechart data="data" options="options"></linechart>
+                <div class="col-sm-4 gyro-chart">
+                    <linechart data="data" options="accXChartOptions"></linechart>
                 </div>
-
+                <div class="col-sm-4 gyro-chart">
+                    <linechart data="data" options="accXChartOptions"></linechart>
+                </div>
+                <div class="col-sm-4 gyro-chart">
+                    <linechart data="data" options="accXChartOptions"></linechart>
+                </div>
             </div>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">Gyroscope</div>
+            <div class="panel-body">
+                <div class="col-sm-4 gyro-chart">
+                    <linechart data="data" options="accXChartOptions"></linechart>
+                </div>
+                <div class="col-sm-4 gyro-chart">
+                    <linechart data="data" options="accXChartOptions"></linechart>
+                </div>
+                <div class="col-sm-4 gyro-chart">
+                    <linechart data="data" options="accXChartOptions"></linechart>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Control panel</div>
             <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runGyro()">
                 start/stop gyro
             </div>
             <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runPoller()">
                 Run poller
             </div>
-            <button type="button" class="btn btn-default" ng-click="getGyro()">
-                <span class=""></span>Get measurement
-            </button>
             <button type="button" class="btn btn-default" ng-click="clear()">
                 <span class=""></span>Clear
             </button>
-            <br> <br>
-
-            <div class="table">
-                <table id="gyro-table">
-                    <tr>
-                        <th>lp.</th>
-                        <th>accX</th>
-                        <th>accY</th>
-                        <th>accZ</th>
-                        <th>gyroX</th>
-                        <th>gyroY</th>
-                        <th>gyroZ</th>
-                    </tr>
-                    <tr ng-repeat="reading in readings | reverse">
-                        <td>{{readings.length - $index}}</td>
-                        <td>{{reading.accX}}</td>
-                        <td>{{reading.accY}}</td>
-                        <td>{{reading.accZ}}</td>
-                        <td>{{reading.gyroX}}</td>
-                        <td>{{reading.gyroY}}</td>
-                        <td>{{reading.gyroZ}}</td>
-                    </tr>
-                </table>
-            </div>
+            <button type="button" class="btn btn-default" ng-click="editChart()">
+                <span class=""></span>EditChart
+            </button>
 
 
         </div>
