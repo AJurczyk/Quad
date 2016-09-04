@@ -3,7 +3,8 @@ package com.ajurczyk.software.imudriver.impl;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
-import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Random;
@@ -15,6 +16,8 @@ import java.util.concurrent.TimeUnit;
  * @author aleksander.jurczyk@gmail.com on 03.09.16.
  */
 public class ImuDriverMock implements IImuDriver {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverMock.class);
 
     private int eventsInterval;
     private boolean working;
@@ -31,7 +34,9 @@ public class ImuDriverMock implements IImuDriver {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void startWorking() {
+
         working = true;
         while (working) {
             final AccGyroData rawReading = new AccGyroData(getRandomAcc(),
@@ -54,7 +59,7 @@ public class ImuDriverMock implements IImuDriver {
             try {
                 TimeUnit.MILLISECONDS.sleep(eventsInterval);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error(e.toString());
             }
         }
     }

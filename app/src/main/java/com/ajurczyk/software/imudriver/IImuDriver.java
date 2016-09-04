@@ -1,6 +1,5 @@
 package com.ajurczyk.software.imudriver;
 
-import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
 import com.ajurczyk.software.imudriver.impl.PositionAngle;
 
 /**

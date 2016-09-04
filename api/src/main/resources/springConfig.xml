@@ -6,7 +6,7 @@
     <bean class="com.ajurczyk.software.imudriver.impl.ImuDriver">
         <property name="filteredReader" ref="filteredReader">
         </property>
-        <property name="calibrationManager">
+        <property name="calibrationMgr">
             <bean class="com.ajurczyk.software.imudriver.impl.CalibrationManager">
                 <property name="caliProbes" value="25"/>
                 <property name="reader" ref="filteredReader"/>

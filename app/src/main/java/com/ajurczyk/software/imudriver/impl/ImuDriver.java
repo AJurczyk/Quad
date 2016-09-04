@@ -24,7 +24,7 @@ public class ImuDriver implements IImuDriver, Runnable {
     @Autowired
     private IImuReaderListener listener;
 
-    private CalibrationManager calibrationManager;
+    private CalibrationManager calibrationMgr;
     private IClock clock = new SystemClock();
     private Thread runner;
     private IImuFilteredReader filteredReader;
@@ -34,8 +34,8 @@ public class ImuDriver implements IImuDriver, Runnable {
         return DT_MS;
     }
 
-    public void setCalibrationManager(CalibrationManager calibrationManager) {
-        this.calibrationManager = calibrationManager;
+    public void setCalibrationMgr(CalibrationManager calibrationMgr) {
+        this.calibrationMgr = calibrationMgr;
     }
 
     public void setListener(IImuReaderListener listener) {
@@ -90,7 +90,7 @@ public class ImuDriver implements IImuDriver, Runnable {
         getInitPosition();
 
         try {
-            calibrationManager.calibrate();
+            calibrationMgr.calibrate();
             while (true) {
                 mainReader();
             }

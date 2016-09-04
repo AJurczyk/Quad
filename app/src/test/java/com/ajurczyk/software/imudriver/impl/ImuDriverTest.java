@@ -1,7 +1,6 @@
 package com.ajurczyk.software.imudriver.impl;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
-import com.ajurczyk.software.imudriver.ICalibrationManager;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuFilteredReader;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
@@ -34,7 +33,7 @@ public class ImuDriverTest {
         //given
         final IImuReaderListener listener = mock(IImuReaderListener.class);
         final IImuFilteredReader reader = mock(IImuFilteredReader.class);
-        final CalibrationManager calibrationManager = mock(CalibrationManager.class);
+        final CalibrationManager calibrationMgr = mock(CalibrationManager.class);
         final IClock clock = mock(IClock.class);
         when(clock.getMiliseconds()).thenReturn(
             0L, DT_MS - 1,
@@ -44,7 +43,7 @@ public class ImuDriverTest {
             0L, DT_MS - 1);
 
         final IImuDriver imuDriver = new ImuDriver();
-        ((ImuDriver) imuDriver).setCalibrationManager(calibrationManager);
+        ((ImuDriver) imuDriver).setCalibrationMgr(calibrationMgr);
         ((ImuDriver) imuDriver).setClock(clock);
         ((ImuDriver) imuDriver).setListener(listener);
         ((ImuDriver) imuDriver).setFilteredReader(reader);
