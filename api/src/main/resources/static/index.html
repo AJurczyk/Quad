@@ -21,37 +21,6 @@
 <div ng-app="myApp" ng-controller="MainCtrl">
     <div class="container">
         <div class="panel panel-primary">
-            <div class="panel-heading">Acceleration</div>
-            <div class="panel-body">
-
-                <div class="col-sm-4 gyro-chart">
-                    <linechart data="ChartManager.accX.data" options="ChartManager.accX.options"></linechart>
-                </div>
-                <div class="col-sm-4 gyro-chart">
-                    <linechart data="ChartManager.accY.data" options="ChartManager.accY.options"></linechart>
-                </div>
-                <div class="col-sm-4 gyro-chart">
-                    <linechart data="ChartManager.accZ.data" options="ChartManager.accZ.options"></linechart>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">Gyroscope</div>
-            <div class="panel-body">
-                <div class="col-sm-4 gyro-chart">
-                    <linechart data="ChartManager.gyroX.data" options="ChartManager.gyroX.options"></linechart>
-                </div>
-                <div class="col-sm-4 gyro-chart">
-                    <linechart data="ChartManager.gyroY.data" options="ChartManager.gyroY.options"></linechart>
-                </div>
-                <div class="col-sm-4 gyro-chart">
-                    <linechart data="ChartManager.gyroZ.data" options="ChartManager.gyroZ.options"></linechart>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-primary">
             <div class="panel-heading">Control panel</div>
             <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runGyro()">
                 start/stop gyro
@@ -59,9 +28,95 @@
             <button type="button" class="btn btn-default" ng-click="ChartManager.clear()">
                 <span class=""></span>Clear
             </button>
+            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runPoller()">
+                Run poller
+            </div>
+
+            <br>
+            <button type="button" class="btn btn-default" ng-click="ChartManager.zoomInAll()">
+                <span class=""></span>+
+            </button>
+            <button type="button" class="btn btn-default" ng-click="ChartManager.zoomOutAll()">
+                <span class=""></span>-
+            </button>
+            <br>
+
+            <div class="input-group">
+                <button type="button" class="btn btn-default" ng-click="ChartManager.setXmin()">
+                    <span class=""></span>Set
+                </button>
+                <input type="number" class="form-control" ng-model="ChartManager.xMin"/>
+            </div>
 
         </div>
 
+        <div class="panel panel-primary">
+            <div class="panel-heading">Acceleration</div>
+            <div class="panel-body">
+
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accX.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accX.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.accX.data" options="ChartManager.accX.options"></linechart>
+                </div>
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accY.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accY.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.accY.data" options="ChartManager.accY.options"></linechart>
+                </div>
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accZ.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accZ.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.accZ.data" options="ChartManager.accZ.options"></linechart>
+                </div>
+            </div>
+        </div>
+<br>
+<br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Gyroscope</div>
+            <div class="panel-body">
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.gyroX.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.gyroX.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.gyroX.data" options="ChartManager.gyroX.options"></linechart>
+                </div>
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.gyroY.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.gyroY.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.gyroY.data" options="ChartManager.gyroY.options"></linechart>
+                </div>
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.gyroZ.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.gyroZ.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.gyroZ.data" options="ChartManager.gyroZ.options"></linechart>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
