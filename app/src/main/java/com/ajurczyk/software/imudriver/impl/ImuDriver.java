@@ -43,7 +43,7 @@ public class ImuDriver implements IImuDriver, Runnable {
         this.clock = clock;
     }
 
-    protected void setFilteredReader(IImuFilteredReader filteredReader) {
+    public void setFilteredReader(IImuFilteredReader filteredReader) {
         this.filteredReader = filteredReader;
     }
 
@@ -93,6 +93,18 @@ public class ImuDriver implements IImuDriver, Runnable {
         }
     }
 
+    protected void getInitPosition() {
+        LOGGER.debug("Reading current position using accelerometer.");
+        positionAngle = new PositionAngle();//TODO get init position from acc reading only
+    }
+
+    protected void mainReader() throws ImuFilteredReaderException, InterruptedException {
+        final long startTime = clock.getMiliseconds();
+        final AccGyroData cleanReading = filteredReader.getFilteredReading();
+        reCalcAngle(cleanReading);
+        waitForNextIteration(clock.getMiliseconds() - startTime);
+    }
+
     private void waitForNextIteration(long delay) throws InterruptedException {
         if (delay < DT_MS) {
             Thread.sleep(DT_MS - delay);
@@ -106,17 +118,5 @@ public class ImuDriver implements IImuDriver, Runnable {
         positionAngle.setAngleY(positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000d));
         positionAngle.setAngleZ(positionAngle.getAngleZ() + cleanReading.getGyroZ() * (DT_MS / 1000d));
         listener.angleReceived(positionAngle);
-    }
-
-    protected void getInitPosition() {
-        LOGGER.debug("Reading current position using accelerometer.");
-        positionAngle = new PositionAngle();//TODO get init position from acc reading only
-    }
-
-    protected void mainReader() throws ImuFilteredReaderException, InterruptedException {
-        final long startTime = clock.getMiliseconds();
-        final AccGyroData cleanReading = filteredReader.getFilteredReading();
-        reCalcAngle(cleanReading);
-        waitForNextIteration(clock.getMiliseconds() - startTime);
     }
 }

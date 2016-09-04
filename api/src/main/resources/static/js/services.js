@@ -1,9 +1,9 @@
 var app = angular.module('quadServices', []);
 
 app.factory('GyroChartSrv', function(){
-    var chartSpan = 100;
 
     function GyroChartSrv(chartName) {
+        var chartSpan = 100;
         var chartName;
         var chartProbesCount = 0;
         this.data = {
@@ -18,7 +18,7 @@ app.factory('GyroChartSrv', function(){
                   dataset: "dataSetRaw",
                   key: "yValue",
                   label: chartName + "raw",
-                  color: "#FF0000",
+                  color: "#FF8A8A",
                   type: ['line'],
                   id: 'series' + chartName + 'raw'
                 },
@@ -27,7 +27,7 @@ app.factory('GyroChartSrv', function(){
                    dataset: "dataSetClean",
                    key: "yValue",
                    label: chartName + "clean",
-                   color: "#00FF00",
+                   color: "#000000",
                    type: ['line'],
                    id: 'series' + chartName + 'clean'
                 }
@@ -71,12 +71,33 @@ app.factory('GyroChartSrv', function(){
                 this.options.axes.x.max++;
             }
         };
+
+        this.zoomIn = function() {
+            var step = 30;
+            if(chartSpan > step){
+                chartSpan = chartSpan - step;
+                this.options.axes.x.max=this.options.axes.x.max - step;
+            }
+        };
+
+        this.zoomOut = function() {
+            var step = 30;
+            chartSpan = chartSpan + step;
+            this.options.axes.x.max = this.options.axes.x.max + step;
+        };
+
+        this.setXmin = function(xMin) {
+            this.options.axes.x.min = xMin;
+            this.options.axes.x.max = xMin + chartSpan;
+        };
     };
     return GyroChartSrv;
 });
 
 app.factory('GyroChartsMgr', ['GyroChartSrv', function(GyroChartSrv){
     var mgr={};
+    mgr.xMin = 0;
+
     mgr.accX = new GyroChartSrv("AccX");
     mgr.accY = new GyroChartSrv("AccY");
     mgr.accZ = new GyroChartSrv("AccZ");
@@ -107,6 +128,33 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', function(GyroChartSrv){
         mgr.gyroX.clear();
         mgr.gyroY.clear();
         mgr.gyroZ.clear();
+    };
+
+    mgr.zoomInAll = function(){
+        mgr.accX.zoomIn();
+        mgr.accY.zoomIn();
+        mgr.accZ.zoomIn();
+        mgr.gyroX.zoomIn();
+        mgr.gyroY.zoomIn();
+        mgr.gyroZ.zoomIn();
+    };
+
+    mgr.zoomOutAll = function(){
+        mgr.accX.zoomOut();
+        mgr.accY.zoomOut();
+        mgr.accZ.zoomOut();
+        mgr.gyroX.zoomOut();
+        mgr.gyroY.zoomOut();
+        mgr.gyroZ.zoomOut();
+    };
+
+    mgr.setXmin = function(){
+        mgr.accX.setXmin(mgr.xMin);
+        mgr.accY.setXmin(mgr.xMin);
+        mgr.accZ.setXmin(mgr.xMin);
+        mgr.gyroX.setXmin(mgr.xMin);
+        mgr.gyroY.setXmin(mgr.xMin);
+        mgr.gyroZ.setXmin(mgr.xMin);
     };
     return mgr;
 }]);

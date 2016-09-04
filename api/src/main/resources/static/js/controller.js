@@ -32,6 +32,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
     $scope.ChartManager = GyroChartsMgr;
 
     var pollerDelay = 110;
+    $scope.pollerState = false;
     $scope.gyroState = false;
 
 
@@ -39,6 +40,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
         delay: pollerDelay,
         action: 'myQuery'
     });
+    myPoller.stop();
 
     myPoller.promise.then(null, null, function(response){
         for(i=0; i < response.length; i++){
@@ -60,5 +62,14 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
         );
     };
 
-    myPoller.start();
+
+    $scope.runPoller = function(){
+        $scope.pollerState =! $scope.pollerState;
+        if($scope.pollerState){
+            myPoller.start();
+        }
+        else {
+            myPoller.stop();
+        }
+     };
 }]);
