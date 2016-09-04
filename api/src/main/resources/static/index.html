@@ -14,6 +14,7 @@
     <script src="/bower_components/angular-poller/angular-poller.js"></script>
 
     <script src="js/controller.js"></script>
+    <script src="js/services.js"></script>
 
 </head>
 <body>
@@ -22,28 +23,30 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Acceleration</div>
             <div class="panel-body">
+
                 <div class="col-sm-4 gyro-chart">
-                    <linechart data="data" options="accXChartOptions"></linechart>
+                    <linechart data="ChartManager.accX.data" options="ChartManager.accX.options"></linechart>
                 </div>
                 <div class="col-sm-4 gyro-chart">
-                    <linechart data="data" options="accXChartOptions"></linechart>
+                    <linechart data="ChartManager.accY.data" options="ChartManager.accY.options"></linechart>
                 </div>
                 <div class="col-sm-4 gyro-chart">
-                    <linechart data="data" options="accXChartOptions"></linechart>
+                    <linechart data="ChartManager.accZ.data" options="ChartManager.accZ.options"></linechart>
                 </div>
             </div>
         </div>
+
         <div class="panel panel-primary">
             <div class="panel-heading">Gyroscope</div>
             <div class="panel-body">
                 <div class="col-sm-4 gyro-chart">
-                    <linechart data="data" options="accXChartOptions"></linechart>
+                    <linechart data="ChartManager.gyroX.data" options="ChartManager.gyroX.options"></linechart>
                 </div>
                 <div class="col-sm-4 gyro-chart">
-                    <linechart data="data" options="accXChartOptions"></linechart>
+                    <linechart data="ChartManager.gyroY.data" options="ChartManager.gyroY.options"></linechart>
                 </div>
                 <div class="col-sm-4 gyro-chart">
-                    <linechart data="data" options="accXChartOptions"></linechart>
+                    <linechart data="ChartManager.gyroZ.data" options="ChartManager.gyroZ.options"></linechart>
                 </div>
             </div>
         </div>
@@ -53,16 +56,9 @@
             <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runGyro()">
                 start/stop gyro
             </div>
-            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'" ng-click="runPoller()">
-                Run poller
-            </div>
-            <button type="button" class="btn btn-default" ng-click="clear()">
+            <button type="button" class="btn btn-default" ng-click="ChartManager.clear()">
                 <span class=""></span>Clear
             </button>
-            <button type="button" class="btn btn-default" ng-click="editChart()">
-                <span class=""></span>EditChart
-            </button>
-
 
         </div>
 
