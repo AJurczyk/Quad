@@ -3,6 +3,7 @@ package com.ajurczyk.software.imudriver.impl;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
+import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Random;
@@ -80,5 +81,4 @@ public class ImuDriverMock implements IImuDriver {
         final Random random = new Random();
         return min + (max - min) * random.nextDouble();
     }
-
 }

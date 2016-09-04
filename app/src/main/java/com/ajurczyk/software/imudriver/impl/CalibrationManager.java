@@ -7,7 +7,6 @@ import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,20 +21,14 @@ public class CalibrationManager implements ICalibrationManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(CalibrationManager.class);
     private static final int DT_MS = 20;
     private int caliProbes = 100;
-    @Autowired
+
     private IImuFilteredReader reader;
 
-    private String compensationFile = "";
-
-    protected void setCaliProbes(int caliProbes) {
+    public void setCaliProbes(int caliProbes) {
         this.caliProbes = caliProbes;
     }
 
-    public void setCompensationFile(String compensationFile) {
-        this.compensationFile = compensationFile;
-    }
-
-    protected void setReader(IImuFilteredReader reader) {
+    public void setReader(IImuFilteredReader reader) {
         this.reader = reader;
     }
 
@@ -74,6 +67,7 @@ public class CalibrationManager implements ICalibrationManager {
     }
 
     private void saveCompensation(double gyroX, double gyroY, double gyroZ) throws IOException {
+        final String compensationFile = reader.getCompensationFile();
         final File file = new File(compensationFile);
         if (!file.exists()) {
             file.createNewFile();
@@ -81,8 +75,8 @@ public class CalibrationManager implements ICalibrationManager {
         final StringBuilder builder = new StringBuilder(18);
         final String newline = System.getProperty("line.separator");
         builder.append("gyroX=").append(String.valueOf(gyroX)).append(newline)
-                .append("gyroY=").append(String.valueOf(gyroY)).append(newline)
-                .append("gyroZ=").append(String.valueOf(gyroZ));
+            .append("gyroY=").append(String.valueOf(gyroY)).append(newline)
+            .append("gyroZ=").append(String.valueOf(gyroZ));
 
         final FileOutputStream fos = new FileOutputStream(compensationFile);
         try {

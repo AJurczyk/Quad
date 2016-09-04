@@ -1,8 +1,10 @@
 package com.ajurczyk.software.imudriver.impl;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.software.imudriver.ICalibrationManager;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuFilteredReader;
+import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import com.ajurczyk.time.IClock;
 import org.mockito.invocation.InvocationOnMock;
@@ -30,7 +32,9 @@ public class ImuDriverTest {
     @Test
     public final void readerThread() throws ImuFilteredReaderException, InterruptedException {
         //given
+        final IImuReaderListener listener = mock(IImuReaderListener.class);
         final IImuFilteredReader reader = mock(IImuFilteredReader.class);
+        final CalibrationManager calibrationManager = mock(CalibrationManager.class);
         final IClock clock = mock(IClock.class);
         when(clock.getMiliseconds()).thenReturn(
             0L, DT_MS - 1,
@@ -40,7 +44,9 @@ public class ImuDriverTest {
             0L, DT_MS - 1);
 
         final IImuDriver imuDriver = new ImuDriver();
+        ((ImuDriver) imuDriver).setCalibrationManager(calibrationManager);
         ((ImuDriver) imuDriver).setClock(clock);
+        ((ImuDriver) imuDriver).setListener(listener);
         ((ImuDriver) imuDriver).setFilteredReader(reader);
         ((ImuDriver) imuDriver).setPositionAngle(new PositionAngle());
 

@@ -4,9 +4,12 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean class="com.ajurczyk.software.imudriver.impl.ImuDriver">
-        <property name="filteredReader">
-            <bean class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
-                <property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>
+        <property name="filteredReader" ref="filteredReader">
+        </property>
+        <property name="calibrationManager">
+            <bean class="com.ajurczyk.software.imudriver.impl.CalibrationManager">
+                <property name="caliProbes" value="25"/>
+                <property name="reader" ref="filteredReader"/>
             </bean>
         </property>
     </bean>
@@ -15,6 +18,9 @@
         <!--<property name="eventsInterval" value="50"/>-->
     <!--</bean>-->
 
+    <bean id="filteredReader" class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
+        <property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>
+    </bean>
     <bean id="i2cController" class="com.ajurczyk.hardware.i2c.impl.Pi4jI2c"/>
 
     <bean id="accGyro" class="com.ajurczyk.hardware.gyroacc.impl.Mpu6050">

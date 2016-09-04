@@ -29,6 +29,12 @@ public interface IImuFilteredReader {
     void reloadCompensation() throws ImuFilteredReaderException;
 
     /**
+     * Gets compensation file.
+     *
+     * @return path to compensation file.
+     */
+    String getCompensationFile();
+    /**
      * Enable/disable gyro compensation.
      *
      * @param state enable/disable

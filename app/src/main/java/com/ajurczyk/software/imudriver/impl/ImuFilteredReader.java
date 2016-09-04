@@ -38,7 +38,12 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
 
-    private String compensationFile = "";
+    private String compensationFile;
+
+    public String getCompensationFile() {
+        return compensationFile;
+    }
+
     private AccGyroData compensation;
 
     private boolean compensate = true;

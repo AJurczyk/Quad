@@ -9,6 +9,7 @@ import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
+import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
 import com.ajurczyk.software.imudriver.impl.PositionAngle;
 import io.api.rest.enums.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
