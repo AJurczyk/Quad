@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@Component
 public class Controller implements IImuReaderListener {
 
     private final List<FlyEvent> flyEvents = new ArrayList<>();
@@ -47,7 +46,7 @@ public class Controller implements IImuReaderListener {
         final List<FlyEvent> flyEventsCopy = new ArrayList<>();
         flyEventsCopy.addAll(flyEvents);
         flyEvents.clear();
-        return flyEventsCopy;
+        return flyEventsCopy;//TODO make it a queue!
     }
 
     /**

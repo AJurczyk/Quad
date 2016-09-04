@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 /**
  * @author aleksander.jurczyk@seedlabs.io
  */
-@Component
 public class ImuDriver implements IImuDriver, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriver.class);
@@ -28,8 +27,8 @@ public class ImuDriver implements IImuDriver, Runnable {
     private IClock clock = new SystemClock();
     private Thread runner;
 
-    @Autowired
     private IImuFilteredReader filteredReader;
+
     private PositionAngle positionAngle;
 
     public void setListener(IImuReaderListener listener) {
