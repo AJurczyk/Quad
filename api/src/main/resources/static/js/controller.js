@@ -50,6 +50,9 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
             if(response[i].type=="GYRO_CLEAN") {
                 $scope.ChartManager.addGyroCleanReading(response[i].value);
             }
+            if(response[i].type=="GYRO_ANGLE") {
+                $scope.ChartManager.addAngleReading(response[i].value);
+            }
         }
     });
 
