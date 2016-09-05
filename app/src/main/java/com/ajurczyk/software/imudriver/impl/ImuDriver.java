@@ -4,13 +4,13 @@ import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuFilteredReader;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
+import com.ajurczyk.software.imudriver.exception.CalibrationManagerException;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
 import com.ajurczyk.time.IClock;
 import com.ajurczyk.time.impl.SystemClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -24,19 +24,22 @@ public class ImuDriver implements IImuDriver, Runnable {
     @Autowired
     private IImuReaderListener listener;
 
+    private CalibrationManager calibrationMgr;
     private IClock clock = new SystemClock();
     private Thread runner;
-
     private IImuFilteredReader filteredReader;
-
     private PositionAngle positionAngle;
-
-    public void setListener(IImuReaderListener listener) {
-        this.listener = listener;
-    }
 
     protected static int getDtMs() {
         return DT_MS;
+    }
+
+    public void setCalibrationMgr(CalibrationManager calibrationMgr) {
+        this.calibrationMgr = calibrationMgr;
+    }
+
+    public void setListener(IImuReaderListener listener) {
+        this.listener = listener;
     }
 
     protected void setClock(IClock clock) {
@@ -64,6 +67,9 @@ public class ImuDriver implements IImuDriver, Runnable {
 
     @Override
     public void stopWorking() {
+        if (runner == null) {
+            return;
+        }
         try {
             runner.interrupt();
             runner.join();
@@ -80,13 +86,17 @@ public class ImuDriver implements IImuDriver, Runnable {
     @Override
     public void run() {
         LOGGER.debug("Start reading gyro.");
+
         getInitPosition();
 
         try {
+            calibrationMgr.calibrate();
             while (true) {
                 mainReader();
             }
         } catch (ImuFilteredReaderException | InterruptedException e) {
+            LOGGER.error(e.toString());
+        } catch (CalibrationManagerException e) {
             LOGGER.error(e.toString());
         } finally {
             LOGGER.debug("Reading gyro finished.");

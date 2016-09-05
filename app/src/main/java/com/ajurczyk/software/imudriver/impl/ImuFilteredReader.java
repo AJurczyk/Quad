@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 
 /**
@@ -29,18 +30,13 @@ public class ImuFilteredReader implements IImuFilteredReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuFilteredReader.class);
 
     private static final int MEDIAN_SIZE = 3;
-
+    private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
     @Autowired
     private IImuReaderListener listener;
-
     @Autowired
     private IGyroAcc gyroAcc;
-
-    private final RotatingList<AccGyroData> previousReadings = new RotatingList<>(MEDIAN_SIZE);
-
-    private String compensationFile = "";
+    private String compensationFile;
     private AccGyroData compensation;
-
     private boolean compensate = true;
 
     /**
@@ -51,6 +47,14 @@ public class ImuFilteredReader implements IImuFilteredReader {
     }
 
     protected ImuFilteredReader(String compensationFile) {
+        this.compensationFile = compensationFile;
+    }
+
+    public String getCompensationFile() {
+        return compensationFile;
+    }
+
+    public void setCompensationFile(String compensationFile) {
         this.compensationFile = compensationFile;
     }
 
@@ -71,7 +75,6 @@ public class ImuFilteredReader implements IImuFilteredReader {
             throw new ImuFilteredReaderException(e.getMessage(), e);
         }
     }
-
 
     protected AccGyroData getCompensation() {
         return compensation;
@@ -113,10 +116,6 @@ public class ImuFilteredReader implements IImuFilteredReader {
     @Override
     public void enableGyroCompensation(boolean state) {
         compensate = state;
-    }
-
-    public void setCompensationFile(String compensationFile) {
-        this.compensationFile = compensationFile;
     }
 
     protected RotatingList<AccGyroData> getPreviousReadings() {

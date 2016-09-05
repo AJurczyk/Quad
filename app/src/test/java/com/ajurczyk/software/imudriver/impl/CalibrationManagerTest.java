@@ -69,10 +69,11 @@ public class CalibrationManagerTest {
     @Test
     public final void calibrate() throws ImuFilteredReaderException, CalibrationManagerException, IOException, PropertyNotFoundException {
         //given
-        final CalibrationManager calibrationMgr = new CalibrationManager();
         final IImuFilteredReader filteredReader = mock(IImuFilteredReader.class);
-        calibrationMgr.setCompensationFile(FILE_PATH);
+        final CalibrationManager calibrationMgr = new CalibrationManager();
+        calibrationMgr.setCaliProbes(CALIBRATE_PROBES);
         calibrationMgr.setReader(filteredReader);
+        when(filteredReader.getCompensationFile()).thenReturn(FILE_PATH);
 
         when(filteredReader.getFilteredReading()).thenAnswer(new Answer<AccGyroData>() {
             int counter;
