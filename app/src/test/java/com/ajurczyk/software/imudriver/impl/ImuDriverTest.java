@@ -21,11 +21,11 @@ public class ImuDriverTest {
     private static final int CYCLES = 5;
     private static final long DT_MS = ImuDriver.getDtMs();
     private static final AccGyroData[] READINGS = {
-        new AccGyroData(1, 2, 3, 1, 2, 3),
-        new AccGyroData(2, 2, 2, 0, 0, 0),
-        new AccGyroData(0, 0, 0, -1, -2, -3),
-        new AccGyroData(0, 0, 0, 1, 1, 1),
-        new AccGyroData(-1, -1, -1, 0, 0, 0)
+        new AccGyroData(0.1d, 0.2d, 0.3d, 1, 2, 3),
+        new AccGyroData(0.3d, 0.2d, 0.1d, 0, 0, 0),
+        new AccGyroData(0.1d, 0.2d, 0.3d, -1, -2, -3),
+        new AccGyroData(0.3d, 0.2d, 0.1d, 1, 1, 1),
+        new AccGyroData(0.2d, 0.2d, 0.2d, 0, 0, 0)
     };
 
     @Test
@@ -79,14 +79,19 @@ public class ImuDriverTest {
     private PositionAngle getExpectedAngle() {
         double angleX = 0d;
         double angleY = 0d;
-        double angleZ = 0d;
+        final float accFactor = 0.02f;
+        final float gyroFactor = 1f - accFactor;
 
         for (int i = 0; i < CYCLES; i++) {
-            angleX += READINGS[i].getGyroX() * DT_MS / 1000;
-            angleY += READINGS[i].getGyroY() * DT_MS / 1000;
-            angleZ += READINGS[i].getGyroZ() * DT_MS / 1000;
-        }
+            final double accXangle = Math.toDegrees(Math.atan2(READINGS[i].getAccY(), READINGS[i].getAccZ()));
+            final double accYangle = Math.toDegrees(Math.atan2(READINGS[i].getAccX(), READINGS[i].getAccZ()));
 
-        return new PositionAngle(angleX, angleY, angleZ);
+            final double gyroXangle = angleX + READINGS[i].getGyroX() * (DT_MS / 1000d);
+            final double gyroYangle = angleY + READINGS[i].getGyroY() * (DT_MS / 1000d);
+            angleX = gyroFactor * gyroXangle + accFactor * accXangle;
+            angleY = gyroFactor * gyroYangle + accFactor * accYangle;
+        }
+        return new PositionAngle(angleX, angleY, 0);
     }
+    //TODO add test when complementary filter fails
 }

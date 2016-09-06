@@ -127,6 +127,7 @@ public class ImuDriver implements IImuDriver, Runnable {
      * @param cleanReading current reading from IMU
      */
     private void reCalcAngle(AccGyroData cleanReading) {
+        //TODO: atan2 has its angle limitations which should be checked
         final float accFactor = 0.02f;
         final float gyroFactor = 1f - accFactor;
 
