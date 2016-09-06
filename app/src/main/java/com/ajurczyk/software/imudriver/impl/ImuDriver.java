@@ -94,9 +94,7 @@ public class ImuDriver implements IImuDriver, Runnable {
             while (true) {
                 mainReader();
             }
-        } catch (ImuFilteredReaderException | InterruptedException e) {
-            LOGGER.error(e.toString());
-        } catch (CalibrationManagerException e) {
+        } catch (ImuFilteredReaderException | InterruptedException | CalibrationManagerException e) {
             LOGGER.error(e.toString());
         } finally {
             LOGGER.debug("Reading gyro finished.");
@@ -123,10 +121,23 @@ public class ImuDriver implements IImuDriver, Runnable {
         }
     }
 
+    /**
+     * Calculates angle with using of complementary filter.
+     *
+     * @param cleanReading current reading from IMU
+     */
     private void reCalcAngle(AccGyroData cleanReading) {
-        positionAngle.setAngleX(positionAngle.getAngleX() + cleanReading.getGyroX() * (DT_MS / 1000d));
-        positionAngle.setAngleY(positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000d));
-        positionAngle.setAngleZ(positionAngle.getAngleZ() + cleanReading.getGyroZ() * (DT_MS / 1000d));
+        final float accFactor = 0.02f;
+        final float gyroFactor = 1f - accFactor;
+
+        final double accXangle = Math.toDegrees(Math.atan2(cleanReading.getAccY(), cleanReading.getAccZ()));
+        final double accYangle = Math.toDegrees(Math.atan2(cleanReading.getAccX(), cleanReading.getAccZ()));
+
+        final double gyroXangle = positionAngle.getAngleX() + cleanReading.getGyroX() * (DT_MS / 1000d);
+        final double gyroYangle = positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000d);
+
+        positionAngle.setAngleX(gyroFactor * gyroXangle + accFactor * accXangle);
+        positionAngle.setAngleY(gyroFactor * gyroYangle + accFactor * accYangle);
         listener.angleReceived(positionAngle);
     }
 }
