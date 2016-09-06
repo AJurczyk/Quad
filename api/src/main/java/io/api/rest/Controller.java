@@ -76,4 +76,9 @@ public class Controller implements IImuReaderListener {
     public void angleReceived(PositionAngle angle) {
         flyEvents.add(new FlyEvent(EventType.GYRO_ANGLE, angle));
     }
+
+    @Override
+    public void motorPowerChanged(int power) {
+        flyEvents.add(new FlyEvent(EventType.MOTOR_THROTTLE, power));
+    }
 }

@@ -28,7 +28,7 @@ public class EmaxCf2822Test {
         final EmaxCf2822 motor = new EmaxCf2822(pwm);
 
         //when
-        motor.setPercent(17);
+        motor.setPower(17);
 
         //then
         verify(pwm, times(1)).setDuty(PWM_17_PRC);
@@ -42,7 +42,7 @@ public class EmaxCf2822Test {
         final EmaxCf2822 motor = new EmaxCf2822(pwm);
 
         //when
-        motor.setPercent(101);
+        motor.setPower(101);
 
         //then
         //throwsException
@@ -56,7 +56,7 @@ public class EmaxCf2822Test {
         final EmaxCf2822 motor = new EmaxCf2822(pwm);
 
         //when
-        motor.setPercent(-1);
+        motor.setPower(-1);
 
         //then
         //throwsException

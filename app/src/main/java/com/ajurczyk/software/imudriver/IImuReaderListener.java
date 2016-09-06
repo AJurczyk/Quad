@@ -28,4 +28,11 @@ public interface IImuReaderListener {
      * @param angle current angle
      */
     void angleReceived(PositionAngle angle);
+
+    /**
+     * Received when power of the motor has changed.
+     *
+     * @param power percent power value.
+     */
+    void motorPowerChanged(int power);
 }

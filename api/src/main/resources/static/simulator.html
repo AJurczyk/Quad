@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Control panel</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="node_modules/n3-charts/build/LineChart.css">
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="node_modules/n3-charts/node_modules/d3/d3.min.js"></script>
+    <script src="node_modules/n3-charts/build/LineChart.js"></script>
+    <script src="/bower_components/angular-poller/angular-poller.js"></script>
+
+    <script src="js/controller.js"></script>
+    <script src="js/services.js"></script>
+
+</head>
+<body>
+<div ng-app="myApp" ng-controller="MainCtrl">
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Control panel</div>
+            <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'"
+                 ng-click="runGyro()">
+                start/stop gyro
+            </div>
+            <button type="button" class="btn btn-default" ng-click="ChartManager.clear()">
+                <span class=""></span>Clear
+            </button>
+            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'"
+                 ng-click="runPoller()">
+                Run poller
+            </div>
+
+            <br>
+            <button type="button" class="btn btn-default" ng-click="ChartManager.zoomInAll()">
+                <span class=""></span>+
+            </button>
+            <button type="button" class="btn btn-default" ng-click="ChartManager.zoomOutAll()">
+                <span class=""></span>-
+            </button>
+            <br>
+
+            <div class="input-group">
+                <button type="button" class="btn btn-default" ng-click="ChartManager.setXmin()">
+                    <span class=""></span>Set
+                </button>
+                <input type="number" class="form-control" ng-model="ChartManager.xMin"/>
+            </div>
+
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Motor controll</div>
+            <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'"
+                 ng-click="runGyro()">
+                Set motor power
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Angle and gyro</div>
+            <div class="panel-body">
+                <div class="col-md-4 gyro-chart">
+                    <linechart data="ChartManager.angleX.data" options="ChartManager.angleX.options"></linechart>
+                </div>
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accX.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.accX.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.accX.data" options="ChartManager.accX.options"></linechart>
+                </div>
+                <div class="col-md-4 gyro-chart">
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.throttle.zoomIn()">
+                        <span class=""></span>+
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ChartManager.throttle.zoomOut()">
+                        <span class=""></span>-
+                    </button>
+                    <linechart data="ChartManager.throttle.data" options="ChartManager.throttle.options"></linechart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

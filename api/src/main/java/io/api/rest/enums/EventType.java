@@ -8,5 +8,6 @@ package io.api.rest.enums;
 public enum EventType {
     GYRO_CLEAN,
     GYRO_RAW,
-    GYRO_ANGLE;
+    GYRO_ANGLE,
+    MOTOR_THROTTLE
 }

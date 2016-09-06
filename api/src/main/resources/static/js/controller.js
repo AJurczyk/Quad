@@ -34,7 +34,7 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
     var pollerDelay = 110;
     $scope.pollerState = false;
     $scope.gyroState = false;
-
+    var throttle = 0;
 
     var myPoller = poller.get(Entry, {
         delay: pollerDelay,
@@ -52,6 +52,10 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
             }
             if(response[i].type=="GYRO_ANGLE") {
                 $scope.ChartManager.addAngleReading(response[i].value);
+                $scope.ChartManager.addThrottleReading(throttle);
+            }
+            if(response[i].type=="MOTOR_THROTTLE") {
+                throttle = response[i].value;
             }
         }
     });
@@ -65,6 +69,13 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
         );
     };
 
+    $scope.runGyro = function(){
+        StartStopSrv.startOrStop(
+            {
+                state: $scope.gyroState
+            }
+        );
+    };
 
     $scope.runPoller = function(){
         $scope.pollerState =! $scope.pollerState;
