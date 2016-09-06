@@ -138,7 +138,6 @@ public class ImuDriver implements IImuDriver, Runnable {
 
         positionAngle.setAngleX(gyroFactor * gyroXangle + accFactor * accXangle);
         positionAngle.setAngleY(gyroFactor * gyroYangle + accFactor * accYangle);
-        positionAngle.setAngleZ(positionAngle.getAngleZ() + cleanReading.getGyroZ() * (DT_MS / 1000d));
         listener.angleReceived(positionAngle);
     }
 }
