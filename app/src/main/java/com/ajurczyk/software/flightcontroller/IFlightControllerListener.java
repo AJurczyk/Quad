@@ -10,4 +10,18 @@ public interface IFlightControllerListener {
      * @param power percent power value.
      */
     void motorPowerChanged(int power);
+
+    /**
+     * Received regulation signal for motor power.
+     *
+     * @param regulation regulation value
+     */
+    void regulationSignalReceived(double regulation);
+
+    /**
+     * Received when flight controller reads angle.
+     *
+     * @param angle angle in degrees
+     */
+    void angleReceived(double angle);
 }

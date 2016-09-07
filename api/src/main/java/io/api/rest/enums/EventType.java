@@ -9,5 +9,7 @@ public enum EventType {
     GYRO_CLEAN,
     GYRO_RAW,
     GYRO_ANGLE,
-    MOTOR_THROTTLE
+    MOTOR_POWER,
+    FLIGHT_CONTROLLER_ANGLE,
+    REGULATION
 }

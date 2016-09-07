@@ -76,6 +76,12 @@ public class FlightController implements IFlightController, Runnable {
                 mainLoop();
             }
         } catch (InterruptedException e) {
+            try {
+                motor.stop();
+            } catch (PwmValRangeException | PercentValRangeException e1) {
+                LOGGER.error(e.toString());
+                //TODO unable to stop motor. Cut off the power.
+            }
             LOGGER.error(e.toString());
         } finally {
             LOGGER.debug("Reading gyro finished.");
@@ -86,12 +92,18 @@ public class FlightController implements IFlightController, Runnable {
         final long startTime = System.currentTimeMillis();
         final double currentAngle = imuDriver.getAngle().getAngleX();
         final int currentPower = motor.getPower();
+
         final double regulation = getRegulation(desiredAngle, currentAngle, currentPower);
+        listener.regulationSignalReceived(regulation);
+
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
+            final int motorPower = currentPower + (int) regulation;
             motor.setPower(currentPower + (int) regulation);
+            listener.motorPowerChanged(motorPower);
         } catch (PwmValRangeException | PercentValRangeException e) {
+            LOGGER.debug("Unable to set power on motor.");
             //TODO do something
         }
     }

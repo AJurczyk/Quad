@@ -4,9 +4,8 @@ package io.api.rest;
  * @author aleksander.jurczyk@seedlabs.io
  */
 
-import com.ajurczyk.hardware.gyroacc.exception.AccGyroIncorrectAxisException;
-import com.ajurczyk.hardware.gyroacc.exception.AccGyroReadValueException;
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.impl.PositionAngle;
@@ -20,10 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class Controller implements IImuReaderListener {
+public class Controller implements IImuReaderListener, IFlightControllerListener {
 
     private static final int MAX_EVENTS_SIZE = 200;
-    private final List<GyroEvent> gyroEvents = new ArrayList<>();
+    private final List<QuadEvent> gyroEvents = new ArrayList<>();
+    private final List<QuadEvent> flightEvents = new ArrayList<>();
+
     @Autowired
     private IImuDriver imuDriver;
 
@@ -34,15 +35,25 @@ public class Controller implements IImuReaderListener {
     /**
      * Get stored GyroEvents.
      *
-     * @return list of measurements
-     * @throws AccGyroIncorrectAxisException something went wrong
-     * @throws AccGyroReadValueException     something went wrong
-     * @throws InterruptedException          something went wrong
+     * @return list of gyro events
      */
     @RequestMapping(value = "/getGyroEvents")
-    public List<GyroEvent> getGyroEvents() throws AccGyroIncorrectAxisException, AccGyroReadValueException,
-        InterruptedException {
-        final List<GyroEvent> flyEventsCopy = new ArrayList<>();
+    public List<QuadEvent> getGyroEvents() {
+        return getEvents(gyroEvents);
+    }
+
+    /**
+     * Get stored FlightEvents.
+     *
+     * @return list of flight controller events
+     */
+    @RequestMapping(value = "/getFlightEvents")
+    public List<QuadEvent> getFlightEvents() {
+        return getEvents(flightEvents);
+    }
+
+    private List<QuadEvent> getEvents(List<QuadEvent> eventsList){
+        final List<QuadEvent> flyEventsCopy = new ArrayList<>();
         flyEventsCopy.addAll(gyroEvents);
         gyroEvents.clear();
         return flyEventsCopy;//TODO make it a queue!
@@ -64,23 +75,38 @@ public class Controller implements IImuReaderListener {
 
     @Override
     public void cleanReadingReceived(AccGyroData data) {
-        addGyroEvent(new GyroEvent(EventType.GYRO_CLEAN, data));
+        addQuadEvent(gyroEvents, new QuadEvent(EventType.GYRO_CLEAN, data));
     }
 
     @Override
     public void rawReadingReceived(AccGyroData data) {
-        addGyroEvent(new GyroEvent(EventType.GYRO_RAW, data));
+        addQuadEvent(gyroEvents, new QuadEvent(EventType.GYRO_RAW, data));
     }
 
     @Override
     public void angleReceived(PositionAngle angle) {
-        addGyroEvent(new GyroEvent(EventType.GYRO_ANGLE, angle));
+        addQuadEvent(gyroEvents, new QuadEvent(EventType.GYRO_ANGLE, angle));
     }
 
-    private void addGyroEvent(GyroEvent event) {
-        if (gyroEvents.size() >= MAX_EVENTS_SIZE) {
-            gyroEvents.clear();
+    @Override
+    public void motorPowerChanged(int power) {
+        addQuadEvent(flightEvents, new QuadEvent(EventType.MOTOR_POWER, power));
+    }
+
+    @Override
+    public void regulationSignalReceived(double regulation) {
+        addQuadEvent(flightEvents, new QuadEvent(EventType.REGULATION, regulation));
+    }
+
+    @Override
+    public void angleReceived(double angle) {
+        addQuadEvent(flightEvents, new QuadEvent(EventType.FLIGHT_CONTROLLER_ANGLE, angle));
+    }
+
+    private void addQuadEvent(List<QuadEvent> eventsList, QuadEvent event) {
+        if (eventsList.size() >= MAX_EVENTS_SIZE) {
+            eventsList.clear();
         }
-        gyroEvents.add(event);
+        eventsList.add(event);
     }
 }
