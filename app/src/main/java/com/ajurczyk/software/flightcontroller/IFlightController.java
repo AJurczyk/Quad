@@ -8,4 +8,6 @@ public interface IFlightController {
     void start();
 
     void stop();
+
+    void setDesiredAngle(double desiredAngle);
 }

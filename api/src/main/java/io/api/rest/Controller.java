@@ -5,6 +5,10 @@ package io.api.rest;
  */
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.hardware.motor.IMotor;
+import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
+import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
+import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
@@ -27,6 +31,12 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
 
     @Autowired
     private IImuDriver imuDriver;
+
+    @Autowired
+    private IFlightController flightController;
+
+    @Autowired
+    private IMotor motor;
 
     public void setImuDriver(IImuDriver imuDriver) {
         this.imuDriver = imuDriver;
@@ -52,10 +62,10 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
         return getEvents(flightEvents);
     }
 
-    private List<QuadEvent> getEvents(List<QuadEvent> eventsList){
+    private List<QuadEvent> getEvents(List<QuadEvent> eventsList) {
         final List<QuadEvent> flyEventsCopy = new ArrayList<>();
-        flyEventsCopy.addAll(gyroEvents);
-        gyroEvents.clear();
+        flyEventsCopy.addAll(eventsList);
+        eventsList.clear();
         return flyEventsCopy;//TODO make it a queue!
     }
 
@@ -71,6 +81,20 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
         } else {
             imuDriver.stopWorking();
         }
+    }
+
+    @RequestMapping(value = "/startStopFlightCtrl")
+    public void startStopFlightController(@RequestParam boolean run) {
+        if (run) {
+            flightController.start();
+        } else {
+            flightController.stop();
+        }
+    }
+
+    @RequestMapping(value = "/setDesiredAngle")
+    public void setDesiredAngle(@RequestParam int angle) {
+        flightController.setDesiredAngle(angle);
     }
 
     @Override

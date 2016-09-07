@@ -3,14 +3,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <bean id="imuSimulator" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator"/>
+    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
+        <property name="imuDriverSimulator" ref="imuSimulator"/>
+    </bean>
+
 
     <bean class="com.ajurczyk.software.flightcontroller.impl.FlightController">
         <property name="imuDriver" ref="imuSimulator"/>
-        <property name="motor">
-            <bean class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
-                <property name="imuDriverSimulator" ref="imuSimulator"/>
-            </bean>
-        </property>
+        <property name="motor" ref="motor"/>
     </bean>
 
 

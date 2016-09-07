@@ -20,7 +20,7 @@ public class MotorSimulator implements IMotor {
 
     @Autowired
     private IImuReaderListener listener;
-    int power = 0;
+    int power = 51;
 
     @Override
     public void stop() throws PwmValRangeException, PercentValRangeException {

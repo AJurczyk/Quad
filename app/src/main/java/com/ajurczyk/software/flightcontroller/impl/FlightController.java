@@ -28,9 +28,13 @@ public class FlightController implements IFlightController, Runnable {
 
     private Thread runner;
 
-    private int dt;
+    private int dt = 20;
 
-    private double desiredAngle;
+    private double desiredAngle = 0;
+
+    public void setDesiredAngle(double desiredAngle) {
+        this.desiredAngle = desiredAngle;
+    }
 
     public void setMotor(IMotor motor) {
         this.motor = motor;
@@ -93,6 +97,7 @@ public class FlightController implements IFlightController, Runnable {
     private void mainLoop() throws InterruptedException {
         final long startTime = System.currentTimeMillis();
         final double currentAngle = imuDriver.getAngle().getAngleX();
+        listener.angleReceived(currentAngle);
         final int currentPower = motor.getPower();
 
         final double regulation = getRegulation(desiredAngle, currentAngle, currentPower);

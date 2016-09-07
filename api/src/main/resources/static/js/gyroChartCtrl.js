@@ -1,11 +1,5 @@
 var app = angular.module('myApp', ['gyroChartServices','ngResource', 'n3-line-chart', 'emguo.poller']);
 
-app.filter('reverse', function() {
-  return function(items) {
-    return items.slice().reverse();
-  };
-});
-
 app.factory('Entry', function($resource) {
     return $resource('/getGyroEvents',[], {
         myQuery: {

@@ -13,82 +13,43 @@
     <script src="node_modules/n3-charts/build/LineChart.js"></script>
     <script src="/bower_components/angular-poller/angular-poller.js"></script>
 
-    <script src="js/controller.js"></script>
-    <script src="js/services.js"></script>
+    <script src="js/flightControllerCtrl.js"></script>
+    <script src="js/flightCtrlSrv.js"></script>
+
 
 </head>
 <body>
-<div ng-app="myApp" ng-controller="MainCtrl">
+<div ng-app="flightModule" ng-controller="flightCtrl">
     <div class="container">
-        <div class="panel panel-primary">
-            <div class="panel-heading">Control panel</div>
-            <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'"
-                 ng-click="runGyro()">
-                start/stop gyro
-            </div>
-            <button type="button" class="btn btn-default" ng-click="ChartManager.clear()">
-                <span class=""></span>Clear
-            </button>
-            <div class="btn btn-default" ng-class="pollerState ? 'btn btn-warning' : 'btn btn-default'"
-                 ng-click="runPoller()">
-                Run poller
-            </div>
 
-            <br>
-            <button type="button" class="btn btn-default" ng-click="ChartManager.zoomInAll()">
-                <span class=""></span>+
-            </button>
-            <button type="button" class="btn btn-default" ng-click="ChartManager.zoomOutAll()">
-                <span class=""></span>-
-            </button>
-            <br>
-
-            <div class="input-group">
-                <button type="button" class="btn btn-default" ng-click="ChartManager.setXmin()">
-                    <span class=""></span>Set
-                </button>
-                <input type="number" class="form-control" ng-model="ChartManager.xMin"/>
-            </div>
-
+        <div class="btn btn-default" ng-class="isRunning ? 'btn btn-warning' : 'btn btn-default'"
+             ng-click="startStopFlightController()">
+            start/stop flight controller
         </div>
+        <button type="button" class="btn btn-default" ng-click="clearCharts()">
+            <span class=""></span>Clear
+        </button>
+        <input type="number" class="form-control" ng-model="desiredAngle"/>
+        <button type="button" class="btn btn-default" ng-click="setDesiredAngle(desiredAngle)">
+            <span class=""></span>Clear
+        </button>
+        <br>
 
         <div class="panel panel-primary">
-            <div class="panel-heading">Motor controll</div>
-            <div class="btn btn-default" ng-class="gyroState ? 'btn btn-warning' : 'btn btn-default'"
-                 ng-click="runGyro()">
-                Set motor power
-            </div>
-            <div class="panel-body">
-
-            </div>
-        </div>
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">Angle and gyro</div>
+            <div class="panel-heading">Angle</div>
             <div class="panel-body">
                 <div class="col-md-4 gyro-chart">
-                    <linechart data="ChartManager.angleX.data" options="ChartManager.angleX.options"></linechart>
+                    <linechart data="motorPwrChart.data" options="motorPwrChart.options"></linechart>
                 </div>
                 <div class="col-md-4 gyro-chart">
-                    <button type="button" class="btn btn-default" ng-click="ChartManager.accX.zoomIn()">
-                        <span class=""></span>+
-                    </button>
-                    <button type="button" class="btn btn-default" ng-click="ChartManager.accX.zoomOut()">
-                        <span class=""></span>-
-                    </button>
-                    <linechart data="ChartManager.accX.data" options="ChartManager.accX.options"></linechart>
+                    <linechart data="angleChart.data" options="angleChart.options"></linechart>
                 </div>
                 <div class="col-md-4 gyro-chart">
-                    <button type="button" class="btn btn-default" ng-click="ChartManager.throttle.zoomIn()">
-                        <span class=""></span>+
-                    </button>
-                    <button type="button" class="btn btn-default" ng-click="ChartManager.throttle.zoomOut()">
-                        <span class=""></span>-
-                    </button>
-                    <linechart data="ChartManager.throttle.data" options="ChartManager.throttle.options"></linechart>
+                    <linechart data="regulationChart.data" options="regulationChart.options"></linechart>
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>

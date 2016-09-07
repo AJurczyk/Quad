@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverSimulator.class);
     private static final int DT_MS = 20;
-    final PositionAngle positionAngle = new PositionAngle(0, 0, 0);
+    PositionAngle positionAngle = new PositionAngle(0, 0, 0);
     double angleSpeed = 0;
     private Thread runner;
 
@@ -37,11 +37,12 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
 
     @Override
     public PositionAngle getAngle() {
-        return null;
+        return positionAngle;
     }
 
     @Override
     public void startWorking() {
+        positionAngle = new PositionAngle(0, 0, 0);
         runner = new Thread(this);
         runner.start();
     }
@@ -88,7 +89,12 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
      * Calculates angle.
      */
     private void reCalcAngle() {
-        final double gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000d);
+        double gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000d);
+        if (gyroXangle > 180) {
+            gyroXangle -= 360;
+        } else if (gyroXangle < -180) {
+            gyroXangle += 360;
+        }
         positionAngle.setAngleX(gyroXangle);
         listener.rawReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.cleanReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
