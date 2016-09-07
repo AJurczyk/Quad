@@ -31,6 +31,5 @@ public class MotorSimulator implements IMotor {
     public void setPower(int power) throws PwmValRangeException, PercentValRangeException {
         this.power = power;
         imuDriverSimulator.setAngleSpeed(power - 50);
-        listener.motorPowerChanged(power);
     }
 }

@@ -80,7 +80,7 @@ public class EmaxCf2822 implements IMotor {
         if (power < 0 || power > 100) {
             throw new PercentValRangeException("Invalid percentage value: " + power + "%.");
         }
-        this.percent = power;
         pwm.setDuty(calcPwmPercent(power));
+        this.percent = power;
     }
 }

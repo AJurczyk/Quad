@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['quadServices','ngResource', 'n3-line-chart', 'emguo.poller']);
+var app = angular.module('myApp', ['gyroChartServices','ngResource', 'n3-line-chart', 'emguo.poller']);
 
 app.filter('reverse', function() {
   return function(items) {
@@ -7,7 +7,7 @@ app.filter('reverse', function() {
 });
 
 app.factory('Entry', function($resource) {
-    return $resource('/getEvents',[], {
+    return $resource('/getGyroEvents',[], {
         myQuery: {
             method: 'get',
             isArray: true

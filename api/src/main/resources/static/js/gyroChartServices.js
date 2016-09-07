@@ -1,4 +1,4 @@
-var app = angular.module('quadServices', []);
+var app = angular.module('gyroChartServices', []);
 
 app.factory('GyroChartSrv', function(){
 

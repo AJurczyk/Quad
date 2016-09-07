@@ -22,8 +22,8 @@ import java.util.List;
 @RestController
 public class Controller implements IImuReaderListener {
 
-    private final List<FlyEvent> flyEvents = new ArrayList<>();
-
+    private static final int MAX_EVENTS_SIZE = 200;
+    private final List<GyroEvent> gyroEvents = new ArrayList<>();
     @Autowired
     private IImuDriver imuDriver;
 
@@ -32,19 +32,19 @@ public class Controller implements IImuReaderListener {
     }
 
     /**
-     * Get reading from storedReadings list.
+     * Get stored GyroEvents.
      *
      * @return list of measurements
      * @throws AccGyroIncorrectAxisException something went wrong
      * @throws AccGyroReadValueException     something went wrong
      * @throws InterruptedException          something went wrong
      */
-    @RequestMapping(value = "/getEvents")
-    public List<FlyEvent> getEvents() throws AccGyroIncorrectAxisException, AccGyroReadValueException,
-            InterruptedException {
-        final List<FlyEvent> flyEventsCopy = new ArrayList<>();
-        flyEventsCopy.addAll(flyEvents);
-        flyEvents.clear();
+    @RequestMapping(value = "/getGyroEvents")
+    public List<GyroEvent> getGyroEvents() throws AccGyroIncorrectAxisException, AccGyroReadValueException,
+        InterruptedException {
+        final List<GyroEvent> flyEventsCopy = new ArrayList<>();
+        flyEventsCopy.addAll(gyroEvents);
+        gyroEvents.clear();
         return flyEventsCopy;//TODO make it a queue!
     }
 
@@ -64,21 +64,23 @@ public class Controller implements IImuReaderListener {
 
     @Override
     public void cleanReadingReceived(AccGyroData data) {
-        flyEvents.add(new FlyEvent(EventType.GYRO_CLEAN, data));
+        addGyroEvent(new GyroEvent(EventType.GYRO_CLEAN, data));
     }
 
     @Override
     public void rawReadingReceived(AccGyroData data) {
-        flyEvents.add(new FlyEvent(EventType.GYRO_RAW, data));
+        addGyroEvent(new GyroEvent(EventType.GYRO_RAW, data));
     }
 
     @Override
     public void angleReceived(PositionAngle angle) {
-        flyEvents.add(new FlyEvent(EventType.GYRO_ANGLE, angle));
+        addGyroEvent(new GyroEvent(EventType.GYRO_ANGLE, angle));
     }
 
-    @Override
-    public void motorPowerChanged(int power) {
-        flyEvents.add(new FlyEvent(EventType.MOTOR_THROTTLE, power));
+    private void addGyroEvent(GyroEvent event) {
+        if (gyroEvents.size() >= MAX_EVENTS_SIZE) {
+            gyroEvents.clear();
+        }
+        gyroEvents.add(event);
     }
 }

@@ -7,12 +7,12 @@ import io.api.rest.enums.EventType;
  *
  * @author aleksander.jurczyk@gmail.com on 02.07.16.
  */
-public class FlyEvent {
+public class GyroEvent {
     private final EventType type;
 
     private final Object value;
 
-    public FlyEvent(EventType type, Object value) {
+    public GyroEvent(EventType type, Object value) {
         this.type = type;
         this.value = value;
     }
