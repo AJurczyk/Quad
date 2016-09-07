@@ -12,7 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MotorSimulator implements IMotor {
 
-    final ImuDriverSimulator imuDriverSimulator = new ImuDriverSimulator();
+    private ImuDriverSimulator imuDriverSimulator;
+
+    public void setImuDriverSimulator(ImuDriverSimulator imuDriverSimulator) {
+        this.imuDriverSimulator = imuDriverSimulator;
+    }
+
     @Autowired
     private IImuReaderListener listener;
     int power = 0;

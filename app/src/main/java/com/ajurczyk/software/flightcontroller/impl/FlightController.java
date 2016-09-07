@@ -8,6 +8,7 @@ import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +23,7 @@ public class FlightController implements IFlightController, Runnable {
 
     private IImuDriver imuDriver;
 
+    @Autowired
     private IFlightControllerListener listener;
 
     private Thread runner;
