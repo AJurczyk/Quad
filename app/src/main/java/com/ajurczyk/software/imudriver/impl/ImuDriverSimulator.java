@@ -100,4 +100,8 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
         listener.cleanReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.angleReceived(positionAngle);
     }
+
+    public void setPositionAngle(PositionAngle positionAngle) {
+        this.positionAngle = positionAngle;
+    }
 }

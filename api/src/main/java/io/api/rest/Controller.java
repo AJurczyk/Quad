@@ -12,6 +12,7 @@ import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
+import com.ajurczyk.software.imudriver.impl.ImuDriverSimulator;
 import com.ajurczyk.software.imudriver.impl.PositionAngle;
 import io.api.rest.enums.EventType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +96,11 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     @RequestMapping(value = "/setDesiredAngle")
     public void setDesiredAngle(@RequestParam int angle) {
         flightController.setDesiredAngle(angle);
+    }
+
+    @RequestMapping(value = "/setCurrentAngle")
+    public void setCurrentAngle(@RequestParam int angle) {
+        ((ImuDriverSimulator) imuDriver).setPositionAngle(new PositionAngle(angle, 0, 0));
     }
 
     @Override

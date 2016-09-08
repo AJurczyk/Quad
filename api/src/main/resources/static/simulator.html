@@ -21,19 +21,32 @@
 <body>
 <div ng-app="flightModule" ng-controller="flightCtrl">
     <div class="container">
-
-        <div class="btn btn-default" ng-class="isRunning ? 'btn btn-warning' : 'btn btn-default'"
-             ng-click="startStopFlightController()">
-            start/stop flight controller
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default" ng-class="isRunning ? 'btn btn-warning' : 'btn btn-default'"
+                    ng-click="startStopFlightController()">start/stop flight controller
+            </button>
+            <button type="button" class="btn btn-default" ng-click="clearCharts()">clear charts
+            </button>
         </div>
-        <button type="button" class="btn btn-default" ng-click="clearCharts()">
-            <span class=""></span>Clear
-        </button>
-        <input type="number" class="form-control" ng-model="desiredAngle"/>
-        <button type="button" class="btn btn-default" ng-click="setDesiredAngle(desiredAngle)">
-            <span class=""></span>Clear
-        </button>
+
         <br>
+        <br>
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="setDesiredAngle(desiredAngle)">Set Desired
+                    Angle
+                </button>
+            </span>
+            <input type="number" class="form-control" ng-model="desiredAngle"/>
+        </div>
+        <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="setCurrentAngle(currentAngle)">Set current
+                        Angle
+                    </button>
+                </span>
+            <input type="number" class="form-control" ng-model="currentAngle"/>
+        </div>
 
         <div class="panel panel-primary">
             <div class="panel-heading">Angle</div>

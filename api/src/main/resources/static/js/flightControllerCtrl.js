@@ -54,4 +54,12 @@ function($scope, poller, flightCtrlSrv, Entry, SingleChartSrv) {
             }
         );
     };
+
+    $scope.setCurrentAngle = function(angle){
+        flightCtrlSrv.setCurrentAngle(
+            {
+                state: angle
+            }
+        );
+    };
 }]);

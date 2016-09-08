@@ -17,6 +17,9 @@ app.factory('flightCtrlSrv',['$resource', function($resource){
         },
         setDesiredAngle: {
             url: "/setDesiredAngle?angle=:state"
+        },
+        setCurrentAngle: {
+            url: "/setCurrentAngle?angle=:state"
         }
     });
 }]);
