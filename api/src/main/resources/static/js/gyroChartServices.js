@@ -1,4 +1,4 @@
-var app = angular.module('quadServices', []);
+var app = angular.module('gyroChartServices', []);
 
 app.factory('GyroChartSrv', function(){
 
@@ -183,6 +183,8 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', 'AngleChartSrv', function(GyroChar
     mgr.angleY = new AngleChartSrv("Y");
     mgr.angleZ = new AngleChartSrv("Z");
 
+    mgr.throttle = new AngleChartSrv("THROTTLE");
+
     mgr.addGyroRawReading = function(yValue){
         mgr.accX.addGyroRawReading(yValue.accX);
         mgr.accY.addGyroRawReading(yValue.accY);
@@ -205,6 +207,10 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', 'AngleChartSrv', function(GyroChar
         mgr.angleZ.addAngleReading(yValue.angleZ);
     };
 
+    mgr.addThrottleReading = function(yValue){
+        mgr.throttle.addAngleReading(yValue);
+    };
+
     mgr.clear = function(){
         mgr.accX.clear();
         mgr.accY.clear();
@@ -218,6 +224,7 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', 'AngleChartSrv', function(GyroChar
         mgr.angleY.clear();
         mgr.angleZ.clear();
 
+        mgr.throttle.clear();
     };
 
     mgr.zoomInAll = function(){
@@ -232,6 +239,8 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', 'AngleChartSrv', function(GyroChar
         mgr.angleX.zoomIn();
         mgr.angleY.zoomIn();
         mgr.angleZ.zoomIn();
+
+        mgr.throttle.zoomIn();
     };
 
     mgr.zoomOutAll = function(){
@@ -246,6 +255,8 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', 'AngleChartSrv', function(GyroChar
         mgr.angleX.zoomOut();
         mgr.angleY.zoomOut();
         mgr.angleZ.zoomOut();
+
+        mgr.throttle.zoomOut();
     };
 
     mgr.setXmin = function(){
@@ -260,6 +271,8 @@ app.factory('GyroChartsMgr', ['GyroChartSrv', 'AngleChartSrv', function(GyroChar
         mgr.angleX.setXmin(mgr.xMin);
         mgr.angleY.setXmin(mgr.xMin);
         mgr.angleZ.setXmin(mgr.xMin);
+
+        mgr.throttle.setXmin(mgr.xMin);
     };
     return mgr;
 }]);

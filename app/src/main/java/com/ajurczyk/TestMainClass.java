@@ -25,14 +25,14 @@ public class TestMainClass {
         IPwmController pwm = new RPi2HardwarePwm(1, EmaxCf2822.getPwmPeriodMs());
         EmaxCf2822 motor = new EmaxCf2822(pwm);
 
-        motor.setPercent(0);
-        motor.setPercent(20);
-        motor.setPercent(30);
+        motor.setPower(0);
+        motor.setPower(20);
+        motor.setPower(30);
         motor.stop();
 
         try {
             for (int i = 0; i < 4; i++) {
-                motor.setPercent(i * 10);
+                motor.setPower(i * 10);
             }
             motor.stop();
         } catch (PercentValRangeException prcValueOutOfRange) {

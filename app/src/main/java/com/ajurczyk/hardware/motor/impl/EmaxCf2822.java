@@ -66,21 +66,21 @@ public class EmaxCf2822 implements IMotor {
 
     @Override
     public void stop() throws PwmValRangeException, PercentValRangeException {
-        setPercent(0);
+        setPower(0);
     }
 
     @Override
-    public int getPercent() {
+    public int getPower() {
         return percent;
     }
 
     @Override
-    public void setPercent(int percent) throws PercentValRangeException, PwmValRangeException {
-        LOGGER.debug("[EMAX] Set " + percent + "%");
-        if (percent < 0 || percent > 100) {
-            throw new PercentValRangeException("Invalid percentage value: " + percent + "%.");
+    public void setPower(int power) throws PercentValRangeException, PwmValRangeException {
+        LOGGER.debug("[EMAX] Set " + power + "%");
+        if (power < 0 || power > 100) {
+            throw new PercentValRangeException("Invalid percentage value: " + power + "%.");
         }
-        this.percent = percent;
-        pwm.setDuty(calcPwmPercent(percent));
+        pwm.setDuty(calcPwmPercent(power));
+        this.percent = power;
     }
 }

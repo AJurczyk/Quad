@@ -10,7 +10,7 @@ public interface IMotor {
 
     void stop() throws PwmValRangeException, PercentValRangeException;
 
-    void setPercent(int value) throws PwmValRangeException, PercentValRangeException;
+    void setPower(int power) throws PwmValRangeException, PercentValRangeException;
 
-    int getPercent();
+    int getPower();
 }
