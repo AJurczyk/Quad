@@ -63,13 +63,6 @@ app.controller('MainCtrl', ['$scope', 'Entry', 'StartStopSrv', 'poller', 'GyroCh
         );
     };
 
-    $scope.runGyro = function(){
-        StartStopSrv.startOrStop(
-            {
-                state: $scope.gyroState
-            }
-        );
-    };
 
     $scope.runPoller = function(){
         $scope.pollerState =! $scope.pollerState;

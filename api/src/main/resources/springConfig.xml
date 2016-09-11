@@ -14,28 +14,27 @@
     </bean>
 
 
-    <!--<bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriver">-->
-    <!--<property name="filteredReader" ref="filteredReader">-->
-    <!--</property>-->
-    <!--<property name="calibrationMgr">-->
-    <!--<bean class="com.ajurczyk.software.imudriver.impl.CalibrationManager">-->
-    <!--<property name="caliProbes" value="25"/>-->
-    <!--<property name="reader" ref="filteredReader"/>-->
-    <!--</bean>-->
-    <!--</property>-->
-    <!--</bean>-->
+    <bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriver">
+        <property name="filteredReader" ref="filteredReader"/>
+        <property name="calibrationMgr">
+            <bean class="com.ajurczyk.software.imudriver.impl.CalibrationManager">
+                <property name="caliProbes" value="25"/>
+                <property name="reader" ref="filteredReader"/>
+            </bean>
+        </property>
+    </bean>
 
     <!--<bean class="com.ajurczyk.software.imudriver.impl.ImuDriverMock">-->
     <!--<property name="eventsInterval" value="50"/>-->
     <!--</bean>-->
 
-    <!--<bean id="filteredReader" class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">-->
-    <!--<property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>-->
-    <!--</bean>-->
-    <!--<bean id="i2cController" class="com.ajurczyk.hardware.i2c.impl.Pi4jI2c"/>-->
-    <!---->
-    <!--<bean id="accGyro" class="com.ajurczyk.hardware.gyroacc.impl.Mpu6050">-->
-    <!--<constructor-arg ref="i2cController"/>-->
-    <!--</bean>-->
+    <bean id="filteredReader" class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
+        <property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>
+    </bean>
+    <bean id="i2cController" class="com.ajurczyk.hardware.i2c.impl.Pi4jI2c"/>
+
+    <bean id="accGyro" class="com.ajurczyk.hardware.gyroacc.impl.Mpu6050">
+        <constructor-arg ref="i2cController"/>
+    </bean>
 
 </beans>
