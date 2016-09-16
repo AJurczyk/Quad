@@ -16,10 +16,11 @@ import java.util.concurrent.TimeUnit;
 public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverSimulator.class);
     private static final int DT_MS = 20;
-    PositionAngle positionAngle = new PositionAngle(0, 0, 0);
-    double angleSpeed = 0;
+    private static final float MAX_GYRO_ANGLE = 180f;
+    private static final float MIN_GYRO_ANGLE = -180f;
+    private PositionAngle positionAngle = new PositionAngle(0, 0, 0);
+    private float angleSpeed;
     private Thread runner;
-
     @Autowired
     private IImuReaderListener listener;
 
@@ -31,7 +32,11 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
         return positionAngle;
     }
 
-    public void setAngleSpeed(double angleSpeed) {
+    public void setPositionAngle(PositionAngle positionAngle) {
+        this.positionAngle = positionAngle;
+    }
+
+    public void setAngleSpeed(float angleSpeed) {
         this.angleSpeed = angleSpeed;
     }
 
@@ -89,19 +94,15 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
      * Calculates angle.
      */
     private void reCalcAngle() {
-        double gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000d);
-        if (gyroXangle > 180) {
+        float gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000f);
+        if (gyroXangle > MAX_GYRO_ANGLE) {
             gyroXangle -= 360;
-        } else if (gyroXangle < -180) {
+        } else if (gyroXangle < MIN_GYRO_ANGLE) {
             gyroXangle += 360;
         }
         positionAngle.setAngleX(gyroXangle);
         listener.rawReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.cleanReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.angleReceived(positionAngle);
-    }
-
-    public void setPositionAngle(PositionAngle positionAngle) {
-        this.positionAngle = positionAngle;
     }
 }

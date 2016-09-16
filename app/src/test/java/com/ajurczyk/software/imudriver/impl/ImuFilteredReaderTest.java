@@ -35,10 +35,10 @@ public class ImuFilteredReaderTest {
     private static final Double GYRO_Z_COMPENS = 3.3d;
 
     private final AccGyroData[] fakeReadings = new AccGyroData[]{
-        new AccGyroData(0d, 0.5d, 1d, 2d, 2.5d, 3d),
-        new AccGyroData(0.5d, 3d, 9.7d, 2d, 12.5d, -5d),
-        new AccGyroData(1d, 5d, 2.6d, 2d, 1.2d, -6d),
-        new AccGyroData(1.7d, 3d, 4d, 20d, 20d, -7d)};
+        new AccGyroData(0f, 0.5f, 1f, 2f, 2.5f, 3f),
+        new AccGyroData(0.5f, 3f, 9.7f, 2f, 12.5f, -5f),
+        new AccGyroData(1f, 5f, 2.6f, 2f, 1.2f, -6f),
+        new AccGyroData(1.7f, 3f, 4f, 20f, 20f, -7f)};
 
     /**
      * Create temporary compensation file.

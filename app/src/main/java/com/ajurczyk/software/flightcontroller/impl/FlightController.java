@@ -28,11 +28,11 @@ public class FlightController implements IFlightController, Runnable {
 
     private Thread runner;
 
-    private int dt = 20;
+    private int interval = 20;
 
-    private double desiredAngle = 0;
+    private float desiredAngle;
 
-    public void setDesiredAngle(double desiredAngle) {
+    public void setDesiredAngle(float desiredAngle) {
         this.desiredAngle = desiredAngle;
     }
 
@@ -48,8 +48,8 @@ public class FlightController implements IFlightController, Runnable {
         this.listener = listener;
     }
 
-    public void setDt(int dt) {
-        this.dt = dt;
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
 
     @Override
@@ -96,34 +96,34 @@ public class FlightController implements IFlightController, Runnable {
 
     private void mainLoop() throws InterruptedException {
         final long startTime = System.currentTimeMillis();
-        final double currentAngle = imuDriver.getAngle().getAngleX();
+        final float currentAngle = imuDriver.getAngle().getAngleX();
         listener.angleReceived(currentAngle);
-        final int currentPower = motor.getPower();
+        final float currentPower = motor.getPower();
 
-        final double regulation = getRegulation(desiredAngle, currentAngle, currentPower);
+        final float regulation = getRegulation(desiredAngle, currentAngle, currentPower);
         listener.regulationSignalReceived(regulation);
 
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
-            final int motorPower = currentPower + (int) regulation;
-            motor.setPower(currentPower + (int) regulation);
-            listener.motorPowerChanged(motorPower);
+            final float powerToSet = currentPower + regulation;
+            motor.setPower(powerToSet);
+            listener.motorPowerChanged(powerToSet);
         } catch (PwmValRangeException | PercentValRangeException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something
         }
     }
 
-    private double getRegulation(double desiredAngle, double currentAngle, int currentPower) {
-        return 0;
+    private float getRegulation(float desiredAngle, float currentAngle, float currentPower) {
+        return desiredAngle + currentAngle + currentPower - desiredAngle - currentAngle - currentPower;
     }
 
     private void waitForNextIteration(long delay) throws InterruptedException {
-        if (delay < dt) {
-            TimeUnit.MILLISECONDS.sleep(dt - delay);
+        if (delay < interval) {
+            TimeUnit.MILLISECONDS.sleep(interval - delay);
         } else {
-            LOGGER.warn("FlightController math took longer than dt(" + dt + "ms): " + delay + "ms.");
+            LOGGER.warn("FlightController math took longer than interval(" + interval + "ms): " + delay + "ms.");
         }
     }
 }

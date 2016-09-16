@@ -6,13 +6,13 @@ package com.ajurczyk.hardware.gyroacc.impl;
  * @author aleksander.jurczyk@seedlabs.io
  */
 public class AccGyroData {
-    private double accX;
-    private double accY;
-    private double accZ;
+    private float accX;
+    private float accY;
+    private float accZ;
 
-    private double gyroX;
-    private double gyroY;
-    private double gyroZ;
+    private float gyroX;
+    private float gyroY;
+    private float gyroZ;
 
     public AccGyroData(){
 
@@ -27,7 +27,7 @@ public class AccGyroData {
      * @param gyroY gyro reading Y axis
      * @param gyroZ gyro reading Z axis
      */
-    public AccGyroData(double accX, double accY, double accZ, double gyroX, double gyroY, double gyroZ) {
+    public AccGyroData(float accX, float accY, float accZ, float gyroX, float gyroY, float gyroZ) {
         this.accX = accX;
         this.accY = accY;
         this.accZ = accZ;
@@ -36,51 +36,51 @@ public class AccGyroData {
         this.gyroZ = gyroZ;
     }
 
-    public double getAccX() {
+    public float getAccX() {
         return accX;
     }
 
-    public void setAccX(double accX) {
+    public void setAccX(float accX) {
         this.accX = accX;
     }
 
-    public double getAccY() {
+    public float getAccY() {
         return accY;
     }
 
-    public void setAccY(double accY) {
+    public void setAccY(float accY) {
         this.accY = accY;
     }
 
-    public double getAccZ() {
+    public float getAccZ() {
         return accZ;
     }
 
-    public void setAccZ(double accZ) {
+    public void setAccZ(float accZ) {
         this.accZ = accZ;
     }
 
-    public double getGyroX() {
+    public float getGyroX() {
         return gyroX;
     }
 
-    public void setGyroX(double gyroX) {
+    public void setGyroX(float gyroX) {
         this.gyroX = gyroX;
     }
 
-    public double getGyroY() {
+    public float getGyroY() {
         return gyroY;
     }
 
-    public void setGyroY(double gyroY) {
+    public void setGyroY(float gyroY) {
         this.gyroY = gyroY;
     }
 
-    public double getGyroZ() {
+    public float getGyroZ() {
         return gyroZ;
     }
 
-    public void setGyroZ(double gyroZ) {
+    public void setGyroZ(float gyroZ) {
         this.gyroZ = gyroZ;
     }
 }

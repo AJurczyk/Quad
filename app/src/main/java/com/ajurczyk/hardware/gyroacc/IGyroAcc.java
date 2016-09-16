@@ -18,7 +18,7 @@ public interface IGyroAcc {
      * @throws AccGyroReadValueException     communication problems
      * @throws AccGyroIncorrectAxisException invalid axis
      */
-    double readAccInG(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
+    float readAccInG(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
 
     /**
      * Read gyroscope in degrees of given axis.
@@ -28,7 +28,7 @@ public interface IGyroAcc {
      * @throws AccGyroReadValueException     communication problems
      * @throws AccGyroIncorrectAxisException invalid axis
      */
-    double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
+    float readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException;
 
     /**
      * Read gyro [deg] and acc [G] on all 3 axis.

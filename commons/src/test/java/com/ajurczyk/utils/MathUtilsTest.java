@@ -12,18 +12,18 @@ public class MathUtilsTest {
     @Test
     public final void oddSet() {
         //when
-        final double median = MathUtils.median(1d, 80d, 2d, 3d, 90d);
+        final float median = MathUtils.median(1f, 80f, 2f, 3f, 90f);
 
         //then
-        Assert.assertEquals(median, 3d);
+        Assert.assertEquals(median, 3f);
     }
 
     @Test
     public final void evenSet() {
         //when
-        final double median = MathUtils.median(1d, 80d, 2d, 4d);
+        final float median = MathUtils.median(1f, 80f, 2f, 4f);
 
         //then
-        Assert.assertEquals(median, 3d);
+        Assert.assertEquals(median, 3f);
     }
 }

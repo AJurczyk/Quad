@@ -53,7 +53,7 @@ public class Mpu6050Test {
         return new Object[][]{
             {(short) 32767, 1 * ACC_SENSITIVITY},
             {(short) 0, 0 * ACC_SENSITIVITY},
-            {(short) 7836, 0.956572161015656},
+            {(short) 7836, 0.9565721750259399},
             {(short) -32767, -1 * ACC_SENSITIVITY}
         };
     }
@@ -68,7 +68,7 @@ public class Mpu6050Test {
         return new Object[][]{
             {(short) 32767, 1 * GYRO_SENSITIVITY},
             {(short) 0, 0 * GYRO_SENSITIVITY},
-            {(short) -73, -4.4557023834955904},
+            {(short) -73, -4.455702304840088},
             {(short) -32767, -1 * GYRO_SENSITIVITY}
         };
     }

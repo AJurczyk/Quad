@@ -12,17 +12,17 @@ import java.util.Random;
  */
 public class FakeGyro implements IGyroAcc {
 
-    private static final double RANGE_MIN = 0;
-    private static final double RANGE_MAX = 0.5;
+    private static final float RANGE_MIN = 0f;
+    private static final float RANGE_MAX = 0.5f;
 
     @Override
-    public double readAccInG(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
+    public float readAccInG(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         final Random random = new Random();
-        return RANGE_MIN + (RANGE_MAX - RANGE_MIN) * random.nextDouble();
+        return RANGE_MIN + (RANGE_MAX - RANGE_MIN) * random.nextFloat();
     }
 
     @Override
-    public double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
+    public float readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         return 0;
     }
 

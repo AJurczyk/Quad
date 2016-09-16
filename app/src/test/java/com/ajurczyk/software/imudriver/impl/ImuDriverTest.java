@@ -20,12 +20,18 @@ public class ImuDriverTest {
 
     private static final int CYCLES = 5;
     private static final long DT_MS = ImuDriver.getDtMs();
+
+    /**
+     * Factor used by complementary filter.
+     */
+    private static final float ACC_FACTOR = 0.02f;
+
     private static final AccGyroData[] READINGS = {
-        new AccGyroData(0.1d, 0.2d, 0.3d, 1, 2, 3),
-        new AccGyroData(0.3d, 0.2d, 0.1d, 0, 0, 0),
-        new AccGyroData(0.1d, 0.2d, 0.3d, -1, -2, -3),
-        new AccGyroData(0.3d, 0.2d, 0.1d, 1, 1, 1),
-        new AccGyroData(0.2d, 0.2d, 0.2d, 0, 0, 0)
+        new AccGyroData(0.1f, 0.2f, 0.3f, 1, 2, 3),
+        new AccGyroData(0.3f, 0.2f, 0.1f, 0, 0, 0),
+        new AccGyroData(0.1f, 0.2f, 0.3f, -1, -2, -3),
+        new AccGyroData(0.3f, 0.2f, 0.1f, 1, 1, 1),
+        new AccGyroData(0.2f, 0.2f, 0.2f, 0, 0, 0)
     };
 
     @Test
@@ -77,19 +83,18 @@ public class ImuDriverTest {
     }
 
     private PositionAngle getExpectedAngle() {
-        double angleX = 0d;
-        double angleY = 0d;
-        final float accFactor = 0.02f;
-        final float gyroFactor = 1f - accFactor;
+        float angleX = 0f;
+        float angleY = 0f;
+        final float gyroFactor = 1f - ACC_FACTOR;
 
         for (int i = 0; i < CYCLES; i++) {
-            final double accXangle = Math.toDegrees(Math.atan2(READINGS[i].getAccY(), READINGS[i].getAccZ()));
-            final double accYangle = Math.toDegrees(Math.atan2(READINGS[i].getAccX(), READINGS[i].getAccZ()));
+            final float accXangle = (float)Math.toDegrees(Math.atan2(READINGS[i].getAccY(), READINGS[i].getAccZ()));
+            final float accYangle = (float)Math.toDegrees(Math.atan2(READINGS[i].getAccX(), READINGS[i].getAccZ()));
 
-            final double gyroXangle = angleX + READINGS[i].getGyroX() * (DT_MS / 1000d);
-            final double gyroYangle = angleY + READINGS[i].getGyroY() * (DT_MS / 1000d);
-            angleX = gyroFactor * gyroXangle + accFactor * accXangle;
-            angleY = gyroFactor * gyroYangle + accFactor * accYangle;
+            final float gyroXangle = angleX + READINGS[i].getGyroX() * (DT_MS / 1000f);
+            final float gyroYangle = angleY + READINGS[i].getGyroY() * (DT_MS / 1000f);
+            angleX = gyroFactor * gyroXangle + ACC_FACTOR * accXangle;
+            angleY = gyroFactor * gyroYangle + ACC_FACTOR * accYangle;
         }
         return new PositionAngle(angleX, angleY, 0);
     }

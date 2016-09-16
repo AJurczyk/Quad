@@ -5,9 +5,6 @@ package io.api.rest;
  */
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
-import com.ajurczyk.hardware.motor.IMotor;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
@@ -35,9 +32,6 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
 
     @Autowired
     private IFlightController flightController;
-
-    @Autowired
-    private IMotor motor;
 
     public void setImuDriver(IImuDriver imuDriver) {
         this.imuDriver = imuDriver;
@@ -84,6 +78,11 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
         }
     }
 
+    /**
+     * Start/stop flight controller.
+     *
+     * @param run true = start
+     */
     @RequestMapping(value = "/startStopFlightCtrl")
     public void startStopFlightController(@RequestParam boolean run) {
         if (run) {
@@ -119,18 +118,18 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     }
 
     @Override
-    public void motorPowerChanged(int power) {
+    public void angleReceived(double angle) {
+        addQuadEvent(flightEvents, new QuadEvent(EventType.FLIGHT_CONTROLLER_ANGLE, angle));
+    }
+
+    @Override
+    public void motorPowerChanged(float power) {
         addQuadEvent(flightEvents, new QuadEvent(EventType.MOTOR_POWER, power));
     }
 
     @Override
     public void regulationSignalReceived(double regulation) {
         addQuadEvent(flightEvents, new QuadEvent(EventType.REGULATION, regulation));
-    }
-
-    @Override
-    public void angleReceived(double angle) {
-        addQuadEvent(flightEvents, new QuadEvent(EventType.FLIGHT_CONTROLLER_ANGLE, angle));
     }
 
     private void addQuadEvent(List<QuadEvent> eventsList, QuadEvent event) {
