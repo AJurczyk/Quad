@@ -90,11 +90,11 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
      */
     private void reCalcAngle() {
         double gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000d);
-        if (gyroXangle > 180) {
-            gyroXangle -= 360;
-        } else if (gyroXangle < -180) {
-            gyroXangle += 360;
-        }
+//        if (gyroXangle > 180) {
+//            gyroXangle -= 360;
+//        } else if (gyroXangle < -180) {
+//            gyroXangle += 360;
+//        }
         positionAngle.setAngleX(gyroXangle);
         listener.rawReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.cleanReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));

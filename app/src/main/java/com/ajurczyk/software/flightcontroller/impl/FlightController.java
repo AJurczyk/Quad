@@ -3,6 +3,7 @@ package com.ajurczyk.software.flightcontroller.impl;
 import com.ajurczyk.hardware.motor.IMotor;
 import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
+import com.ajurczyk.software.flightcontroller.IPid;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
@@ -22,6 +23,16 @@ public class FlightController implements IFlightController, Runnable {
     private IMotor motor;
 
     private IImuDriver imuDriver;
+
+    private IPid pid;
+
+    public IPid getPid() {
+        return pid;
+    }
+
+    public void setPid(IPid pid) {
+        this.pid = pid;
+    }
 
     @Autowired
     private IFlightControllerListener listener;
@@ -75,7 +86,12 @@ public class FlightController implements IFlightController, Runnable {
     @Override
     public void run() {
         LOGGER.debug("Start flight controller.");
-
+        ((Pid)pid).clear();
+        try {
+            motor.setPower(0);
+        } catch (PwmValRangeException |PercentValRangeException e) {
+            e.printStackTrace();
+        }
         imuDriver.startWorking();
         try {
             while (true) {
@@ -98,25 +114,23 @@ public class FlightController implements IFlightController, Runnable {
         final long startTime = System.currentTimeMillis();
         final double currentAngle = imuDriver.getAngle().getAngleX();
         listener.angleReceived(currentAngle);
-        final int currentPower = motor.getPower();
 
-        final double regulation = getRegulation(desiredAngle, currentAngle, currentPower);
+        final double regulation = getRegulation(desiredAngle, currentAngle);
         listener.regulationSignalReceived(regulation);
 
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
-            final int motorPower = currentPower + (int) regulation;
-            motor.setPower(currentPower + (int) regulation);
-            listener.motorPowerChanged(motorPower);
+            motor.setPower((float)regulation);
+            listener.motorPowerChanged((float)regulation);
         } catch (PwmValRangeException | PercentValRangeException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something
         }
     }
 
-    private double getRegulation(double desiredAngle, double currentAngle, int currentPower) {
-        return 0;
+    private double getRegulation(double desiredAngle, double currentAngle) {
+        return pid.getRegulation(desiredAngle, currentAngle);
     }
 
     private void waitForNextIteration(long delay) throws InterruptedException {

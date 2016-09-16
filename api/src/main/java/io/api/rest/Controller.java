@@ -10,6 +10,7 @@ import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
+import com.ajurczyk.software.flightcontroller.impl.FlightController;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.impl.ImuDriverSimulator;
@@ -103,6 +104,21 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
         ((ImuDriverSimulator) imuDriver).setPositionAngle(new PositionAngle(angle, 0, 0));
     }
 
+    @RequestMapping(value = "/setP")
+    public void setP(@RequestParam float value) {
+        ((FlightController)flightController).getPid().setP(value);
+    }
+
+    @RequestMapping(value = "/setI")
+    public void setI(@RequestParam float value) {
+        ((FlightController)flightController).getPid().setI(value);
+    }
+
+    @RequestMapping(value = "/setD")
+    public void setD(@RequestParam float value) {
+        ((FlightController)flightController).getPid().setD(value);
+    }
+
     @Override
     public void cleanReadingReceived(AccGyroData data) {
         addQuadEvent(gyroEvents, new QuadEvent(EventType.GYRO_CLEAN, data));
@@ -119,7 +135,7 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     }
 
     @Override
-    public void motorPowerChanged(int power) {
+    public void motorPowerChanged(float power) {
         addQuadEvent(flightEvents, new QuadEvent(EventType.MOTOR_POWER, power));
     }
 

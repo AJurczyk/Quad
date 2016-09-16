@@ -11,6 +11,13 @@
     <bean class="com.ajurczyk.software.flightcontroller.impl.FlightController">
         <property name="imuDriver" ref="imuSimulator"/>
         <property name="motor" ref="motor"/>
+        <property name="pid">
+            <bean class="com.ajurczyk.software.flightcontroller.impl.Pid">
+                <property name="P" value="0.8"/>
+                <property name="I" value="0.0"/>
+                <property name="D" value="0.0"/>
+            </bean>
+        </property>
     </bean>
 
 

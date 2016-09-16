@@ -18,7 +18,7 @@ public class EmaxCf2822 implements IMotor {
     private static final int PWM_MAX_MS = 2;
     private static final int PWM_PERIOD_MS = 5;
     private final IPwmController pwm;
-    private int percent;
+    private float percent;
 
     /**
      * Constructor that inits pwm parameters.
@@ -55,7 +55,7 @@ public class EmaxCf2822 implements IMotor {
         return PWM_PERIOD_MS;
     }
 
-    private float calcPwmPercent(int value) throws PwmValRangeException {
+    private float calcPwmPercent(float value) throws PwmValRangeException {
         final float pwmValue = PWM_MIN_MS + (float) (PWM_MAX_MS - PWM_MIN_MS) / 100 * value;
         if (pwmValue < PWM_MIN_MS || pwmValue > PWM_MAX_MS) {
             throw new PwmValRangeException("Calculated pwm value " + pwmValue
@@ -70,12 +70,12 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public int getPower() {
+    public float getPower() {
         return percent;
     }
 
     @Override
-    public void setPower(int power) throws PercentValRangeException, PwmValRangeException {
+    public void setPower(float power) throws PercentValRangeException, PwmValRangeException {
         LOGGER.debug("[EMAX] Set " + power + "%");
         if (power < 0 || power > 100) {
             throw new PercentValRangeException("Invalid percentage value: " + power + "%.");

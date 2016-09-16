@@ -20,7 +20,7 @@ public class MotorSimulator implements IMotor {
 
     @Autowired
     private IImuReaderListener listener;
-    int power = 51;
+    float power = 0;
 
     @Override
     public void stop() throws PwmValRangeException, PercentValRangeException {
@@ -28,13 +28,13 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public int getPower() {
+    public float getPower() {
         return power;
     }
 
     @Override
-    public void setPower(int power) throws PwmValRangeException, PercentValRangeException {
+    public void setPower(float power) throws PwmValRangeException, PercentValRangeException {
         this.power = power;
-        imuDriverSimulator.setAngleSpeed(power - 50);
+        imuDriverSimulator.setAngleSpeed(power);
     }
 }
