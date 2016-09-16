@@ -22,7 +22,7 @@ public final class MathUtils {
      * @param args values
      * @return median
      */
-    public static double median(double... args) {
+    public static float median(float... args) {
         Arrays.sort(args);
         if (args.length % 2 == 0) {
             return (args[args.length / 2 - 1] + args[args.length / 2]) / 2;
@@ -37,7 +37,7 @@ public final class MathUtils {
      * @param args values
      * @return median
      */
-    public static double median(List<Double> args) {
+    public static float median(List<Float> args) {
         Collections.sort(args);
 
         if (args.size() % 2 == 0) {

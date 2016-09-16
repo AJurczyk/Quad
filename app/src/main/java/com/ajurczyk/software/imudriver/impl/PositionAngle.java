@@ -7,9 +7,9 @@ package com.ajurczyk.software.imudriver.impl;
  */
 public class PositionAngle {
 
-    private double angleX;
-    private double angleY;
-    private double angleZ;
+    private float angleX;
+    private float angleY;
+    private float angleZ;
 
     /**
      * Constructor with all the angles.
@@ -18,7 +18,7 @@ public class PositionAngle {
      * @param angleY y axis inclination
      * @param angleZ z axis inclination
      */
-    public PositionAngle(double angleX, double angleY, double angleZ) {
+    public PositionAngle(float angleX, float angleY, float angleZ) {
         this.angleX = angleX;
         this.angleY = angleY;
         this.angleZ = angleZ;
@@ -28,27 +28,27 @@ public class PositionAngle {
 
     }
 
-    public double getAngleX() {
+    public float getAngleX() {
         return angleX;
     }
 
-    public void setAngleX(double angleX) {
+    public void setAngleX(float angleX) {
         this.angleX = angleX;
     }
 
-    public double getAngleY() {
+    public float getAngleY() {
         return angleY;
     }
 
-    public void setAngleY(double angleY) {
+    public void setAngleY(float angleY) {
         this.angleY = angleY;
     }
 
-    public double getAngleZ() {
+    public float getAngleZ() {
         return angleZ;
     }
 
-    public void setAngleZ(double angleZ) {
+    public void setAngleZ(float angleZ) {
         this.angleZ = angleZ;
     }
 }

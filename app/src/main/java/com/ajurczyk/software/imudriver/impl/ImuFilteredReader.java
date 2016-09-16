@@ -166,9 +166,9 @@ public class ImuFilteredReader implements IImuFilteredReader {
 
     private void loadCompensationFromFile(String filePath) throws IOException, PropertyNotFoundException {
         final PropertiesManager properties = new PropertiesManager(filePath);
-        compensation = new AccGyroData(0, 0, 0,
-            Double.valueOf(properties.getProperty("gyroX")),
-            Double.valueOf(properties.getProperty("gyroY")),
-            Double.valueOf(properties.getProperty("gyroZ")));
+        compensation = new AccGyroData(0f, 0f, 0f,
+            Float.valueOf(properties.getProperty("gyroX")),
+            Float.valueOf(properties.getProperty("gyroY")),
+            Float.valueOf(properties.getProperty("gyroZ")));
     }
 }

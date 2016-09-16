@@ -83,16 +83,16 @@ public class CalibrationManagerTest {
                 counter++;
                 switch (counter % 4) {
                     case 0: {
-                        return new AccGyroData(0.1d, 3.1d, 2.2d, -3d, 4.1d, 5d);
+                        return new AccGyroData(0.1f, 3.1f, 2.2f, -3f, 4.1f, 5f);
                     }
                     case 1: {
-                        return new AccGyroData(3.2d, 2.4d, 2.2d, -4d, 4.3d, 3d);
+                        return new AccGyroData(3.2f, 2.4f, 2.2f, -4f, 4.3f, 3f);
                     }
                     case 2: {
-                        return new AccGyroData(5.4d, 1.02d, 0d, 12.4d, 0d, 0.2d);
+                        return new AccGyroData(5.4f, 1.02f, 0f, 12.4f, 0f, 0.2f);
                     }
                     case 3: {
-                        return new AccGyroData(1d, 1d, 1d, 1d, 1d, 1d);
+                        return new AccGyroData(1f, 1f, 1f, 1f, 1f, 1f);
                     }
                     default: {
                         return null;

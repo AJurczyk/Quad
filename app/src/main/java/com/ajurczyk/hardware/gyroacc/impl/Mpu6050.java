@@ -26,9 +26,9 @@ public class Mpu6050 implements IGyroAcc {
     @Autowired
     private final II2cController i2c;
 
-    private final double accRaw2Gfactor;
+    private final float accRaw2Gfactor;
 
-    private final double gyroRaw2DegFactor;
+    private final float gyroRaw2DegFactor;
 
     /**
      * Main constructor that initializes i2c device.
@@ -49,12 +49,12 @@ public class Mpu6050 implements IGyroAcc {
     }
 
     @Override
-    public double readAccInG(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
+    public float readAccInG(Axis axis) throws AccGyroIncorrectAxisException, AccGyroReadValueException {
         return readAccRaw(axis) * accRaw2Gfactor;
     }
 
     @Override
-    public double readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
+    public float readGyroDeg(Axis axis) throws AccGyroReadValueException, AccGyroIncorrectAxisException {
         return readGyroRaw(axis) * gyroRaw2DegFactor;
     }
 
@@ -110,9 +110,9 @@ public class Mpu6050 implements IGyroAcc {
         }
     }
 
-    private double calcConversionFactor(int maxFinalValue) throws InvalidConversionFactor {
+    private float calcConversionFactor(int maxFinalValue) throws InvalidConversionFactor {
         final int maxRaw = (int) 0xFFFF / 2;
-        final double factor = (double) maxFinalValue / (double) maxRaw;
+        final float factor = (float) maxFinalValue / (float) maxRaw;
         if (factor <= 0) {
             throw new InvalidConversionFactor("factor cant be less or equall than 0. Is: " + factor);
         }

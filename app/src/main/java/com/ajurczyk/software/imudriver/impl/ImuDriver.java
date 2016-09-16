@@ -21,6 +21,11 @@ public class ImuDriver implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriver.class);
     private static final int DT_MS = 20;
 
+    /**
+     * Factor used by complementary filter.
+     */
+    private static final float ACC_FACTOR = 0.02f;
+
     @Autowired
     private IImuReaderListener listener;
 
@@ -128,17 +133,17 @@ public class ImuDriver implements IImuDriver, Runnable {
      */
     private void reCalcAngle(AccGyroData cleanReading) {
         //TODO: atan2 has its angle limitations which should be checked
-        final float accFactor = 0.02f;
-        final float gyroFactor = 1f - accFactor;
 
-        final double accXangle = Math.toDegrees(Math.atan2(cleanReading.getAccY(), cleanReading.getAccZ()));
-        final double accYangle = Math.toDegrees(Math.atan2(cleanReading.getAccX(), cleanReading.getAccZ()));
+        final float accXangle = (float)Math.toDegrees(Math.atan2(cleanReading.getAccY(), cleanReading.getAccZ()));
+        final float accYangle = (float)Math.toDegrees(Math.atan2(cleanReading.getAccX(), cleanReading.getAccZ()));
 
-        final double gyroXangle = positionAngle.getAngleX() + cleanReading.getGyroX() * (DT_MS / 1000d);
-        final double gyroYangle = positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000d);
+        final float gyroXangle = positionAngle.getAngleX() + cleanReading.getGyroX() * (DT_MS / 1000f);
+        final float gyroYangle = positionAngle.getAngleY() + cleanReading.getGyroY() * (DT_MS / 1000f);
 
-        positionAngle.setAngleX(gyroFactor * gyroXangle + accFactor * accXangle);
-        positionAngle.setAngleY(gyroFactor * gyroYangle + accFactor * accYangle);
+        final float gyroFactor = 1f - ACC_FACTOR;
+
+        positionAngle.setAngleX(gyroFactor * gyroXangle + ACC_FACTOR * accXangle);
+        positionAngle.setAngleY(gyroFactor * gyroYangle + ACC_FACTOR * accYangle);
         listener.angleReceived(positionAngle);
     }
 }

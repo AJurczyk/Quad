@@ -47,9 +47,9 @@ public class ImuDriverMock implements IImuDriver {
                 getRandomGyro()
             );
 
-            final AccGyroData cleanReading = new AccGyroData(rawReading.getAccX() + 0.5,
-                rawReading.getAccY() + 0.5,
-                rawReading.getAccZ() + 0.5,
+            final AccGyroData cleanReading = new AccGyroData(rawReading.getAccX() + 0.5f,
+                rawReading.getAccY() + 0.5f,
+                rawReading.getAccZ() + 0.5f,
                 rawReading.getGyroX() + 50,
                 rawReading.getGyroY() + 50,
                 rawReading.getGyroZ() + 50
@@ -74,16 +74,16 @@ public class ImuDriverMock implements IImuDriver {
         return working;
     }
 
-    private double getRandomAcc() {
-        return randomWithinRange(-1d, 1d);
+    private float getRandomAcc() {
+        return randomWithinRange(-1f, 1f);
     }
 
-    private double getRandomGyro() {
-        return randomWithinRange(-255d, 200d);
+    private float getRandomGyro() {
+        return randomWithinRange(-255f, 200f);
     }
 
-    private double randomWithinRange(double min, double max) {
+    private float randomWithinRange(float min, float max) {
         final Random random = new Random();
-        return min + (max - min) * random.nextDouble();
+        return min + (max - min) * random.nextFloat();
     }
 }

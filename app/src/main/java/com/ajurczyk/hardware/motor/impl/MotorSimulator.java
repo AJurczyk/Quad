@@ -3,24 +3,20 @@ package com.ajurczyk.hardware.motor.impl;
 import com.ajurczyk.hardware.motor.IMotor;
 import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
-import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.impl.ImuDriverSimulator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 06.09.16.
  */
 public class MotorSimulator implements IMotor {
 
-    private ImuDriverSimulator imuDriverSimulator;
+    private float power = 51;
 
-    public void setImuDriverSimulator(ImuDriverSimulator imuDriverSimulator) {
-        this.imuDriverSimulator = imuDriverSimulator;
+    private ImuDriverSimulator imuDriverSimu;
+
+    public void setImuDriverSimu(ImuDriverSimulator imuDriverSimu) {
+        this.imuDriverSimu = imuDriverSimu;
     }
-
-    @Autowired
-    private IImuReaderListener listener;
-    int power = 51;
 
     @Override
     public void stop() throws PwmValRangeException, PercentValRangeException {
@@ -28,13 +24,13 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public int getPower() {
+    public float getPower() {
         return power;
     }
 
     @Override
-    public void setPower(int power) throws PwmValRangeException, PercentValRangeException {
+    public void setPower(float power) throws PwmValRangeException, PercentValRangeException {
         this.power = power;
-        imuDriverSimulator.setAngleSpeed(power - 50);
+        imuDriverSimu.setAngleSpeed(power - 50);
     }
 }

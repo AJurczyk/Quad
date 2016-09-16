@@ -9,5 +9,5 @@ public interface IFlightController {
 
     void stop();
 
-    void setDesiredAngle(double desiredAngle);
+    void setDesiredAngle(float desiredAngle);
 }
