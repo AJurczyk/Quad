@@ -6,6 +6,7 @@ import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
+import com.ajurczyk.software.regulators.IRegulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,18 @@ public class FlightController implements IFlightController, Runnable {
     @Autowired
     private IFlightControllerListener listener;
 
+    private IRegulator regulator;
     private Thread runner;
-
     private int interval = 20;
-
     private float desiredAngle;
+
+    public IRegulator getRegulator() {
+        return regulator;
+    }
+
+    public void setRegulator(IRegulator regulator) {
+        this.regulator = regulator;
+    }
 
     public void setDesiredAngle(float desiredAngle) {
         this.desiredAngle = desiredAngle;
@@ -96,27 +104,27 @@ public class FlightController implements IFlightController, Runnable {
 
     private void mainLoop() throws InterruptedException {
         final long startTime = System.currentTimeMillis();
-        final float currentAngle = imuDriver.getAngle().getAngleX();
+        final float currentAngle = imuDriver.getAngle().getAngleY();
         listener.angleReceived(currentAngle);
-        final float currentPower = motor.getPower();
 
-        final float regulation = getRegulation(desiredAngle, currentAngle, currentPower);
+        final float regulation = regulator.getRegulation(currentAngle, desiredAngle);
         listener.regulationSignalReceived(regulation);
 
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
-            final float powerToSet = currentPower + regulation;
+            float powerToSet = regulation;
+            if (powerToSet < 0) {
+                powerToSet = 0f;
+            } else if (powerToSet > 50) {
+                powerToSet = 50;
+            }
             motor.setPower(powerToSet);
             listener.motorPowerChanged(powerToSet);
         } catch (PwmValRangeException | PercentValRangeException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something
         }
-    }
-
-    private float getRegulation(float desiredAngle, float currentAngle, float currentPower) {
-        return desiredAngle + currentAngle + currentPower - desiredAngle - currentAngle - currentPower;
     }
 
     private void waitForNextIteration(long delay) throws InterruptedException {

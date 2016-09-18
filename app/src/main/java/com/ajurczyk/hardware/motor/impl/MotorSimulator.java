@@ -10,7 +10,7 @@ import com.ajurczyk.software.imudriver.impl.ImuDriverSimulator;
  */
 public class MotorSimulator implements IMotor {
 
-    private float power = 51;
+    private float power;
 
     private ImuDriverSimulator imuDriverSimu;
 
