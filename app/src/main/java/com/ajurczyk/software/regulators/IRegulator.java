@@ -3,7 +3,7 @@ package com.ajurczyk.software.regulators;
 /**
  * @author aleksander.jurczyk@gmail.com on 16.09.16.
  */
-public interface Iregulator {
+public interface IRegulator {
 
     /**
      * Calculates regulation for given values.
@@ -17,15 +17,15 @@ public interface Iregulator {
     /**
      * Set proportional factor.
      */
-    void setP(float factor);
+    void setProportional(float factor);
 
     /**
      * Set integral factor.
      */
-    void setI(float factor);
+    void setIntegral(float factor);
 
     /**
      * set derivative factor.
      */
-    void setD(float factor);
+    void setDerivative(float factor);
 }

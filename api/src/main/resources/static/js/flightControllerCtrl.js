@@ -62,4 +62,36 @@ function($scope, poller, flightCtrlSrv, Entry, SingleChartSrv) {
             }
         );
     };
+
+    $scope.setP = function(value){
+        flightCtrlSrv.setP(
+            {
+                state: value
+            }
+        );
+    };
+
+    $scope.setI = function(value){
+        flightCtrlSrv.setI(
+            {
+                state: value
+            }
+        );
+    };
+
+    $scope.setD = function(value){
+        flightCtrlSrv.setD(
+            {
+                state: value
+            }
+        );
+    };
+
+    $scope.setMotorPower = function(value){
+        flightCtrlSrv.setMotorPower(
+            {
+                state: value
+            }
+        );
+    };
 }]);

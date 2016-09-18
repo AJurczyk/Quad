@@ -1,34 +1,34 @@
 package com.ajurczyk.software.regulators.impl;
 
-import com.ajurczyk.software.regulators.Iregulator;
+import com.ajurczyk.software.regulators.IRegulator;
 
 /**
- * Regulator P.
+ * Regulator proportional.
  *
  * @author aleksander.jurczyk@gmail.com on 16.09.16.
  */
-public class RegulatorP implements Iregulator {
+public class RegulatorP implements IRegulator {
 
-    private float pFactor;
+    private float proportional;
 
     @Override
     public float getRegulation(float currentValue, float desiredValue) {
-        float error = desiredValue - currentValue;
-        return pFactor * error;
+        final float error = desiredValue - currentValue;
+        return proportional * error;
     }
 
     @Override
-    public void setP(float factor) {
-        this.pFactor = factor;
+    public void setProportional(float factor) {
+        this.proportional = factor;
     }
 
     @Override
-    public void setI(float factor) {
+    public void setIntegral(float factor) {
         //do nothing
     }
 
     @Override
-    public void setD(float factor) {
+    public void setDerivative(float factor) {
         //do nothing
     }
 }

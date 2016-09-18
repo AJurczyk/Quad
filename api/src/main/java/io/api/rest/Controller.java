@@ -5,6 +5,9 @@ package io.api.rest;
  */
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.hardware.motor.IMotor;
+import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
+import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
@@ -26,6 +29,9 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     private static final int MAX_EVENTS_SIZE = 200;
     private final List<QuadEvent> gyroEvents = new ArrayList<>();
     private final List<QuadEvent> flightEvents = new ArrayList<>();
+
+    @Autowired
+    private IMotor motor;
 
     @Autowired
     private IImuDriver imuDriver;
@@ -100,6 +106,26 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     @RequestMapping(value = "/setCurrentAngle")
     public void setCurrentAngle(@RequestParam int angle) {
         ((ImuDriverSimulator) imuDriver).setPositionAngle(new PositionAngle(angle, 0, 0));
+    }
+
+    @RequestMapping(value = "/setProportional")
+    public void setP(@RequestParam float value) {
+        flightController.getRegulator().setProportional(value);
+    }
+
+    @RequestMapping(value = "/setIntegral")
+    public void setI(@RequestParam float value) {
+        flightController.getRegulator().setIntegral(value);
+    }
+
+    @RequestMapping(value = "/setDerivative")
+    public void setD(@RequestParam float value) {
+        flightController.getRegulator().setDerivative(value);
+    }
+
+    @RequestMapping(value = "/setMotorPower")
+    public void setMotorPower(@RequestParam float power) throws PercentValRangeException, PwmValRangeException {
+        motor.setPower(power);
     }
 
     @Override
