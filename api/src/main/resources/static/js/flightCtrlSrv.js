@@ -22,13 +22,13 @@ app.factory('flightCtrlSrv',['$resource', function($resource){
             url: "/setCurrentAngle?angle=:state"
         },
         setP: {
-            url: "/setP?value=:state"
+            url: "/setProportional?value=:state"
         },
         setI: {
-            url: "/setI?value=:state"
+            url: "/setIntegral?value=:state"
         },
         setD: {
-            url: "/setD?value=:state"
+            url: "/setDerivative?value=:state"
         },
         setMotorPower: {
             url: "/setMotorPower?power=:state"

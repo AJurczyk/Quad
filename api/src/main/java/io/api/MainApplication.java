@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ImportResource;
 
 
 @SpringBootApplication
-@ImportResource({"classpath:springConfig.xml"})
+@ImportResource({"classpath:configSimulator.xml"})
 @SuppressWarnings("PMD.UseUtilityClass")
 public class MainApplication {
     public static void main(String... args) {

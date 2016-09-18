@@ -12,12 +12,6 @@ public class MotorSimulator implements IMotor {
 
     private float power;
 
-    private ImuDriverSimulator imuDriverSimu;
-
-    public void setImuDriverSimu(ImuDriverSimulator imuDriverSimu) {
-        this.imuDriverSimu = imuDriverSimu;
-    }
-
     @Override
     public void stop() throws PwmValRangeException, PercentValRangeException {
         setPower(0);
@@ -30,7 +24,12 @@ public class MotorSimulator implements IMotor {
 
     @Override
     public void setPower(float power) throws PwmValRangeException, PercentValRangeException {
-        this.power = power;
-        imuDriverSimu.setAngleSpeed(power - 50);
+        if (power > 100) {
+            this.power = 100;
+        } else if (power < 0) {
+            this.power = 0;
+        } else {
+            this.power = power;
+        }
     }
 }

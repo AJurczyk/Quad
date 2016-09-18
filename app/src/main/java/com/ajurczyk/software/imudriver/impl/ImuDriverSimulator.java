@@ -1,6 +1,7 @@
 package com.ajurczyk.software.imudriver.impl;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
+import com.ajurczyk.hardware.motor.IMotor;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
@@ -16,13 +17,20 @@ import java.util.concurrent.TimeUnit;
 public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverSimulator.class);
     private static final int DT_MS = 20;
-    private static final float MAX_GYRO_ANGLE = 180f;
-    private static final float MIN_GYRO_ANGLE = -180f;
+    private static final float MAX_GYRO_ANGLE = 60f;
+    private static final float MIN_GYRO_ANGLE = -40f;
     private PositionAngle positionAngle = new PositionAngle(0, 0, 0);
     private float angleSpeed;
+
     private Thread runner;
     @Autowired
     private IImuReaderListener listener;
+
+    private IMotor motor;
+
+    public void setMotor(IMotor motor) {
+        this.motor = motor;
+    }
 
     public void setListener(IImuReaderListener listener) {
         this.listener = listener;
@@ -36,10 +44,6 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
         this.positionAngle = positionAngle;
     }
 
-    public void setAngleSpeed(float angleSpeed) {
-        this.angleSpeed = angleSpeed;
-    }
-
     @Override
     public PositionAngle getAngle() {
         return positionAngle;
@@ -48,6 +52,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     @Override
     public void startWorking() {
         positionAngle = new PositionAngle(0, 0, 0);
+        angleSpeed = 0;
         runner = new Thread(this);
         runner.start();
     }
@@ -94,15 +99,34 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
      * Calculates angle.
      */
     private void reCalcAngle() {
+        if (positionAngle.getAngleX() >= MAX_GYRO_ANGLE) {
+            angleSpeed = 0;
+        } else if (positionAngle.getAngleX() <= MIN_GYRO_ANGLE) {
+            angleSpeed = 0;
+        }
+        angleSpeed = angleSpeed + calculateAngularAcceleration() * DT_MS;
+
         float gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000f);
         if (gyroXangle > MAX_GYRO_ANGLE) {
-            gyroXangle -= 360;
+            gyroXangle = MAX_GYRO_ANGLE;
         } else if (gyroXangle < MIN_GYRO_ANGLE) {
-            gyroXangle += 360;
+            gyroXangle = MIN_GYRO_ANGLE;
         }
         positionAngle.setAngleX(gyroXangle);
         listener.rawReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.cleanReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
         listener.angleReceived(positionAngle);
+    }
+
+    private float calculateAngularAcceleration() {
+        final float radius = 0.5f;
+        final float maxFs = 2f;
+        final float mass = 0.1f;
+        final float gFactor = 10f;
+        final float alfa = positionAngle.getAngleX();
+        final float Fs = motor.getPower() * maxFs / 100;
+
+        float toReturn = (float) ((Fs / mass - Math.cos(alfa * 0.01745) * gFactor) * radius);
+        return toReturn;
     }
 }
