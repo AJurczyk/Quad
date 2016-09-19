@@ -19,9 +19,14 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final int DT_MS = 20;
     private static final float MAX_GYRO_ANGLE = 60f;
     private static final float MIN_GYRO_ANGLE = -40f;
+
+    private static final float RADIUS = 0.5f;
+    private static final float MAX_MOTOR_FORCE = 2f;
+    private static final float MASS = 0.1f;
+    private static final float GRAVITY_CONST = 10f;
+
     private PositionAngle positionAngle = new PositionAngle(0, 0, 0);
     private float angleSpeed;
-
     private Thread runner;
     @Autowired
     private IImuReaderListener listener;
@@ -99,34 +104,30 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
      * Calculates angle.
      */
     private void reCalcAngle() {
-        if (positionAngle.getAngleX() >= MAX_GYRO_ANGLE) {
+        if (positionAngle.getAngleY() >= MAX_GYRO_ANGLE) {
             angleSpeed = 0;
-        } else if (positionAngle.getAngleX() <= MIN_GYRO_ANGLE) {
+        } else if (positionAngle.getAngleY() <= MIN_GYRO_ANGLE) {
             angleSpeed = 0;
         }
         angleSpeed = angleSpeed + calculateAngularAcceleration() * DT_MS;
 
-        float gyroXangle = positionAngle.getAngleX() + angleSpeed * (DT_MS / 1000f);
-        if (gyroXangle > MAX_GYRO_ANGLE) {
-            gyroXangle = MAX_GYRO_ANGLE;
-        } else if (gyroXangle < MIN_GYRO_ANGLE) {
-            gyroXangle = MIN_GYRO_ANGLE;
+        float gyroYangle = positionAngle.getAngleY() + angleSpeed * (DT_MS / 1000f);
+        if (gyroYangle > MAX_GYRO_ANGLE) {
+            gyroYangle = MAX_GYRO_ANGLE;
+        } else if (gyroYangle < MIN_GYRO_ANGLE) {
+            gyroYangle = MIN_GYRO_ANGLE;
         }
-        positionAngle.setAngleX(gyroXangle);
-        listener.rawReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
-        listener.cleanReadingReceived(new AccGyroData(0, 0, 0, angleSpeed, 0, 0));
+        positionAngle.setAngleY(gyroYangle);
+        listener.rawReadingReceived(new AccGyroData(0, 0, 0, 0, angleSpeed, 0));
+        listener.cleanReadingReceived(new AccGyroData(0, 0, 0, 0, angleSpeed, 0));
         listener.angleReceived(positionAngle);
     }
 
+    @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
-        final float radius = 0.5f;
-        final float maxFs = 2f;
-        final float mass = 0.1f;
-        final float gFactor = 10f;
         final float alfa = positionAngle.getAngleX();
-        final float Fs = motor.getPower() * maxFs / 100;
+        final float motorForce = motor.getPower() / 100 * MAX_MOTOR_FORCE;
 
-        float toReturn = (float) ((Fs / mass - Math.cos(alfa * 0.01745) * gFactor) * radius);
-        return toReturn;
+        return (float) ((motorForce / MASS - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
     }
 }

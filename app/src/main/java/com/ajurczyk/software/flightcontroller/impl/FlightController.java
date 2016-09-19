@@ -113,7 +113,7 @@ public class FlightController implements IFlightController, Runnable {
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
-            float powerToSet = 50 + regulation;
+            final float powerToSet = 50 + regulation;
 
             motor.setPower(powerToSet);
             listener.motorPowerChanged(powerToSet);

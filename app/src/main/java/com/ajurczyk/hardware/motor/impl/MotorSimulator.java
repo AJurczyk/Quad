@@ -3,14 +3,19 @@ package com.ajurczyk.hardware.motor.impl;
 import com.ajurczyk.hardware.motor.IMotor;
 import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
-import com.ajurczyk.software.imudriver.impl.ImuDriverSimulator;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 06.09.16.
  */
 public class MotorSimulator implements IMotor {
 
+    private static final float MIN_POWER = 0f;
+    private float maxPower = 100f;
     private float power;
+
+    public void setMaxPower(float maxPower) {
+        this.maxPower = maxPower;
+    }
 
     @Override
     public void stop() throws PwmValRangeException, PercentValRangeException {
@@ -24,10 +29,10 @@ public class MotorSimulator implements IMotor {
 
     @Override
     public void setPower(float power) throws PwmValRangeException, PercentValRangeException {
-        if (power > 100) {
-            this.power = 100;
-        } else if (power < 0) {
-            this.power = 0;
+        if (power > maxPower) {
+            this.power = maxPower;
+        } else if (power < MIN_POWER) {
+            this.power = MIN_POWER;
         } else {
             this.power = power;
         }

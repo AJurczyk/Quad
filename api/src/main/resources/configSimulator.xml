@@ -3,7 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator"/>
+    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
+        <property name="maxPower" value = "100"/>
+    </bean>
     <bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator">
         <property name="motor" ref="motor"/>
     </bean>
