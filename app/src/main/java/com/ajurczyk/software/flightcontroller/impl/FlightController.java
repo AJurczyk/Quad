@@ -7,6 +7,7 @@ import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.regulators.IRegulator;
+import com.ajurczyk.software.regulators.impl.RegulatorPid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,12 @@ public class FlightController implements IFlightController, Runnable {
 
     @Override
     public void start() {
+        ((RegulatorPid)regulator).clear();
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         runner = new Thread(this);
         runner.start();
     }

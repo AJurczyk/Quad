@@ -18,7 +18,7 @@
     </bean>
 
 
-    <bean id="regulatorP" class="com.ajurczyk.software.regulators.impl.RegulatorP">
+    <bean id="regulatorPid" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
         <property name="proportional" value="0.5"/>
     </bean>
 
@@ -27,7 +27,7 @@
         <!--<property name="imuDriver" ref="imuSimulator"/>-->
         <property name="imuDriver" ref="imuDriver"/>
         <property name="motor" ref="motor"/>
-        <property name="regulator" ref="regulatorP"/>
+        <property name="regulator" ref="regulatorPid"/>
     </bean>
 
 

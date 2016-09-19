@@ -22,10 +22,7 @@
     <bean id="filteredReader" class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
         <property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>
     </bean>
-    <bean id="i2cController" class="com.ajurczyk.hardware.i2c.impl.Pi4jI2c"/>
 
-    <bean id="accGyro" class="com.ajurczyk.hardware.gyroacc.impl.Mpu6050">
-        <constructor-arg ref="i2cController"/>
-    </bean>
+    <bean id="accGyro" class="com.ajurczyk.hardware.gyroacc.impl.FakeGyro"/>
 
 </beans>
