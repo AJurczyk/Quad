@@ -13,4 +13,9 @@ public interface IMotor {
     void setPower(float power) throws PwmValRangeException, PercentValRangeException;
 
     float getPower();
+
+    /**
+     * Set maximum allowed power.
+     */
+    void setPowerLimit(float powerLimit);
 }

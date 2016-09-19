@@ -10,11 +10,12 @@ import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 public class MotorSimulator implements IMotor {
 
     private static final float MIN_POWER = 0f;
-    private float maxPower = 100f;
+    private float powerLimit = 100f;
     private float power;
 
-    public void setMaxPower(float maxPower) {
-        this.maxPower = maxPower;
+    @Override
+    public void setPowerLimit(float powerLimit) {
+        this.powerLimit = powerLimit;
     }
 
     @Override
@@ -29,8 +30,8 @@ public class MotorSimulator implements IMotor {
 
     @Override
     public void setPower(float power) throws PwmValRangeException, PercentValRangeException {
-        if (power > maxPower) {
-            this.power = maxPower;
+        if (power > powerLimit) {
+            this.power = powerLimit;
         } else if (power < MIN_POWER) {
             this.power = MIN_POWER;
         } else {
