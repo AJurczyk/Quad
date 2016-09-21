@@ -15,11 +15,13 @@
 
     <bean id="motor" class="com.ajurczyk.hardware.motor.impl.EmaxCf2822">
         <constructor-arg ref="pwm"/>
+        <property name="powerLimit" value = "50"/>
     </bean>
 
 
     <bean id="regulatorPid" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
-        <property name="proportional" value="0.5"/>
+        <property name="proportional" value="0.7"/>
+        <property name="derivative" value="20"/>
     </bean>
 
 

@@ -111,7 +111,7 @@ public class FlightController implements IFlightController, Runnable {
 
     private void mainLoop() throws InterruptedException {
         final long startTime = System.currentTimeMillis();
-        final float currentAngle = imuDriver.getAngle().getAngleX();
+        final float currentAngle = imuDriver.getAngle().getAngleY();
         listener.angleReceived(currentAngle);
 
         final float regulation = regulator.getRegulation(currentAngle, desiredAngle);
@@ -120,7 +120,7 @@ public class FlightController implements IFlightController, Runnable {
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
-            final float powerToSet = 50 + regulation;
+            final float powerToSet = 30 + regulation;
 
             motor.setPower(powerToSet);
             listener.motorPowerChanged(powerToSet);

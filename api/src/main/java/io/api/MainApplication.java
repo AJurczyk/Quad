@@ -12,7 +12,7 @@ import java.util.Locale;
 
 
 @SpringBootApplication
-@ImportResource({"classpath:configSimulatorLocal.xml"})
+@ImportResource({"classpath:configReal.xml"})
 @SuppressWarnings("PMD.UseUtilityClass")
 public class MainApplication {
     public static void main(String... args) {

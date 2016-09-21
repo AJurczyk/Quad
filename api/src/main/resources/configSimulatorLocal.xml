@@ -4,7 +4,7 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
-        <property name="maxPower" value = "100"/>
+        <property name="powerLimit" value = "50"/>
     </bean>
     <bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator">
         <property name="motor" ref="motor"/>
