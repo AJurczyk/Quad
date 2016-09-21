@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource({"classpath:configReal.xml"})
+@ImportResource({"classpath:configSimulatorLocal.xml"})
 @SuppressWarnings("PMD.UseUtilityClass")
 public class MainApplication {
     public static void main(String... args) {

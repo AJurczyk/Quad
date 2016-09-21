@@ -17,15 +17,17 @@ import java.util.concurrent.TimeUnit;
 public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverSimulator.class);
     private static final int DT_MS = 20;
-    private static final float MAX_GYRO_ANGLE = 60f;
-    private static final float MIN_GYRO_ANGLE = -40f;
+    private static final float MAX_GYRO_ANGLE = 90f;
+    private static final float MIN_GYRO_ANGLE = -90f;
 
     private static final float RADIUS = 0.5f;
-    private static final float MAX_MOTOR_FORCE = 3.33f;
+    private static final float MAX_MOTOR_FORCE = 2f;
     private static final float MASS = 0.1f;
     private static final float GRAVITY_CONST = 10f;
 
-    private PositionAngle positionAngle = new PositionAngle(0, MIN_GYRO_ANGLE, 0);
+    private final static float INIT_ANGLE = 0f;
+
+    private PositionAngle positionAngle = new PositionAngle(0, INIT_ANGLE, 0);
     private float angleSpeed;
     private Thread runner;
 
@@ -57,8 +59,8 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
 
     @Override
     public void startWorking() {
-        positionAngle = new PositionAngle(0, MIN_GYRO_ANGLE, 0);
         angleSpeed = 0;
+        positionAngle.setAngleY(INIT_ANGLE);
         runner = new Thread(this);
         runner.start();
     }
@@ -126,9 +128,11 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
 
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
-        final float alfa = positionAngle.getAngleY();
+         float alfa = positionAngle.getAngleY();
+//        alfa = 0;
         final float motorForce = motor.getPower() / 100 * MAX_MOTOR_FORCE;
 
-        return (float) ((motorForce / MASS - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
+        float toReturn = (float) ((motorForce / MASS - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
+        return toReturn;
     }
 }

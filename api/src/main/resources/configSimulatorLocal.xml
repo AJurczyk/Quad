@@ -4,14 +4,16 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
-        <property name="powerLimit" value = "50"/>
+        <property name="powerLimit" value = "100"/>
     </bean>
     <bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator">
         <property name="motor" ref="motor"/>
     </bean>
 
     <bean id="regulatorP" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
-        <property name="proportional" value="0.5"/>
+        <property name="proportional" value="0.7"/>
+        <property name="integral" value="0.001"/>
+        <property name="derivative" value="100"/>
     </bean>
 
 

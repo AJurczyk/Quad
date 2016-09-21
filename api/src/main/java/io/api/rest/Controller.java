@@ -105,7 +105,7 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
 
     @RequestMapping(value = "/setCurrentAngle")
     public void setCurrentAngle(@RequestParam int angle) {
-        ((ImuDriverSimulator) imuDriver).setPositionAngle(new PositionAngle(angle, 0, 0));
+        ((ImuDriverSimulator) imuDriver).setPositionAngle(new PositionAngle(0, angle, 0));
     }
 
     @RequestMapping(value = "/setProportional")
