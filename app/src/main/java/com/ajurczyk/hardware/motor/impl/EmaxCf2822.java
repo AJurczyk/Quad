@@ -82,15 +82,16 @@ public class EmaxCf2822 implements IMotor {
 
     @Override
     public void setPower(float power) throws PwmValRangeException {
+        float powerToSet = power;
         LOGGER.debug("[EMAX] Set " + power + "%");
         if (power > powerLimit) {
             LOGGER.warn("Tried to set not allowed power: " + power + ". PowerLimit=" + powerLimit);
-            power = powerLimit;
+            powerToSet = powerLimit;
         } else if (power < 0) {
             LOGGER.warn("Tried to set not allowed power: " + power + ". Power must be greater than zero.");
-            power = 0;
+            powerToSet = 0;
         }
-        pwm.setDuty(calcPwmPercent(power));
-        this.powerPercent = power;
+        pwm.setDuty(calcPwmPercent(powerToSet));
+        this.powerPercent = powerToSet;
     }
 }

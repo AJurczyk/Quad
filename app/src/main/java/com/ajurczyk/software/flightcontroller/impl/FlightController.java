@@ -64,11 +64,6 @@ public class FlightController implements IFlightController, Runnable {
     @Override
     public void start() {
         ((RegulatorPid)regulator).clear();
-        try {
-            TimeUnit.MILLISECONDS.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         runner = new Thread(this);
         runner.start();
     }

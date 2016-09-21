@@ -8,12 +8,14 @@ import java.util.Locale;
  * @author aleksander.jurczyk@gmail.com on 18.09.16.
  */
 public class RegulatorPid implements IRegulator {
-    float lastError = 0;
+    private float lastError;
     private float proportional;
     private float integral;
     private float derivative;
-    private float errSum = 0;
+    private float errSum;
     private long lastTime = System.currentTimeMillis();
+
+    private static final String DECIMAL_FORMAT = "%.2f";
 
     @Override
     public void setProportional(float proportional) {
@@ -35,31 +37,34 @@ public class RegulatorPid implements IRegulator {
         return compute(desiredValue, currentValue);
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     private float compute(float desiredVal, float currentVal) {
-        StringBuilder builder = new StringBuilder();
+        final long now = System.currentTimeMillis();
+        final long timeChange = (now - lastTime);
+        final float error = desiredVal - currentVal;
+        errSum += error * timeChange;
 
-        long now = System.currentTimeMillis();
-        long timeChange = (now - lastTime);
-        float error = desiredVal - currentVal;
-        errSum += (error * timeChange);
-
-        float dErr = (error - lastError) / timeChange;
+        final float deltaError = (error - lastError) / timeChange;
 
         lastError = error;
         lastTime = now;
 
-        float regulation = proportional * error + integral * errSum + derivative * dErr;
+        final float regulation = proportional * error + integral * errSum + derivative * deltaError;
 
-        builder.append(String.format(Locale.CANADA, "%.2f", currentVal)).append("\t");
-        builder.append(String.format(Locale.CANADA, "%.2f", regulation)).append("\t");
-        builder.append(String.format(Locale.CANADA, "%.2f", error)).append("\t");
-        builder.append(timeChange).append("\t");
-        builder.append(String.format(Locale.CANADA, "%.2f", errSum)).append("\t");
-        builder.append(String.format(Locale.CANADA, "%.2f", dErr)).append("\t");
-        System.out.println(builder.toString());
+        final StringBuilder builder = new StringBuilder();
+        builder.append(String.format(Locale.CANADA, DECIMAL_FORMAT, currentVal)).append('\t')
+            .append(String.format(Locale.CANADA, DECIMAL_FORMAT, regulation)).append('\t')
+            .append(String.format(Locale.CANADA, DECIMAL_FORMAT, error)).append('\t')
+            .append(timeChange).append('\t')
+            .append(String.format(Locale.CANADA, DECIMAL_FORMAT, errSum)).append('\t')
+            .append(String.format(Locale.CANADA, DECIMAL_FORMAT, deltaError)).append('\t');
+        System.out.println(builder.toString());//TODO: remove printing to console
         return regulation;
     }
 
+    /**
+     * Clear all info about errors from previous runs.
+     */
     public void clear() {
         lastError = 0;
         lastTime = System.currentTimeMillis();
