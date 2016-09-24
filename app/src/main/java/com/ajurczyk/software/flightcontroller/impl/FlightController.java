@@ -147,7 +147,10 @@ private void mainLoop() throws InterruptedException {
     waitForNextIteration(System.currentTimeMillis() - startTime);
 
     try {
-        final float powerToSet = (float)((50+regulation)*Math.cos(Math.toRadians(currentAngle)));
+//        final float stala = 100;
+//        final float powerToSet = (float) (regulation + stala * Math.cos(Math.toRadians(currentAngle)));
+//        final float powerToSet = (float)((50+regulation)*Math.cos(Math.toRadians(currentAngle)));
+        final float thrustToSet =
         previousRegulation = regulation;
 
         motor.setPower(powerToSet);
@@ -165,4 +168,6 @@ private void mainLoop() throws InterruptedException {
             LOGGER.warn("FlightController math took longer than interval(" + interval + "ms): " + delay + "ms.");
         }
     }
+
+    private float calculateFw()
 }
