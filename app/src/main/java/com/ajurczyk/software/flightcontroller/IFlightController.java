@@ -1,5 +1,6 @@
 package com.ajurczyk.software.flightcontroller;
 
+import com.ajurczyk.software.flightcontroller.exception.FlightControllerException;
 import com.ajurczyk.software.regulators.IRegulator;
 
 /**
@@ -7,7 +8,7 @@ import com.ajurczyk.software.regulators.IRegulator;
  */
 public interface IFlightController {
 
-    void start();
+    void start() throws FlightControllerException;
 
     void stop();
 

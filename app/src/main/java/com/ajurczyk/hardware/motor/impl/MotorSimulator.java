@@ -12,6 +12,16 @@ public class MotorSimulator implements IMotor {
     private static final float MIN_POWER = 0f;
     private float powerLimit = 100f;
     private float power;
+    private float maxThrust;
+
+    @Override
+    public float getMaxThrust() {
+        return maxThrust;
+    }
+
+    public void setMaxThrust(float maxThrust) {
+        this.maxThrust = maxThrust;
+    }
 
     @Override
     public void setPowerLimit(float powerLimit) {

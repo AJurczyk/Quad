@@ -5,6 +5,7 @@ import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
+import com.ajurczyk.software.flightcontroller.exception.FlightControllerException;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.regulators.IRegulator;
 import com.ajurczyk.software.regulators.impl.RegulatorPid;
@@ -21,6 +22,7 @@ public class FlightController implements IFlightController, Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlightController.class);
 
+    private static final float GRAVITY_CONST = 9.81f;
     private IMotor motor;
 
     private IImuDriver imuDriver;
@@ -32,6 +34,12 @@ public class FlightController implements IFlightController, Runnable {
     private Thread runner;
     private int interval = 20;
     private float desiredAngle;
+    private float mass;
+    private float maxThrust;
+
+    public void setMass(float mass) {
+        this.mass = mass;
+    }
 
     public IRegulator getRegulator() {
         return regulator;
@@ -62,8 +70,21 @@ public class FlightController implements IFlightController, Runnable {
     }
 
     @Override
-    public void start() {
-        ((RegulatorPid)regulator).clear();
+    public void start() throws FlightControllerException {
+        LOGGER.debug("Start flight controller.");
+        ((RegulatorPid) regulator).clear();
+        maxThrust = motor.getMaxThrust();
+        if (maxThrust == 0) {
+            LOGGER.error("Error starting flight controller. motor doesn't have its max thrust set.");
+            throw new FlightControllerException("Motor doesn't have its max thrust set.");
+        }
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        imuDriver.startWorking();
+        listener.motorPowerChanged(motor.getPower());
         runner = new Thread(this);
         runner.start();
     }
@@ -84,9 +105,6 @@ public class FlightController implements IFlightController, Runnable {
 
     @Override
     public void run() {
-        LOGGER.debug("Start flight controller.");
-
-        imuDriver.startWorking();
         try {
             while (true) {
                 mainLoop();
@@ -115,10 +133,10 @@ public class FlightController implements IFlightController, Runnable {
         waitForNextIteration(System.currentTimeMillis() - startTime);
 
         try {
-            final float powerToSet = 30 + regulation;
-
-            motor.setPower(powerToSet);
-            listener.motorPowerChanged(powerToSet);
+            final float thrustToSet = (float) (regulation + mass * GRAVITY_CONST * Math.cos(Math.toRadians(currentAngle)));
+            final float thrustPercent = thrustToSet / maxThrust * 100;
+            motor.setPower(thrustPercent);
+            listener.motorPowerChanged(thrustPercent);
         } catch (PwmValRangeException | PercentValRangeException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something

@@ -20,6 +20,7 @@ public class EmaxCf2822 implements IMotor {
     private final IPwmController pwm;
     private float powerPercent;
     private float powerLimit = 100f;
+    private float maxThrust;
 
     /**
      * Constructor that inits pwm parameters.
@@ -54,6 +55,15 @@ public class EmaxCf2822 implements IMotor {
 
     public static int getPwmPeriodMs() {
         return PWM_PERIOD_MS;
+    }
+
+    @Override
+    public float getMaxThrust() {
+        return maxThrust;
+    }
+
+    public void setMaxThrust(float maxThrust) {
+        this.maxThrust = maxThrust;
     }
 
     @Override

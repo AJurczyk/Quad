@@ -4,14 +4,21 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
-        <property name="powerLimit" value = "50"/>
+        <property name="powerLimit" value = "100"/>
+        <property name="maxThrust" value = "7.35"/>
     </bean>
     <bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator">
         <property name="motor" ref="motor"/>
+        <property name="mass" value="0.1"/>
+        <property name="initialAngle" value="-40"/>
+        <property name="initialMotorPower" value="0"/>
+
     </bean>
 
     <bean id="regulatorP" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
-        <property name="proportional" value="0.5"/>
+        <property name="proportional" value="0.01"/>
+        <property name="integral" value="0"/>
+        <property name="derivative" value="1"/>
     </bean>
 
 
@@ -19,6 +26,7 @@
         <property name="imuDriver" ref="imuDriver"/>
         <property name="motor" ref="motor"/>
         <property name="regulator" ref="regulatorP"/>
+        <property name="mass" value="0.1"/>
     </bean>
 
     <bean id="filteredReader" class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
