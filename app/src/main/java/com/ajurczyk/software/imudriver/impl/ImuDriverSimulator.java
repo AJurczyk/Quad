@@ -2,6 +2,8 @@ package com.ajurczyk.software.imudriver.impl;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.hardware.motor.IMotor;
+import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
+import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
@@ -17,22 +19,34 @@ import java.util.concurrent.TimeUnit;
 public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverSimulator.class);
     private static final int DT_MS = 20;
-    private static final float MAX_GYRO_ANGLE = 60f;
+//    private static final float MAX_GYRO_ANGLE = 89f;
+        private static final float MAX_GYRO_ANGLE = 60f;
     private static final float MIN_GYRO_ANGLE = -40f;
+//    private static final float MIN_GYRO_ANGLE = -89f;
 
     private static final float RADIUS = 0.5f;
-    private static final float MAX_MOTOR_FORCE = 3.33f;
-    private static final float MASS = 0.1f;
-    private static final float GRAVITY_CONST = 10f;
-
-    private PositionAngle positionAngle = new PositionAngle(0, MIN_GYRO_ANGLE, 0);
+    private static final float GRAVITY_CONST = 9.81f;
+    private static float mass;
+    private float initialAngle = MIN_GYRO_ANGLE;
+    private float initialMotorPower = 0;
+    private PositionAngle positionAngle = new PositionAngle();
     private float angleSpeed;
     private Thread runner;
-
     @Autowired
     private IImuReaderListener listener;
-
     private IMotor motor;
+
+    public static void setMass(float mass) {
+        ImuDriverSimulator.mass = mass;
+    }
+
+    public void setInitialAngle(float initialAngle) {
+        this.initialAngle = initialAngle;
+    }
+
+    public void setInitialMotorPower(float initialMotorPower) {
+        this.initialMotorPower = initialMotorPower;
+    }
 
     public void setMotor(IMotor motor) {
         this.motor = motor;
@@ -57,7 +71,12 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
 
     @Override
     public void startWorking() {
-        positionAngle = new PositionAngle(0, MIN_GYRO_ANGLE, 0);
+        positionAngle = new PositionAngle(0, initialAngle, 0);
+        try {
+            motor.setPower(initialMotorPower);
+        } catch (PwmValRangeException | PercentValRangeException e) {
+            e.printStackTrace();
+        }
         angleSpeed = 0;
         runner = new Thread(this);
         runner.start();
@@ -127,8 +146,8 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
         final float alfa = positionAngle.getAngleY();
-        final float motorForce = motor.getPower() / 100 * MAX_MOTOR_FORCE;
+        final float motorForce = motor.getPower() / 100 * motor.getMaxThrust();
 
-        return (float) ((motorForce / MASS - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
+        return (float) ((motorForce / mass - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
     }
 }

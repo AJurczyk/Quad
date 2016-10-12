@@ -15,21 +15,23 @@
 
     <bean id="motor" class="com.ajurczyk.hardware.motor.impl.EmaxCf2822">
         <constructor-arg ref="pwm"/>
-        <property name="powerLimit" value = "50"/>
+        <property name="powerLimit" value = "60"/>
+        <property name="maxThrust" value="7.35"/>
     </bean>
 
 
     <bean id="regulatorPid" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
-        <property name="proportional" value="0.7"/>
-        <property name="derivative" value="20"/>
+        <property name="proportional" value="0.01"/>
+        <property name="integral" value="0"/>
+        <property name="derivative" value="1"/>
     </bean>
 
 
     <bean class="com.ajurczyk.software.flightcontroller.impl.FlightController">
-        <!--<property name="imuDriver" ref="imuSimulator"/>-->
         <property name="imuDriver" ref="imuDriver"/>
         <property name="motor" ref="motor"/>
         <property name="regulator" ref="regulatorPid"/>
+        <property name="mass" value="0.1"/>
     </bean>
 
 

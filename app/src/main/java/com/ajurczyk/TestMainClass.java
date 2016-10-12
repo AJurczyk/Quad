@@ -31,8 +31,8 @@ public class TestMainClass {
         motor.stop();
 
         try {
-            for (int i = 0; i < 4; i++) {
-                motor.setPower(i * 10);
+            for (int i = 0; i <= 100; i+=10) {
+                motor.setPower(i);
             }
             motor.stop();
         } catch (PercentValRangeException prcValueOutOfRange) {

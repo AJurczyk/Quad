@@ -10,6 +10,7 @@ import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
+import com.ajurczyk.software.flightcontroller.exception.FlightControllerException;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.impl.ImuDriverSimulator;
@@ -90,7 +91,7 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
      * @param run true = start
      */
     @RequestMapping(value = "/startStopFlightCtrl")
-    public void startStopFlightController(@RequestParam boolean run) {
+    public void startStopFlightController(@RequestParam boolean run) throws FlightControllerException {
         if (run) {
             flightController.start();
         } else {

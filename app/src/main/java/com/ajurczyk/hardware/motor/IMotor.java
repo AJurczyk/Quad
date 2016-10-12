@@ -18,4 +18,11 @@ public interface IMotor {
      * Set maximum allowed power.
      */
     void setPowerLimit(float powerLimit);
+
+    /**
+     * Returns max motor thrust.
+     *
+     * @return max motor thrust.
+     */
+    float getMaxThrust();
 }
