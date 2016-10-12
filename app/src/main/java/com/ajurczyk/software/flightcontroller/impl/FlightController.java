@@ -79,7 +79,7 @@ public class FlightController implements IFlightController, Runnable {
             throw new FlightControllerException("Motor doesn't have its max thrust set.");
         }
         try {
-            TimeUnit.MILLISECONDS.sleep(500);
+            TimeUnit.MILLISECONDS.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

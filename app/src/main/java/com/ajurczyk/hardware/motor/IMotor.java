@@ -20,9 +20,9 @@ public interface IMotor {
     void setPowerLimit(float powerLimit);
 
     /**
-     * Returns max motor thrust in grams.
+     * Returns max motor thrust.
      *
-     * @return
+     * @return max motor thrust.
      */
     float getMaxThrust();
 }
