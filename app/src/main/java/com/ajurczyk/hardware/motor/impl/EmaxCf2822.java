@@ -1,8 +1,8 @@
 package com.ajurczyk.hardware.motor.impl;
 
 import com.ajurczyk.hardware.motor.IMotor;
+import com.ajurczyk.hardware.motor.exception.MotorException;
 import com.ajurczyk.hardware.pwm.IPwmController;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.WholeNumException;
 import org.slf4j.LoggerFactory;
@@ -67,8 +67,8 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public void setPowerLimit(float powerLimit) {
-        this.powerLimit = powerLimit;
+    public void setRpmPrcnLimit(float rpmPrcnLimit) {
+        this.powerLimit = rpmPrcnLimit;
     }
 
     private float calcPwmPercent(float percentValue) throws PwmValRangeException {
@@ -81,7 +81,7 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public void stop() throws PwmValRangeException, PercentValRangeException {
+    public void stop() throws MotorException {
         setPower(0);
     }
 
@@ -91,17 +91,21 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public void setPower(float power) throws PwmValRangeException {
+    public void setPower(float power) throws MotorException {
         float powerToSet = power;
-        LOGGER.debug("[EMAX] Set " + power + "%");
-        if (power > powerLimit) {
-            LOGGER.warn("Tried to set not allowed power: " + power + ". PowerLimit=" + powerLimit);
-            powerToSet = powerLimit;
-        } else if (power < 0) {
-            LOGGER.warn("Tried to set not allowed power: " + power + ". Power must be greater than zero.");
-            powerToSet = 0;
+        try {
+            LOGGER.debug("[EMAX] Set " + power + "%");
+            if (power > powerLimit) {
+                LOGGER.warn("Tried to set not allowed power: " + power + ". PowerLimit=" + powerLimit);
+                powerToSet = powerLimit;
+            } else if (power < 0) {
+                LOGGER.warn("Tried to set not allowed power: " + power + ". Power must be greater than zero.");
+                powerToSet = 0;
+            }
+            pwm.setDuty(calcPwmPercent(powerToSet));
+            this.powerPercent = powerToSet;
+        } catch (PwmValRangeException e) {
+            throw new MotorException(e.getMessage(), e);
         }
-        pwm.setDuty(calcPwmPercent(powerToSet));
-        this.powerPercent = powerToSet;
     }
 }

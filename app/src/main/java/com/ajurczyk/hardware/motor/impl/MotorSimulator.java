@@ -1,8 +1,6 @@
 package com.ajurczyk.hardware.motor.impl;
 
 import com.ajurczyk.hardware.motor.IMotor;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 06.09.16.
@@ -24,12 +22,12 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public void setPowerLimit(float powerLimit) {
-        this.powerLimit = powerLimit;
+    public void setRpmPrcnLimit(float rpmPrcnLimit) {
+        this.powerLimit = rpmPrcnLimit;
     }
 
     @Override
-    public void stop() throws PwmValRangeException, PercentValRangeException {
+    public void stop() {
         setPower(0);
     }
 
@@ -39,7 +37,7 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public void setPower(float power) throws PwmValRangeException, PercentValRangeException {
+    public void setPower(float power) {
         if (power > powerLimit) {
             this.power = powerLimit;
         } else if (power < MIN_POWER) {

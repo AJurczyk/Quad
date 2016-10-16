@@ -44,7 +44,7 @@ public class EmaxCf2822Test {
 
         final IPwmController pwm = mock(RPi2HardwarePwm.class);
         final EmaxCf2822 motor = new EmaxCf2822(pwm);
-        motor.setPowerLimit(MAX_POWER);
+        motor.setRpmPrcnLimit(MAX_POWER);
 
         //when
         motor.setPower(MAX_POWER + 1);
