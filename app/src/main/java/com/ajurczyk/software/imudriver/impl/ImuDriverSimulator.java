@@ -2,8 +2,7 @@ package com.ajurczyk.software.imudriver.impl;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.hardware.motor.IMotor;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
+import com.ajurczyk.hardware.motor.exception.MotorException;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
@@ -73,8 +72,8 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     public void startWorking() {
         positionAngle = new PositionAngle(0, initialAngle, 0);
         try {
-            motor.setPower(initialMotorPower);
-        } catch (PwmValRangeException | PercentValRangeException e) {
+            motor.setThrustNewtons(initialMotorPower);
+        } catch (MotorException e) {
             e.printStackTrace();
         }
         angleSpeed = 0;
@@ -146,7 +145,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
         final float alfa = positionAngle.getAngleY();
-        final float motorForce = motor.getPower() / 100 * motor.getMaxThrust();
+        final float motorForce = motor.getThrustNewtons();
 
         return (float) ((motorForce / mass - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
     }

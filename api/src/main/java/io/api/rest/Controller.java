@@ -6,8 +6,7 @@ package io.api.rest;
 
 import com.ajurczyk.hardware.gyroacc.impl.AccGyroData;
 import com.ajurczyk.hardware.motor.IMotor;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
+import com.ajurczyk.hardware.motor.exception.MotorException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.flightcontroller.exception.FlightControllerException;
@@ -125,8 +124,8 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     }
 
     @RequestMapping(value = "/setMotorPower")
-    public void setMotorPower(@RequestParam float power) throws PercentValRangeException, PwmValRangeException {
-        motor.setPower(power);
+    public void setMotorPower(@RequestParam float power) throws MotorException {
+        motor.setRpmPrcnt(power);
     }
 
     @Override
@@ -150,7 +149,7 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     }
 
     @Override
-    public void motorPowerChanged(float power) {
+    public void motorThrustPrcntChanged(float power) {
         addQuadEvent(flightEvents, new QuadEvent(EventType.MOTOR_POWER, power));
     }
 

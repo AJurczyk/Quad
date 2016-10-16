@@ -3,109 +3,91 @@ package com.ajurczyk.hardware.motor.impl;
 import com.ajurczyk.hardware.motor.IMotor;
 import com.ajurczyk.hardware.motor.exception.MotorException;
 import com.ajurczyk.hardware.pwm.IPwmController;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.WholeNumException;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.
  */
 public class EmaxCf2822 implements IMotor {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmaxCf2822.class);
+    private int pwmMinDutyMs = 1;
+    private int pwmMaxDutyMs = 2;
+    private int pwmPeriodMs = 5;
 
-    private static final int PWM_MIN_MS = 1;
-    private static final int PWM_MAX_MS = 2;
-    private static final int PWM_PERIOD_MS = 5;
-    private final IPwmController pwm;
-    private float powerPercent;
-    private float powerLimit = 100f;
-    private float maxThrust;
-
-    /**
-     * Constructor that inits pwm parameters.
-     *
-     * @param pwm controller to control pwm pin (eg.Pi4JGpio)
-     * @throws WholeNumException    thrown if period caused error in pwm calculations
-     * @throws PwmValRangeException thrown if period caused error in pwm calculations
-     */
-    public EmaxCf2822(IPwmController pwm) throws WholeNumException, PwmValRangeException {
-        this.pwm = pwm;
-        pwm.setPeriodMs(PWM_PERIOD_MS);
-        pwm.setDuty(PWM_MAX_MS);
+    protected void setPwmMinDutyMs(int pwmMinDutyMs) {
+        this.pwmMinDutyMs = pwmMinDutyMs;
     }
 
-    /**
-     * Returns pwm duty cycle in ms for 0% throttle.
-     *
-     * @return PWM_MIN_MS const
-     */
-    public static int getPwmMinMs() {
-        return PWM_MIN_MS;
+    protected void setPwmMaxDutyMs(int pwmMaxDutyMs) {
+        this.pwmMaxDutyMs = pwmMaxDutyMs;
     }
 
-    /**
-     * Returns pwm duty cycle in ms for 100% throttle.
-     *
-     * @return PWM_MAX_MS const
-     */
-    public static int getPwmMaxMs() {
-        return PWM_MAX_MS;
+    protected void setPwmPeriodMs(int pwmPeriodMs) {
+        this.pwmPeriodMs = pwmPeriodMs;
     }
 
-    public static int getPwmPeriodMs() {
-        return PWM_PERIOD_MS;
+    private float rpmPrcnt;
+    private IPwmController pwmController;
+
+    protected IPwmController getPwmController() {
+        return pwmController;
+    }
+
+    public void setPwmController(IPwmController pwmController) {
+        this.pwmController = pwmController;
     }
 
     @Override
-    public float getMaxThrust() {
-        return maxThrust;
-    }
+    public void setRpmPrcnt(float percent) {
 
-    public void setMaxThrust(float maxThrust) {
-        this.maxThrust = maxThrust;
     }
 
     @Override
-    public void setRpmPrcnLimit(float rpmPrcnLimit) {
-        this.powerLimit = rpmPrcnLimit;
-    }
-
-    private float calcPwmPercent(float percentValue) throws PwmValRangeException {
-        final float pwmValue = PWM_MIN_MS + ((float) (PWM_MAX_MS - PWM_MIN_MS)) / 100 * percentValue;
-        if (pwmValue < PWM_MIN_MS || pwmValue > PWM_MAX_MS) {
-            throw new PwmValRangeException("Calculated pwm value " + pwmValue
-                + " is out of EMAX CF2822 range.");
-        }
-        return pwmValue;
+    public float getRpmPrcnt() {
+        return 0;
     }
 
     @Override
     public void stop() throws MotorException {
-        setPower(0);
+
     }
 
     @Override
-    public float getPower() {
-        return powerPercent;
+    public void setRpmPrcnLimit(float rpmPrcnLimit) {
+
     }
 
     @Override
-    public void setPower(float power) throws MotorException {
-        float powerToSet = power;
-        try {
-            LOGGER.debug("[EMAX] Set " + power + "%");
-            if (power > powerLimit) {
-                LOGGER.warn("Tried to set not allowed power: " + power + ". PowerLimit=" + powerLimit);
-                powerToSet = powerLimit;
-            } else if (power < 0) {
-                LOGGER.warn("Tried to set not allowed power: " + power + ". Power must be greater than zero.");
-                powerToSet = 0;
-            }
-            pwm.setDuty(calcPwmPercent(powerToSet));
-            this.powerPercent = powerToSet;
-        } catch (PwmValRangeException e) {
-            throw new MotorException(e.getMessage(), e);
-        }
+    public float getRpmPrcntLimit() {
+        return 0;
+    }
+
+    @Override
+    public float getThrustPercent() {
+        return 0;
+    }
+
+    @Override
+    public void setThrustPercent(float thrustPercent) {
+
+    }
+
+    @Override
+    public float getThrustNewtons() {
+        return 0;
+    }
+
+    @Override
+    public void setThrustFile(String path) {
+
+    }
+
+    @Override
+    public void init() throws MotorException {
+
+    }
+
+    @Override
+    public void setThrustNewtons(float thrustInNewtons) {
+
     }
 }

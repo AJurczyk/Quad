@@ -1,8 +1,7 @@
 package com.ajurczyk.software.flightcontroller.impl;
 
 import com.ajurczyk.hardware.motor.IMotor;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
+import com.ajurczyk.hardware.motor.exception.MotorException;
 import com.ajurczyk.software.flightcontroller.IFlightController;
 import com.ajurczyk.software.flightcontroller.IFlightControllerListener;
 import com.ajurczyk.software.flightcontroller.exception.FlightControllerException;
@@ -73,7 +72,6 @@ public class FlightController implements IFlightController, Runnable {
     public void start() throws FlightControllerException {
         LOGGER.debug("Start flight controller.");
         ((RegulatorPid) regulator).clear();
-        maxThrust = motor.getMaxThrust();
         if (maxThrust == 0) {
             LOGGER.error("Error starting flight controller. motor doesn't have its max thrust set.");
             throw new FlightControllerException("Motor doesn't have its max thrust set.");
@@ -84,7 +82,7 @@ public class FlightController implements IFlightController, Runnable {
             e.printStackTrace();
         }
         imuDriver.startWorking();
-        listener.motorPowerChanged(motor.getPower());
+        listener.motorThrustPrcntChanged(motor.getThrustPercent());
         runner = new Thread(this);
         runner.start();
     }
@@ -112,7 +110,7 @@ public class FlightController implements IFlightController, Runnable {
         } catch (InterruptedException e) {
             try {
                 motor.stop();
-            } catch (PwmValRangeException | PercentValRangeException e1) {
+            } catch (MotorException e1) {
                 LOGGER.error(e.toString());
                 //TODO unable to stop motor. Cut off the power.
             }
@@ -134,10 +132,9 @@ public class FlightController implements IFlightController, Runnable {
 
         try {
             final float thrustToSet = (float) (regulation + mass * GRAVITY_CONST * Math.cos(Math.toRadians(currentAngle)));
-            final float thrustPercent = thrustToSet / maxThrust * 100;
-            motor.setPower(thrustPercent);
-            listener.motorPowerChanged(thrustPercent);
-        } catch (PwmValRangeException | PercentValRangeException e) {
+            motor.setThrustNewtons(thrustToSet);
+            listener.motorThrustPrcntChanged(motor.getThrustPercent());
+        } catch (MotorException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something
         }

@@ -20,9 +20,9 @@ public class TestMainClass {
      * @throws WholeNumException    invalid period
      */
     public static void main(String[] args) throws PwmValRangeException, WholeNumException, PercentValRangeException {
-        System.out.println("TEST quad");
+     /*   System.out.println("TEST quad");
 
-        IPwmController pwm = new RPi2HardwarePwm(1, EmaxCf2822.getPwmPeriodMs());
+        IPwmController pwm = new RPi2HardwarePwm(1, 5);
         EmaxCf2822 motor = new EmaxCf2822(pwm);
 
         motor.setPower(0);
@@ -38,7 +38,7 @@ public class TestMainClass {
         } catch (PercentValRangeException prcValueOutOfRange) {
             motor.stop();
             throw prcValueOutOfRange;
-        }
+        }*/
 //        IPwmController pwm = new RPi2HardwarePwm(1, 20);
 //
 //        pwm.setDuty(1.5f);

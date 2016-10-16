@@ -1,8 +1,6 @@
 package com.ajurczyk.hardware.motor;
 
 import com.ajurczyk.hardware.motor.exception.MotorException;
-import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
-import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 13.01.16.
@@ -15,25 +13,40 @@ public interface IMotor {
     void stop() throws MotorException;
 
     /**
-     * Set maximum allowed rpm as percent of max rpm.
+     * Set maximum allowed rpm percent.
      *
      * @param rpmPrcnLimit max allowed rpm percent
      */
     void setRpmPrcnLimit(float rpmPrcnLimit);
 
     /**
-     * Returns max motor thrust.
-     *
-     * @return max motor thrust.
+     * Get maximum allowed rpm percent.
+     * @return max allowed rpm percent.
      */
-    float getMaxThrust();
+    float getRpmPrcntLimit();
 
     /**
      * Set motor rpm to a percent of max rpm.
      *
      * @param percent percent to set
+     * @throws MotorException invalid value to set
      */
-    void setRpmPrcnt(float percent);
+    void setRpmPrcnt(float percent) throws MotorException;
+
+    /**
+     * Get Current rpm percent.
+     * @return current rpm percent
+     */
+    float getRpmPrcnt();
+
+    /**
+     * Sets motor thrust to a percent of max thrust.
+     *
+     * @param thrustPercent percent to set
+     * @throws MotorException invalid value to set
+
+     */
+    void setThrustPercent(float thrustPercent) throws MotorException;
 
     /**
      * Get current thrust percent.
@@ -43,11 +56,12 @@ public interface IMotor {
     float getThrustPercent();
 
     /**
-     * Sets motor thrust to a percent of max thrust.
+     * Set motor thrust to a value in Newtons.
      *
-     * @param thrustPercent percent to set
+     * @param thrustInNewtons desired Newton value
+     * @throws MotorException invalid value to set
      */
-    void setThrustPercent(float thrustPercent);
+    void setThrustNewtons(float thrustInNewtons) throws MotorException;
 
     /**
      * Get current thrust in Newtons.
@@ -57,9 +71,14 @@ public interface IMotor {
     float getThrustNewtons();
 
     /**
-     * Set motor thrust to a value in Newtons.
+     * Set file with thrust characteristic.
      *
-     * @param thrustInNewtons desired Newton value
+     * @param path path to file
      */
-    void setThrustNewtons(float thrustInNewtons);
+    void setThrustFile(String path);
+
+    /**
+     * Initialize motor.
+     */
+    void init() throws MotorException;
 }
