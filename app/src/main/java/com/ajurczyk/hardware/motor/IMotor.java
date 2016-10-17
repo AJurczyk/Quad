@@ -8,6 +8,11 @@ import com.ajurczyk.hardware.motor.exception.MotorException;
 public interface IMotor {
 
     /**
+     * Initialize motor.
+     */
+    void init() throws MotorException;
+
+    /**
      * Stop the motor.
      */
     void stop() throws MotorException;
@@ -29,15 +34,17 @@ public interface IMotor {
      * Set motor rpm to a percent of max rpm.
      *
      * @param percent percent to set
+     * @param updateThrustVar update variable that holds current thrust percentage. It's time consuming.
+     *
      * @throws MotorException invalid value to set
      */
-    void setRpmPrcnt(float percent) throws MotorException;
+    void setRpmPrcnt(float percent, boolean updateThrustVar) throws MotorException;
 
     /**
      * Get Current rpm percent.
      * @return current rpm percent
      */
-    float getRpmPrcnt();
+    float getCurrentRpmPrcnt();
 
     /**
      * Sets motor thrust to a percent of max thrust.
@@ -53,7 +60,7 @@ public interface IMotor {
      *
      * @return thrust in percent of max thrust
      */
-    float getThrustPercent();
+    float getCurrentThrustPercent();
 
     /**
      * Set motor thrust to a value in Newtons.
@@ -75,10 +82,5 @@ public interface IMotor {
      *
      * @param path path to file
      */
-    void setThrustFile(String path);
-
-    /**
-     * Initialize motor.
-     */
-    void init() throws MotorException;
+    void setThrustMapFile(String path);
 }

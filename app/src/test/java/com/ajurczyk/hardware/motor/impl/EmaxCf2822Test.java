@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.TreeMap;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,10 +39,11 @@ public class EmaxCf2822Test {
 
     private static final float MAX_THROTTLE = 100f;
     private static final String THRUST_FILE = "src/test/resources/thrustTestFile.properties";
-    private final ConcurrentHashMap<Float, Float> percentAndThrust = new ConcurrentHashMap<>();
+    private final TreeMap<Float, Float> thrustToPercent = new TreeMap<>();
 
     /**
      * Data provider with percentage values to check.
+     *
      * @return percentage values
      */
     @DataProvider(name = "percentValues")
@@ -69,23 +70,23 @@ public class EmaxCf2822Test {
     }
 
     private void initPercentAndThrustMap() {
-        percentAndThrust.put(0f, 0f);
-        percentAndThrust.put(10f, 5f);
-        percentAndThrust.put(20f, 10f);
-        percentAndThrust.put(30f, 20f);
-        percentAndThrust.put(40f, 25f);
-        percentAndThrust.put(50f, 35f);
-        percentAndThrust.put(60f, 45f);
-        percentAndThrust.put(70f, 65f);
-        percentAndThrust.put(RPM_PRCNT_LIMIT, NEWTON_LIMIT);
-        percentAndThrust.put(90f, 95f);
-        percentAndThrust.put(100f, MAX_THROTTLE);
+        thrustToPercent.put(0f, 0f);
+        thrustToPercent.put(5f, 10f);
+        thrustToPercent.put(10f, 20f);
+        thrustToPercent.put(20f, 30f);
+        thrustToPercent.put(25f, 40f);
+        thrustToPercent.put(35f, 50f);
+        thrustToPercent.put(45f, 60f);
+        thrustToPercent.put(65f, 70f);
+        thrustToPercent.put(NEWTON_LIMIT, RPM_PRCNT_LIMIT);
+        thrustToPercent.put(95f, 90f);
+        thrustToPercent.put(MAX_THROTTLE, 100f);
     }
 
     private void createThrustFile() throws IOException {
         FileUtils.removeFile(THRUST_FILE);
         final StringBuilder builder = new StringBuilder();
-        for (final Map.Entry<Float, Float> entry : percentAndThrust.entrySet()) {
+        for (final Map.Entry<Float, Float> entry : thrustToPercent.entrySet()) {
             builder.append(entry.getKey()).append('=').append(entry.getValue()).append(System.getProperty("line.separator"));
         }
         FileUtils.save(builder.toString(), THRUST_FILE, true);
@@ -100,7 +101,7 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         ((EmaxCf2822) motor).setPwmController(pwm);
         ((EmaxCf2822) motor).setPwmMaxDutyMs(PWM_MAX_DUTY_MS);
         ((EmaxCf2822) motor).setPwmMinDutyMs(PWM_MIN_DUTY_MS);
@@ -110,7 +111,7 @@ public class EmaxCf2822Test {
         motor.init();
 
         //then
-        verify(pwm).setDuty(PWM_MIN_DUTY_MS);
+        verify(pwm).setDuty(PWM_MAX_DUTY_MS);
         verify(pwm).setPeriodMs(PWM_PERIOD_MS);
     }
 
@@ -119,32 +120,32 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
-        motor.setRpmPrcnt(percentToSet);
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
+        motor.setRpmPrcnt(percentToSet, true);
 
         //then
-        final float percentSet = ((EmaxCf2822) motor).getRpmPrcnt();
+        final float percentSet = motor.getCurrentRpmPrcnt();
         Assert.assertEquals(percentSet, percentToSet);
         verify(pwm).setDuty(convertPercentToPwm(percentSet));
     }
 
-    @Test(expectedExceptions = MotorException.class)
+    @Test
     public final void setPercentBelow0() throws MotorException, PwmValRangeException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
-            motor.setRpmPrcnt(VALUE_BELOW_0);
+            motor.setRpmPrcnt(VALUE_BELOW_0, true);
         } catch (MotorException e) {
             exceptionThrown = true;
         }
@@ -159,14 +160,14 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
-            motor.setRpmPrcnt(PRCNT_ABOVE_100);
+            motor.setRpmPrcnt(PRCNT_ABOVE_100, true);
         } catch (MotorException e) {
             exceptionThrown = true;
         }
@@ -181,13 +182,13 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         motor.setRpmPrcnLimit(RPM_PRCNT_LIMIT);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
-        motor.setRpmPrcnt(RPM_PRCNT_LIMIT + 1);
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
+        motor.setRpmPrcnt(RPM_PRCNT_LIMIT + 1, true);
 
         //then
         verify(pwm).setDuty(convertPercentToPwm(RPM_PRCNT_LIMIT));
@@ -198,11 +199,11 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
             motor.setThrustNewtons(VALUE_BELOW_0);
@@ -220,12 +221,12 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         motor.setRpmPrcnLimit(RPM_PRCNT_LIMIT);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
             motor.setThrustNewtons(MAX_THROTTLE + 1);
@@ -243,12 +244,12 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         motor.setRpmPrcnLimit(RPM_PRCNT_LIMIT);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         motor.setThrustNewtons(NEWTON_LIMIT + 1);
 
         //then
@@ -260,11 +261,11 @@ public class EmaxCf2822Test {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
-        motor.setThrustFile(THRUST_FILE);
+        motor.setThrustMapFile(THRUST_FILE);
         ((EmaxCf2822) motor).setPwmController(pwm);
 
         //when
-        motor.init();
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         motor.setThrustNewtons(NEWTON_IN_BETWEEN);
 
         //then
