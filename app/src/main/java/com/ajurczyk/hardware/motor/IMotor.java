@@ -22,13 +22,13 @@ public interface IMotor {
      *
      * @param rpmPrcnLimit max allowed rpm percent
      */
-    void setRpmPrcnLimit(float rpmPrcnLimit);
+    void setRpmLimit(float rpmPrcnLimit);
 
     /**
      * Get maximum allowed rpm percent.
      * @return max allowed rpm percent.
      */
-    float getRpmPrcntLimit();
+    float getRpmLimit();
 
     /**
      * Set motor rpm to a percent of max rpm.
@@ -37,13 +37,13 @@ public interface IMotor {
      *
      * @throws MotorException invalid value to set
      */
-    void setRpmPrcnt(float percent) throws MotorException;
+    void setRpm(float percent) throws MotorException;
 
     /**
      * Get Current rpm percent.
      * @return current rpm percent
      */
-    float getCurrentRpmPrcnt();
+    float getCurrentRpmm();
 
     /**
      * Sets motor thrust to a percent of max thrust.
@@ -52,14 +52,14 @@ public interface IMotor {
      * @throws MotorException invalid value to set
 
      */
-    void setThrustPrcnt(float thrustPrcnt) throws MotorException;
+    void setThrust(float thrustPrcnt) throws MotorException;
 
     /**
      * Get current thrust percent.
      *
      * @return thrust in percent of max thrust
      */
-    float getCurrentThrustPrcnt();
+    float getCurrentThrust();
 
     /**
      * Set file with thrust characteristic.

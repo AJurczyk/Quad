@@ -13,32 +13,30 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public void setRpmPrcnLimit(float rpmPrcnLimit) {
+    public void setRpmLimit(float rpmPrcnLimit) {
 
     }
 
     @Override
-    public float getRpmPrcntLimit() {
+    public float getRpmLimit() {
         return 0;
     }
 
     @Override
-    public void setRpmPrcnt(float percent) throws MotorException {
+    public void setRpm(float percent) throws MotorException {
 
     }
 
-    @Override
-    public float getCurrentRpmPrcnt() {
+    public float getCurrentRpmm() {
         return 0;
     }
 
     @Override
-    public void setThrustPrcnt(float thrustPrcnt) throws MotorException {
+    public void setThrust(float thrustPrcnt) throws MotorException {
 
     }
 
-    @Override
-    public float getCurrentThrustPrcnt() {
+    public float getCurrentThrust() {
         return 0;
     }
 
@@ -72,7 +70,7 @@ public class MotorSimulator implements IMotor {
 //    }
 //
 //    @Override
-//    public void setRpmPrcnLimit(float rpmPrcnLimit) {
+//    public void setRpmLimit(float rpmPrcnLimit) {
 //        this.powerLimit = rpmPrcnLimit;
 //    }
 //

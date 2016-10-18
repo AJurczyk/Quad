@@ -125,7 +125,7 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
 
     @RequestMapping(value = "/setMotorPower")
     public void setMotorPower(@RequestParam float power) throws MotorException {
-        motor.setRpmPrcnt(power);
+        motor.setRpm(power);
     }
 
     @Override

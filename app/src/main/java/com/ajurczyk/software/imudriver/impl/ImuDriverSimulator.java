@@ -72,7 +72,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     public void startWorking() {
         positionAngle = new PositionAngle(0, initialAngle, 0);
         try {
-            motor.setThrustPrcnt(initialMotorThrustPrcnt);
+            motor.setThrust(initialMotorThrustPrcnt);
         } catch (MotorException e) {
             e.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
         final float alfa = positionAngle.getAngleY();
-        final float motorForce = motor.getCurrentThrustPrcnt() / 100 * motor.getMaxThrustInNewtons();
+        final float motorForce = motor.getCurrentThrust() / 100 * motor.getMaxThrustInNewtons();
 
         return (float) ((motorForce / mass - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
     }

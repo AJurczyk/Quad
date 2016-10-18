@@ -82,7 +82,7 @@ public class FlightController implements IFlightController, Runnable {
             e.printStackTrace();
         }
         imuDriver.startWorking();
-        listener.motorThrustPrcntChanged(motor.getCurrentThrustPrcnt());
+        listener.motorThrustPrcntChanged(motor.getCurrentThrust());
         runner = new Thread(this);
         runner.start();
     }
@@ -133,8 +133,8 @@ public class FlightController implements IFlightController, Runnable {
         try {
             final float thrustToSetInNewtons = (float) (regulation + mass * GRAVITY_CONST * Math.cos(Math.toRadians(currentAngle)));
             final float thrustPercent = thrustToSetInNewtons/motor.getMaxThrustInNewtons()*100;
-            motor.setThrustPrcnt(thrustPercent);
-            listener.motorThrustPrcntChanged(motor.getCurrentThrustPrcnt());
+            motor.setThrust(thrustPercent);
+            listener.motorThrustPrcntChanged(motor.getCurrentThrust());
         } catch (MotorException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something
