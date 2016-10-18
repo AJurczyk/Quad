@@ -23,7 +23,7 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public void setRpmPrcnt(float percent, boolean updateThrustVar) throws MotorException {
+    public void setRpmPrcnt(float percent) throws MotorException {
 
     }
 
@@ -33,28 +33,23 @@ public class MotorSimulator implements IMotor {
     }
 
     @Override
-    public void setThrustPercent(float thrustPercent) throws MotorException {
+    public void setThrustPrcnt(float thrustPrcnt) throws MotorException {
 
     }
 
     @Override
-    public float getCurrentThrustPercent() {
-        return 0;
-    }
-
-    @Override
-    public void setThrustNewtons(float thrustInNewtons) throws MotorException {
-
-    }
-
-    @Override
-    public float getThrustNewtons() {
+    public float getCurrentThrustPrcnt() {
         return 0;
     }
 
     @Override
     public void setThrustMapFile(String path) {
 
+    }
+
+    @Override
+    public float getMaxThrustInNewtons() {
+        return 0;
     }
 
     @Override

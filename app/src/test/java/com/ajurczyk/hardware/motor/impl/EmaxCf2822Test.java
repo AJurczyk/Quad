@@ -35,7 +35,7 @@ public class EmaxCf2822Test {
     private static final float PRCNT_ABOVE_100 = 100.34f;
     private static final float RPM_PRCNT_LIMIT = 80f;
     private static final float NEWTON_LIMIT = 80f;
-    private static final float NEWTON_IN_BETWEEN = 27.5f;
+    private static final float THRUST_PRCNT_IN_BETWEEN = 27.5f;
 
     private static final float MAX_THROTTLE = 100f;
     private static final String THRUST_FILE = "src/test/resources/thrustTestFile.properties";
@@ -116,7 +116,7 @@ public class EmaxCf2822Test {
     }
 
     @Test(dataProvider = "percentValues")
-    public final void setCorrectPercent(float percentToSet) throws PwmValRangeException, MotorException {
+    public final void setCorrectRpmPercent(float percentToSet) throws PwmValRangeException, MotorException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -125,7 +125,7 @@ public class EmaxCf2822Test {
 
         //when
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
-        motor.setRpmPrcnt(percentToSet, true);
+        motor.setRpmPrcnt(percentToSet);
 
         //then
         final float percentSet = motor.getCurrentRpmPrcnt();
@@ -134,7 +134,7 @@ public class EmaxCf2822Test {
     }
 
     @Test
-    public final void setPercentBelow0() throws MotorException, PwmValRangeException {
+    public final void setRpmPercentBelow0() throws MotorException, PwmValRangeException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -145,7 +145,7 @@ public class EmaxCf2822Test {
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
-            motor.setRpmPrcnt(VALUE_BELOW_0, true);
+            motor.setRpmPrcnt(VALUE_BELOW_0);
         } catch (MotorException e) {
             exceptionThrown = true;
         }
@@ -156,7 +156,7 @@ public class EmaxCf2822Test {
     }
 
     @Test
-    public final void setPercentAbove100() throws MotorException, PwmValRangeException {
+    public final void setRpmPercentAbove100() throws MotorException, PwmValRangeException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -167,7 +167,7 @@ public class EmaxCf2822Test {
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
-            motor.setRpmPrcnt(PRCNT_ABOVE_100, true);
+            motor.setRpmPrcnt(PRCNT_ABOVE_100);
         } catch (MotorException e) {
             exceptionThrown = true;
         }
@@ -178,7 +178,7 @@ public class EmaxCf2822Test {
     }
 
     @Test
-    public final void setPercentAboveMaxLimit() throws MotorException, PwmValRangeException {
+    public final void setRpmPercentAboveLimit() throws MotorException, PwmValRangeException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -188,14 +188,14 @@ public class EmaxCf2822Test {
 
         //when
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
-        motor.setRpmPrcnt(RPM_PRCNT_LIMIT + 1, true);
+        motor.setRpmPrcnt(RPM_PRCNT_LIMIT + 1);
 
         //then
         verify(pwm).setDuty(convertPercentToPwm(RPM_PRCNT_LIMIT));
     }
 
     @Test
-    public final void setThrustNewtonsBelowMin() throws PwmValRangeException, MotorException {
+    public final void setThrustPercentBelow0() throws PwmValRangeException, MotorException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -206,7 +206,7 @@ public class EmaxCf2822Test {
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
-            motor.setThrustNewtons(VALUE_BELOW_0);
+            motor.setThrustPrcnt(VALUE_BELOW_0);
         } catch (MotorException e) {
             exceptionThrown = true;
         }
@@ -217,7 +217,7 @@ public class EmaxCf2822Test {
     }
 
     @Test
-    public final void setThrustNewtonsAboveMax() throws PwmValRangeException, MotorException {
+    public final void setThrustPercentAboveMax() throws PwmValRangeException, MotorException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -229,7 +229,7 @@ public class EmaxCf2822Test {
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
         boolean exceptionThrown = false;
         try {
-            motor.setThrustNewtons(MAX_THROTTLE + 1);
+            motor.setThrustPrcnt(PRCNT_ABOVE_100);
         } catch (MotorException e) {
             exceptionThrown = true;
         }
@@ -240,7 +240,7 @@ public class EmaxCf2822Test {
     }
 
     @Test
-    public final void setThrustNewtonsAboveMaxLimit() throws PwmValRangeException, MotorException {
+    public final void setThrustPrcntAboveLimit() throws PwmValRangeException, MotorException {
         //given
         final IMotor motor = new EmaxCf2822();
         final IPwmController pwm = mock(IPwmController.class);
@@ -250,7 +250,7 @@ public class EmaxCf2822Test {
 
         //when
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
-        motor.setThrustNewtons(NEWTON_LIMIT + 1);
+        motor.setThrustPrcnt(NEWTON_LIMIT + 1);
 
         //then
         verify(pwm).setDuty(convertPercentToPwm(RPM_PRCNT_LIMIT));
@@ -266,9 +266,47 @@ public class EmaxCf2822Test {
 
         //when
         ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
-        motor.setThrustNewtons(NEWTON_IN_BETWEEN);
+        motor.setThrustPrcnt(THRUST_PRCNT_IN_BETWEEN);
 
         //then
         verify(pwm).setDuty(convertPercentToPwm(PRCNT_IN_BETWEEN));
+    }
+
+    public final void setRpmPrcntUpdatesThrustPrcntVar() throws MotorException {
+        //given
+        final IMotor motor = new EmaxCf2822();
+        final IPwmController pwm = mock(IPwmController.class);
+        motor.setThrustMapFile(THRUST_FILE);
+        ((EmaxCf2822) motor).setPwmController(pwm);
+
+        //when
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
+        motor.setRpmPrcnt(RPM_PRCNT_LIMIT);
+
+        //then
+        final float rpmPrcntSet = motor.getCurrentRpmPrcnt();
+        final float thrustPrcntSet = motor.getCurrentThrustPrcnt();
+        final float expectedThrustPrcnt = NEWTON_LIMIT / MAX_THROTTLE * 100f;
+        Assert.assertEquals(thrustPrcntSet, expectedThrustPrcnt);
+        Assert.assertEquals(rpmPrcntSet, RPM_PRCNT_LIMIT);
+    }
+
+    public final void setThrustPcntUpdatesRpmPrcntVar() throws MotorException {
+        //given
+        final IMotor motor = new EmaxCf2822();
+        final IPwmController pwm = mock(IPwmController.class);
+        motor.setThrustMapFile(THRUST_FILE);
+        ((EmaxCf2822) motor).setPwmController(pwm);
+        final float thrustToSet = NEWTON_LIMIT / MAX_THROTTLE * 100;
+
+        //when
+        ((EmaxCf2822) motor).loadThrustMapFromFile(THRUST_FILE);
+        motor.setThrustPrcnt(thrustToSet);
+
+        //then
+        final float thrustPrcntSet = motor.getCurrentThrustPrcnt();
+        final float rpmPrcntSet = motor.getCurrentRpmPrcnt();
+        Assert.assertEquals(thrustPrcntSet, thrustToSet);
+        Assert.assertEquals(rpmPrcntSet, RPM_PRCNT_LIMIT);
     }
 }

@@ -52,51 +52,6 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public void init() throws MotorException {
-        try {
-            loadThrustMapFromFile(thrustMapFile);
-            pwmController.setPeriodMs(pwmPeriodMs);
-            pwmController.setDuty(pwmMaxDutyMs);
-        } catch (PwmValRangeException | WholeNumException e) {
-            throw new MotorException(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public float getCurrentRpmPrcnt() {
-        return currentRpmPrcnt;
-    }
-
-    @Override
-    public void setRpmPrcnt(float rpmPrcnt, boolean updateThrustVar) throws MotorException {
-        try {
-            LOGGER.debug("[EMAX] Set " + rpmPrcnt + "%");
-            if (rpmPrcnt > 100 || rpmPrcnt < 0) {
-                stop();
-                throw new MotorException("Invalid rpm percent value " + rpmPrcnt + "%. Motor has been stopped.");
-            }
-            if (rpmPrcnt > rpmPrcnLimit) {
-                LOGGER.warn("Tried to set rpm percent above limit. Expected: " + rpmPrcnt + "%. Limit: " + rpmPrcnLimit + "%");
-                pwmController.setDuty(calcPwmFromRpmPercent(rpmPrcnLimit));
-                this.currentRpmPrcnt = rpmPrcnLimit;
-            } else {
-                pwmController.setDuty(calcPwmFromRpmPercent(rpmPrcnt));
-                this.currentRpmPrcnt = rpmPrcnt;
-            }
-        } catch (PwmValRangeException e) {
-            throw new MotorException(e.getMessage(), e);
-        }
-        if (updateThrustVar) {
-            currentThrustPrcnt = 100 * convertRpmPercentToThrust(rpmPrcnt) / maxThrust;
-        }
-    }
-
-    @Override
-    public void stop() throws MotorException {
-        setRpmPrcnt(0, true);
-    }
-
-    @Override
     public void setRpmPrcnLimit(float rpmPrcnLimit) {
         this.rpmPrcnLimit = rpmPrcnLimit;
     }
@@ -107,33 +62,36 @@ public class EmaxCf2822 implements IMotor {
     }
 
     @Override
-    public float getCurrentThrustPercent() {
+    public float getCurrentRpmPrcnt() {
+        return currentRpmPrcnt;
+    }
+
+    @Override
+    public float getCurrentThrustPrcnt() {
         return currentThrustPrcnt;
     }
 
     @Override
-    public void setThrustPercent(float thrustPercent) throws MotorException {
-        if (thrustPercent < 0 || thrustPercent > 100) {
-            stop();
-            throw new MotorException("Invalid thrust percent value " + thrustPercent + "%. Motor has been stopped.");
-        }
-        final float rpmPercent = convertThrustPercentToRpmPercent(thrustPercent);
-        currentThrustPrcnt = thrustPercent;
-        setRpmPrcnt(rpmPercent, false);
+    public float getMaxThrustInNewtons() {
+        return maxThrust;
     }
 
     @Override
-    public float getThrustNewtons() {
-        return currentThrustPrcnt / 100 * maxThrust;
+    public void init() throws MotorException {
+        try {
+            LOGGER.debug("[EMAX] Init started.");
+            loadThrustMapFromFile(thrustMapFile);
+            pwmController.setPeriodMs(pwmPeriodMs);
+            pwmController.setDuty(pwmMaxDutyMs);
+            LOGGER.debug("[EMAX] Init successful.");
+        } catch (PwmValRangeException | WholeNumException e) {
+            throw new MotorException(e.getMessage(), e);
+        }
     }
 
     @Override
-    public void setThrustNewtons(float thrustInNewtons) throws MotorException {
-        if (thrustInNewtons < 0 || thrustInNewtons > maxThrust) {
-            stop();
-            throw new MotorException("Invalid thrust value " + thrustInNewtons + "[N]. Motor has been stopped.");
-        }
-        setThrustPercent(100 * thrustInNewtons / maxThrust);
+    public void stop() throws MotorException {
+        setRpmPrcnt(0);
     }
 
     @Override
@@ -141,13 +99,38 @@ public class EmaxCf2822 implements IMotor {
         this.thrustMapFile = path;
     }
 
-    private float calcPwmFromRpmPercent(float percentValue) throws PwmValRangeException {
-        final float pwmValue = pwmMinDutyMs + ((float) (pwmMaxDutyMs - pwmMinDutyMs)) / 100 * percentValue;
-        if (pwmValue < pwmMinDutyMs || pwmValue > pwmMaxDutyMs) {
-            throw new PwmValRangeException("Calculated pwm value " + pwmValue
-                + " is out of EMAX CF2822 range" + pwmMinDutyMs + " - " + pwmMaxDutyMs + ".");
+    @Override
+    public void setRpmPrcnt(float rpmPrcnt) throws MotorException {
+        try {
+            LOGGER.debug("[EMAX] Set rpm: " + rpmPrcnt + "%.");
+            if (rpmPrcnt > 100 || rpmPrcnt < 0) {
+                stop();
+                throw new MotorException("Invalid rpm percent value " + rpmPrcnt + "%. Motor has been stopped.");
+            }
+            float rpmToSet = rpmPrcnt;
+            if (rpmPrcnt > rpmPrcnLimit) {
+                LOGGER.warn("Rpm will be set to limit value. Expected: " + rpmPrcnt + "%. Limit: " + rpmPrcnLimit + "%");
+                rpmToSet = rpmPrcnLimit;
+            }
+            pwmController.setDuty(calcPwmFromRpmPercent(rpmToSet));
+
+            //TODO optimization - conversion is inefficient, if setThrustPrcnt methos is used we know thrustPrcnt already
+            this.currentThrustPrcnt = convertRpmPrcntToThrustPrcnt(rpmToSet);
+
+            this.currentRpmPrcnt = rpmToSet;
+        } catch (PwmValRangeException e) {
+            throw new MotorException(e.getMessage(), e);
         }
-        return pwmValue;
+    }
+
+    @Override
+    public void setThrustPrcnt(float thrustPrcnt) throws MotorException {
+        LOGGER.debug("[EMAX] Set thrust: " + thrustPrcnt + "%.");
+        if (thrustPrcnt < 0 || thrustPrcnt > 100) {
+            stop();
+            throw new MotorException("Invalid thrust percent value " + thrustPrcnt + "%. Motor has been stopped.");
+        }
+        setRpmPrcnt(convertThrustPrcntToRpmPrcnt(thrustPrcnt));
     }
 
     protected void loadThrustMapFromFile(String path) throws MotorException {
@@ -163,7 +146,7 @@ public class EmaxCf2822 implements IMotor {
         }
     }
 
-    private float convertRpmPercentToThrust(float rpmPrcnt) {
+    private float convertRpmPrcntToThrustPrcnt(float rpmPrcnt) {
         if (rpmPrcnt == 0) {
             return thrustRpmPrcntMap.firstEntry().getValue();
         } else if (rpmPrcnt == 100) {
@@ -172,20 +155,27 @@ public class EmaxCf2822 implements IMotor {
         Map.Entry<Float, Float> lowerEntry = thrustRpmPrcntMap.entrySet().stream().filter(entry -> entry.getValue() < rpmPrcnt).max(Comparator.comparing(Map.Entry::getValue)).get();
         Map.Entry<Float, Float> higherEntry = thrustRpmPrcntMap.entrySet().stream().filter(entry -> entry.getValue() > rpmPrcnt).min(Comparator.comparing(Map.Entry::getValue)).get();
         final Float diffFraction = (rpmPrcnt - lowerEntry.getValue()) / (higherEntry.getValue() - lowerEntry.getValue());
-        return lowerEntry.getKey() + (higherEntry.getKey() - lowerEntry.getKey()) * diffFraction;
+        final float thrustNewtons = lowerEntry.getKey() + (higherEntry.getKey() - lowerEntry.getKey()) * diffFraction;
+        return thrustNewtons / maxThrust * 100;
     }
 
-    private float convertThrustToRpmPercent(float newton) {
-        if (thrustRpmPrcntMap.containsKey(newton)) {
-            return thrustRpmPrcntMap.get(newton);
+    private float convertThrustPrcntToRpmPrcnt(float thrustPrcnt) {
+        final float thrustNewtons = thrustPrcnt / 100 * maxThrust;
+        if (thrustRpmPrcntMap.containsKey(thrustNewtons)) {
+            return thrustRpmPrcntMap.get(thrustNewtons);
         }
-        final Map.Entry<Float, Float> lowerEntry = thrustRpmPrcntMap.lowerEntry(newton);
-        final Map.Entry<Float, Float> higherEntry = thrustRpmPrcntMap.higherEntry(newton);
-        final Float diffFraction = (newton - lowerEntry.getKey()) / (higherEntry.getKey() - lowerEntry.getKey());
+        final Map.Entry<Float, Float> lowerEntry = thrustRpmPrcntMap.lowerEntry(thrustNewtons);
+        final Map.Entry<Float, Float> higherEntry = thrustRpmPrcntMap.higherEntry(thrustNewtons);
+        final Float diffFraction = (thrustNewtons - lowerEntry.getKey()) / (higherEntry.getKey() - lowerEntry.getKey());
         return lowerEntry.getValue() + (higherEntry.getValue() - lowerEntry.getValue()) * diffFraction;
     }
 
-    private float convertThrustPercentToRpmPercent(float thrustPrcnt) {
-        return convertThrustToRpmPercent(thrustPrcnt / 100 * maxThrust);
+    private float calcPwmFromRpmPercent(float percentValue) throws PwmValRangeException {
+        final float pwmValue = pwmMinDutyMs + ((float) (pwmMaxDutyMs - pwmMinDutyMs)) / 100 * percentValue;
+        if (pwmValue < pwmMinDutyMs || pwmValue > pwmMaxDutyMs) {
+            throw new PwmValRangeException("Calculated pwm value " + pwmValue
+                + " is out of EMAX CF2822 range" + pwmMinDutyMs + " - " + pwmMaxDutyMs + ".");
+        }
+        return pwmValue;
     }
 }

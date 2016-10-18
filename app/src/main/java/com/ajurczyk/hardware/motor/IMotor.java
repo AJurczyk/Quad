@@ -34,11 +34,10 @@ public interface IMotor {
      * Set motor rpm to a percent of max rpm.
      *
      * @param percent percent to set
-     * @param updateThrustVar update variable that holds current thrust percentage. It's time consuming.
      *
      * @throws MotorException invalid value to set
      */
-    void setRpmPrcnt(float percent, boolean updateThrustVar) throws MotorException;
+    void setRpmPrcnt(float percent) throws MotorException;
 
     /**
      * Get Current rpm percent.
@@ -49,33 +48,18 @@ public interface IMotor {
     /**
      * Sets motor thrust to a percent of max thrust.
      *
-     * @param thrustPercent percent to set
+     * @param thrustPrcnt percent to set
      * @throws MotorException invalid value to set
 
      */
-    void setThrustPercent(float thrustPercent) throws MotorException;
+    void setThrustPrcnt(float thrustPrcnt) throws MotorException;
 
     /**
      * Get current thrust percent.
      *
      * @return thrust in percent of max thrust
      */
-    float getCurrentThrustPercent();
-
-    /**
-     * Set motor thrust to a value in Newtons.
-     *
-     * @param thrustInNewtons desired Newton value
-     * @throws MotorException invalid value to set
-     */
-    void setThrustNewtons(float thrustInNewtons) throws MotorException;
-
-    /**
-     * Get current thrust in Newtons.
-     *
-     * @return thrust in Newtons
-     */
-    float getThrustNewtons();
+    float getCurrentThrustPrcnt();
 
     /**
      * Set file with thrust characteristic.
@@ -83,4 +67,11 @@ public interface IMotor {
      * @param path path to file
      */
     void setThrustMapFile(String path);
+
+    /**
+     * Get maximum motor thrust.
+     *
+     * @return max motor thrust based on config file
+     */
+    float getMaxThrustInNewtons();
 }

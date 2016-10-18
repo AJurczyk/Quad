@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImuDriverSimulator.class);
     private static final int DT_MS = 20;
-//    private static final float MAX_GYRO_ANGLE = 89f;
-        private static final float MAX_GYRO_ANGLE = 60f;
+    //    private static final float MAX_GYRO_ANGLE = 89f;
+    private static final float MAX_GYRO_ANGLE = 60f;
     private static final float MIN_GYRO_ANGLE = -40f;
 //    private static final float MIN_GYRO_ANGLE = -89f;
 
@@ -27,7 +27,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     private static final float GRAVITY_CONST = 9.81f;
     private static float mass;
     private float initialAngle = MIN_GYRO_ANGLE;
-    private float initialMotorPower = 0;
+    private float initialMotorThrustPrcnt = 0;
     private PositionAngle positionAngle = new PositionAngle();
     private float angleSpeed;
     private Thread runner;
@@ -43,8 +43,8 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
         this.initialAngle = initialAngle;
     }
 
-    public void setInitialMotorPower(float initialMotorPower) {
-        this.initialMotorPower = initialMotorPower;
+    public void setInitialMotorThrustPrcnt(float initialMotorThrustPrcnt) {
+        this.initialMotorThrustPrcnt = initialMotorThrustPrcnt;
     }
 
     public void setMotor(IMotor motor) {
@@ -72,7 +72,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     public void startWorking() {
         positionAngle = new PositionAngle(0, initialAngle, 0);
         try {
-            motor.setThrustNewtons(initialMotorPower);
+            motor.setThrustPrcnt(initialMotorThrustPrcnt);
         } catch (MotorException e) {
             e.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
         final float alfa = positionAngle.getAngleY();
-        final float motorForce = motor.getThrustNewtons();
+        final float motorForce = motor.getCurrentThrustPrcnt() / 100 * motor.getMaxThrustInNewtons();
 
         return (float) ((motorForce / mass - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
     }

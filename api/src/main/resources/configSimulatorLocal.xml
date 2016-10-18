@@ -11,7 +11,7 @@
         <property name="motor" ref="motor"/>
         <property name="mass" value="0.1"/>
         <property name="initialAngle" value="-40"/>
-        <property name="initialMotorPower" value="0"/>
+        <property name="initialMotorThrustPrcnt" value="0"/>
 
     </bean>
 
