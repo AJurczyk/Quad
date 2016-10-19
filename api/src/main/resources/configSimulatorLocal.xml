@@ -3,19 +3,24 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.MotorSimulator">
-        <property name="powerLimit" value = "100"/>
-        <property name="maxThrust" value = "7.35"/>
+
+    <bean id="pwmMock" class="com.ajurczyk.hardware.pwm.impl.PwmMock"/>
+
+    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.EmaxCf2822" init-method="init">
+        <property name="pwmController" ref="pwmMock"/>
+        <property name="thrustMapFile" value="/opt/ajurczyk/quad/config/thrustToRpm.properties"/>
+        <property name="rpmLimit" value = "100"/>
     </bean>
-    <bean id="imuDriver" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator">
+
+    <bean id="imuDriverSimulator" class="com.ajurczyk.software.imudriver.impl.ImuDriverSimulator">
         <property name="motor" ref="motor"/>
         <property name="mass" value="0.1"/>
-        <property name="initialAngle" value="-40"/>
-        <property name="initialMotorThrustPrcnt" value="0"/>
+        <property name="initAngle" value="-40"/>
+        <property name="initMotorThrust" value="0"/>
 
     </bean>
 
-    <bean id="regulatorP" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
+    <bean id="regulator" class="com.ajurczyk.software.regulators.impl.RegulatorPid">
         <property name="proportional" value="0.01"/>
         <property name="integral" value="0"/>
         <property name="derivative" value="1"/>
@@ -23,16 +28,14 @@
 
 
     <bean class="com.ajurczyk.software.flightcontroller.impl.FlightController">
-        <property name="imuDriver" ref="imuDriver"/>
+        <property name="imuDriver" ref="imuDriverSimulator"/>
         <property name="motor" ref="motor"/>
-        <property name="regulator" ref="regulatorP"/>
+        <property name="regulator" ref="regulator"/>
         <property name="mass" value="0.1"/>
     </bean>
 
     <bean id="filteredReader" class="com.ajurczyk.software.imudriver.impl.ImuFilteredReader">
         <property name="compensationFile" value="/opt/ajurczyk/quad/config/compensation.properties"/>
     </bean>
-
     <bean id="accGyro" class="com.ajurczyk.hardware.gyroacc.impl.FakeGyro"/>
-
 </beans>

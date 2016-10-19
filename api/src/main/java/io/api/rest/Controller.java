@@ -149,7 +149,7 @@ public class Controller implements IImuReaderListener, IFlightControllerListener
     }
 
     @Override
-    public void motorThrustPrcntChanged(float power) {
+    public void motorThrustChanged(float power) {
         addQuadEvent(flightEvents, new QuadEvent(EventType.MOTOR_POWER, power));
     }
 

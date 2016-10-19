@@ -9,7 +9,7 @@ public interface IFlightControllerListener {
      *
      * @param thrustPrcnt percent power value.
      */
-    void motorThrustPrcntChanged(float thrustPrcnt);
+    void motorThrustChanged(float thrustPrcnt);
 
     /**
      * Received regulation signal for motor power.

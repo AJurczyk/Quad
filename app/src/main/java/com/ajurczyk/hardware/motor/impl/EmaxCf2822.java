@@ -139,7 +139,7 @@ public class EmaxCf2822 implements IMotor {
             for (final String propertyName : propertiesMgr.getPropertiesNames()) {
                 thrustToRpmMap.put(Float.valueOf(propertyName), Float.valueOf(propertiesMgr.getProperty(propertyName)));
             }
-            maxThrustNewtons = thrustToRpmMap.lastKey();
+            this.maxThrustNewtons = thrustToRpmMap.lastKey();
         } catch (IOException | PropertyNotFoundException e) {
             throw new MotorException(e.getMessage(), e);
         }

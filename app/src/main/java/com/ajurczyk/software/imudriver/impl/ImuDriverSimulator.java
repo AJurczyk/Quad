@@ -21,30 +21,33 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     //    private static final float MAX_GYRO_ANGLE = 89f;
     private static final float MAX_GYRO_ANGLE = 60f;
     private static final float MIN_GYRO_ANGLE = -40f;
-//    private static final float MIN_GYRO_ANGLE = -89f;
-
+    //    private static final float MIN_GYRO_ANGLE = -89f;
     private static final float RADIUS = 0.5f;
     private static final float GRAVITY_CONST = 9.81f;
-    private static float mass;
-    private float initialAngle = MIN_GYRO_ANGLE;
-    private float initialMotorThrustPrcnt = 0;
+
+    private float mass;
+    private float initAngle = MIN_GYRO_ANGLE;
+    private float initMotorThrust;
+
     private PositionAngle positionAngle = new PositionAngle();
     private float angleSpeed;
+
     private Thread runner;
+    private boolean running;
     @Autowired
     private IImuReaderListener listener;
     private IMotor motor;
 
-    public static void setMass(float mass) {
-        ImuDriverSimulator.mass = mass;
+    public void setMass(float mass) {
+        this.mass = mass;
     }
 
-    public void setInitialAngle(float initialAngle) {
-        this.initialAngle = initialAngle;
+    public void setInitAngle(float initAngle) {
+        this.initAngle = initAngle;
     }
 
-    public void setInitialMotorThrustPrcnt(float initialMotorThrustPrcnt) {
-        this.initialMotorThrustPrcnt = initialMotorThrustPrcnt;
+    public void setInitMotorThrust(float initMotorThrust) {
+        this.initMotorThrust = initMotorThrust;
     }
 
     public void setMotor(IMotor motor) {
@@ -70,13 +73,15 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
 
     @Override
     public void startWorking() {
-        positionAngle = new PositionAngle(0, initialAngle, 0);
-        try {
-            motor.setThrust(initialMotorThrustPrcnt);
-        } catch (MotorException e) {
-            e.printStackTrace();
-        }
+        positionAngle = new PositionAngle(0, initAngle, 0);
         angleSpeed = 0;
+        try {
+            motor.setThrust(initMotorThrust);
+        } catch (MotorException e) {
+            LOGGER.error(e.getMessage(), e);
+            return;
+        }
+
         runner = new Thread(this);
         runner.start();
     }
@@ -89,20 +94,21 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
         try {
             runner.interrupt();
             runner.join();
+            running = false;
         } catch (InterruptedException e) {
-            LOGGER.debug("Waiting for gyroscope to end was interrupted.", e);
+            LOGGER.error("Waiting for gyroscope to end was interrupted.", e);
         }
     }
 
     @Override
     public boolean isWorking() {
-        return false;
+        return running;
     }
 
     @Override
     public void run() {
         LOGGER.debug("Start reading gyro.");
-
+        running = true;
         try {
             while (true) {
                 mainReader();
@@ -110,6 +116,7 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
         } catch (ImuFilteredReaderException | InterruptedException e) {
             LOGGER.error(e.toString());
         } finally {
+            running = false;
             LOGGER.debug("Reading gyro finished.");
         }
     }

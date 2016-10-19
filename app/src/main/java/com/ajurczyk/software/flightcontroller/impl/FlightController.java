@@ -34,7 +34,6 @@ public class FlightController implements IFlightController, Runnable {
     private int interval = 20;
     private float desiredAngle;
     private float mass;
-    private float maxThrust;
 
     public void setMass(float mass) {
         this.mass = mass;
@@ -72,7 +71,7 @@ public class FlightController implements IFlightController, Runnable {
     public void start() throws FlightControllerException {
         LOGGER.debug("Start flight controller.");
         ((RegulatorPid) regulator).clear();
-        if (maxThrust == 0) {
+        if (motor.getMaxThrustInNewtons() == 0) {
             LOGGER.error("Error starting flight controller. motor doesn't have its max thrust set.");
             throw new FlightControllerException("Motor doesn't have its max thrust set.");
         }
@@ -82,7 +81,7 @@ public class FlightController implements IFlightController, Runnable {
             e.printStackTrace();
         }
         imuDriver.startWorking();
-        listener.motorThrustPrcntChanged(motor.getCurrentThrust());
+        listener.motorThrustChanged(motor.getCurrentThrust());
         runner = new Thread(this);
         runner.start();
     }
@@ -127,18 +126,16 @@ public class FlightController implements IFlightController, Runnable {
 
         final float regulation = regulator.getRegulation(currentAngle, desiredAngle);
         listener.regulationSignalReceived(regulation);
-
-        waitForNextIteration(System.currentTimeMillis() - startTime);
-
         try {
-            final float thrustToSetInNewtons = (float) (regulation + mass * GRAVITY_CONST * Math.cos(Math.toRadians(currentAngle)));
-            final float thrustPercent = thrustToSetInNewtons/motor.getMaxThrustInNewtons()*100;
+            final float thrustToSetNewtns = (float) (regulation + mass * GRAVITY_CONST * Math.cos(Math.toRadians(currentAngle)));
+            final float thrustPercent = thrustToSetNewtns / motor.getMaxThrustInNewtons() * 100;
             motor.setThrust(thrustPercent);
-            listener.motorThrustPrcntChanged(motor.getCurrentThrust());
+            listener.motorThrustChanged(motor.getCurrentThrust());
         } catch (MotorException e) {
             LOGGER.debug("Unable to set power on motor.");
             //TODO do something
         }
+        waitForNextIteration(System.currentTimeMillis() - startTime);
     }
 
     private void waitForNextIteration(long delay) throws InterruptedException {

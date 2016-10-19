@@ -1,11 +1,8 @@
 package com.ajurczyk;
 
-import com.ajurczyk.hardware.motor.impl.EmaxCf2822;
-import com.ajurczyk.hardware.pwm.IPwmController;
 import com.ajurczyk.hardware.pwm.exceptions.PercentValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.PwmValRangeException;
 import com.ajurczyk.hardware.pwm.exceptions.WholeNumException;
-import com.ajurczyk.hardware.pwm.impl.RPi2HardwarePwm;
 
 /**
  * @author aleksander.jurczyk@gmail.com on 29.11.15.
@@ -20,7 +17,7 @@ public class TestMainClass {
      * @throws WholeNumException    invalid period
      */
     public static void main(String[] args) throws PwmValRangeException, WholeNumException, PercentValRangeException {
-     /*   System.out.println("TEST quad");
+/*        System.out.println("TEST quad");
 
         IPwmController pwm = new RPi2HardwarePwm(1, 5);
         EmaxCf2822 motor = new EmaxCf2822(pwm);
