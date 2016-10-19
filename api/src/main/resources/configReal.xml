@@ -2,14 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-
+    <!--<bean id="pwm" class="com.ajurczyk.hardware.pwm.impl.PwmMock"/>-->
 
     <bean id="pwm" class="com.ajurczyk.hardware.pwm.impl.RPi2HardwarePwm">
         <constructor-arg index="0" value="1"/>
         <constructor-arg index="1" value="5"/>
     </bean>
 
-    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.EmaxCf2822">
+    <bean id="motor" class="com.ajurczyk.hardware.motor.impl.EmaxCf2822" init-method="init">
         <property name="pwmController" ref="pwm"/>
         <property name="thrustMapFile" value="/opt/ajurczyk/quad/config/thrustToRpm.properties"/>
         <property name="rpmLimit" value = "100"/>

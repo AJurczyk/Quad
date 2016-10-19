@@ -81,7 +81,8 @@ public class EmaxCf2822 implements IMotor {
             LOGGER.debug("[EMAX] Init started.");
             loadThrustMapFromFile(thrustMapFile);
             pwmController.setPeriodMs(pwmPeriodMs);
-            pwmController.setDuty(pwmMaxDutyMs);
+//            pwmController.setDuty(pwmMaxDutyMs);
+            pwmController.setDuty(pwmMinDutyMs);
             LOGGER.debug("[EMAX] Init successful.");
         } catch (PwmValRangeException | WholeNumException e) {
             throw new MotorException(e.getMessage(), e);

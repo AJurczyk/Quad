@@ -95,11 +95,11 @@ public class ImuDriver implements IImuDriver, Runnable {
         getInitPosition();
 
         try {
-            calibrationMgr.calibrate();
+//            calibrationMgr.calibrate();
             while (true) {
                 mainReader();
             }
-        } catch (ImuFilteredReaderException | InterruptedException | CalibrationManagerException e) {
+        } catch (ImuFilteredReaderException | InterruptedException/* | CalibrationManagerException */e) {
             LOGGER.error(e.toString());
         } finally {
             LOGGER.debug("Reading gyro finished.");

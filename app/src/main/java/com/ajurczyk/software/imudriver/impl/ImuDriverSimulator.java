@@ -6,6 +6,7 @@ import com.ajurczyk.hardware.motor.exception.MotorException;
 import com.ajurczyk.software.imudriver.IImuDriver;
 import com.ajurczyk.software.imudriver.IImuReaderListener;
 import com.ajurczyk.software.imudriver.exception.ImuFilteredReaderException;
+import com.ajurczyk.utils.RotatingList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,8 +153,11 @@ public class ImuDriverSimulator implements IImuDriver, Runnable {
     @SuppressWarnings("PMD.AvoidFinalLocalVariable")
     private float calculateAngularAcceleration() {
         final float alfa = positionAngle.getAngleY();
-        final float motorForce = motor.getCurrentThrust() / 100 * motor.getMaxThrustInNewtons();
+        motorThrustHistory.add(motor.getCurrentThrust());
+        final float motorForce = motorThrustHistory.get(0) / 100 * motor.getMaxThrustInNewtons();
 
         return (float) ((motorForce / mass - Math.cos(Math.toRadians(alfa)) * GRAVITY_CONST) * RADIUS);
     }
+
+    private RotatingList<Float>motorThrustHistory = new RotatingList<>(50);
 }
